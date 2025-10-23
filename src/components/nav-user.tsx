@@ -1,17 +1,11 @@
 "use client";
 
-import {
-
-  IconDotsVertical,
-  IconLogout,
-
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconLogout } from "@tabler/icons-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -37,6 +31,11 @@ export function NavUser({
     name: string;
     email: string;
     avatar: string;
+    balance: number | null;
+    tokenBalance: number | null;
+    emailVerified: boolean;
+    role: "USER" | "ADMIN";
+    image: string | null;
   };
 }) {
   const { isMobile } = useSidebar();
