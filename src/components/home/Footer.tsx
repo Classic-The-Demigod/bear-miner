@@ -1,18 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  //   Rocket,
-  //   Zap,
-  //   Trophy,
-  //   CheckCircle2,
-  //   ChevronDown,
-  //   Twitter,
-  Send,
-  Github,
-  X,
-  Aperture,
-} from "lucide-react";
+
 
 const Footer = () => {
   return (

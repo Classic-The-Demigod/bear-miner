@@ -17,7 +17,7 @@ import * as z from "zod";
 import { signIn } from "@/lib/auth-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signinAction } from "../../app/actions/auth";
+// import { signinAction } from "../../app/actions/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),

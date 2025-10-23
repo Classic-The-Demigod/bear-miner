@@ -4,25 +4,25 @@ import * as React from "react";
 import Image from "next/image";
 import {
   IconCamera,
-  IconChartBar,
+  // IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
+  // IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
+  // IconInnerShadowTop,
+  // IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
+  // IconUsers,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
+// import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
+// import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -34,16 +34,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-interface AppSidebarProps {
-  id: string;
-  name: string;
-  email: string;
-  balance: number;
-  tokenBalance: number;
-  emailVerified: boolean;
-  role: "USER" | "ADMIN";
-  image: string | null;
-}
+
 
 const data = {
   user: {

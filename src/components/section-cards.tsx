@@ -136,7 +136,7 @@ export function SectionCards({ user }: { user: SectionCardsProps }) {
                 </p>
                 <p className="text-xs text-red-500">
                   PLease do not close this dialog until you have sent the SOL.
-                  and clicked "I've sent SOL".
+                  and clicked &quout;"I&apos;'ve sent SOL".
                 </p>
               </div>
 
