@@ -46,7 +46,7 @@ interface AppSidebarProps {
 }
 
 type AppSidebarCombinedProps = React.ComponentProps<typeof Sidebar> & {
-  user: AppSidebarProps;
+  user?: AppSidebarProps;
 };
 
 const data = {
