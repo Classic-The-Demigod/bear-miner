@@ -35,7 +35,7 @@ interface NavUserProps {
   image: string | null;
 }
 
-export function NavUser({ user }: { user: NavUserProps }) {
+export function NavUser({ user }: { user: NavUserProps | null }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -65,6 +65,10 @@ export function NavUser({ user }: { user: NavUserProps }) {
     } finally {
       setIsLoggingOut(false);
     }
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (
