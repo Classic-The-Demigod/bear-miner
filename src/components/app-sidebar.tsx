@@ -34,7 +34,20 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+interface AppSidebarProps {
+  id: string;
+  name: string;
+  email: string;
+  balance: number;
+  tokenBalance: number;
+  emailVerified: boolean;
+  role: "USER" | "ADMIN";
+  image: string | null;
+}
 
+type AppSidebarCombinedProps = React.ComponentProps<typeof Sidebar> & {
+  user: AppSidebarProps;
+};
 
 const data = {
   user: {
@@ -48,26 +61,6 @@ const data = {
       url: "#",
       icon: IconDashboard,
     },
-    // {
-    //   title: "Lifecycle",
-    //   url: "#",
-    //   icon: IconListDetails,
-    // },
-    // {
-    //   title: "Analytics",
-    //   url: "#",
-    //   icon: IconChartBar,
-    // },
-    // {
-    //   title: "Projects",
-    //   url: "#",
-    //   icon: IconFolder,
-    // },
-    // {
-    //   title: "Team",
-    //   url: "#",
-    //   icon: IconUsers,
-    // },
   ],
   navClouds: [
     {
@@ -153,7 +146,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: AppSidebarCombinedProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
