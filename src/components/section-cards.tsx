@@ -1,5 +1,5 @@
 "use client";
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import {  IconTrendingUp } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { prisma } from "../lib/prisma";
+
 
 interface SectionCardsProps {
   id: string;
