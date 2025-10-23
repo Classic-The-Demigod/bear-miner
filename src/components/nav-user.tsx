@@ -24,20 +24,18 @@ import { logoutAction } from "@/app/actions/auth";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-    balance: number | null;
-    tokenBalance: number | null;
-    emailVerified: boolean;
-    role: "USER" | "ADMIN";
-    image: string | null;
-  };
-}) {
+interface NavUserProps {
+  name: string;
+  email: string;
+  avatar: string;
+  balance: number | null;
+  tokenBalance: number | null;
+  emailVerified: boolean;
+  role: "USER" | "ADMIN";
+  image: string | null;
+}
+
+export function NavUser({ user }: { user: NavUserProps | null }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
