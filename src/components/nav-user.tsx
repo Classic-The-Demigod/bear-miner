@@ -27,7 +27,7 @@ import { signOut } from "@/lib/auth-client";
 interface NavUserProps {
   name: string;
   email: string;
-  avatar: string;
+  avatar?: string;
   balance: number | null;
   tokenBalance: number | null;
   emailVerified: boolean;
@@ -35,7 +35,7 @@ interface NavUserProps {
   image: string | null;
 }
 
-export function NavUser({ user }: { user: NavUserProps | null }) {
+export function NavUser({ user }: { user: NavUserProps }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
