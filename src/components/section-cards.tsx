@@ -1,5 +1,5 @@
 "use client";
-import {  IconTrendingUp } from "@tabler/icons-react";
+import { IconTrendingUp } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,13 +27,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-
 interface SectionCardsProps {
   id: string;
   name: string;
   email: string;
-  balance: number;
-  tokenBalance: number;
+  balance: number | null;
+  tokenBalance: number | null;
   emailVerified: boolean;
   role: "USER" | "ADMIN";
   image: string | null;
@@ -52,7 +51,7 @@ interface SectionCardsProps {
 //     "role": "USER"
 // }
 
-export function SectionCards({ user }: { user: SectionCardsProps }) {
+export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {

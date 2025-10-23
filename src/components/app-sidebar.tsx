@@ -38,8 +38,8 @@ interface AppSidebarProps {
   id: string;
   name: string;
   email: string;
-  balance: number;
-  tokenBalance: number;
+  balance: number | null;
+  tokenBalance: number | null;
   emailVerified: boolean;
   role: "USER" | "ADMIN";
   image: string | null;
