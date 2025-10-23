@@ -41,12 +41,12 @@ interface AppSidebarProps {
   balance: number;
   tokenBalance: number;
   emailVerified: boolean;
-  role: string;
+  role: "USER" | "ADMIN";
   image: string | null;
 }
 
 type AppSidebarCombinedProps = React.ComponentProps<typeof Sidebar> & {
-  user?: AppSidebarProps;
+  user?: AppSidebarProps | null;
 };
 
 const data = {
