@@ -58,12 +58,14 @@ export function SignupForm({
           password: data.password,
         },
         {
-          onRequest: () => {},
-          onResponse: () => {},
-          onError: (ctx) => {
-            toast.error(ctx.error.message);
+          fetchOptions: {
+            onRequest: () => {},
+            onResponse: () => {},
+            onError: (ctx) => {
+              toast.error(ctx.error.message);
+            },
+            onSuccess: () => {},
           },
-          onSuccess: () => {},
         }
       );
 
