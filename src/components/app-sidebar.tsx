@@ -41,7 +41,7 @@ interface AppSidebarProps {
   balance: number;
   tokenBalance: number;
   emailVerified: boolean;
-  role: "USER" | "ADMIN";
+  role: string;
   image: string | null;
 }
 
