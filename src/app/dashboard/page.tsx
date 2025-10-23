@@ -25,7 +25,7 @@ export default async function Page() {
 
   console.log("Session in dashboard page:", session);
 
-  if (!session?.user) {
+  if (!user) {
     return redirect("/signin");
   }
 
@@ -38,7 +38,7 @@ export default async function Page() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" user={user}/>
+      <AppSidebar variant="inset" user={user} />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
