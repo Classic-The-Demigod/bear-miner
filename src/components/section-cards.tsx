@@ -10,22 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Copy, Check } from "lucide-react";
-import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import StakeModal from "./modals/stake-modal";
+import WithdrawModal from "./modals/withdraw-modal";
 
 interface SectionCardsProps {
   id: string;
@@ -52,23 +39,13 @@ interface SectionCardsProps {
 // }
 
 export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(
-      "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
-    );
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 ">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Your Balance</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            ${user?.balance.toFixed(2) ?? "0.00"}
+            ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(user?.balance ?? 0)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -85,66 +62,10 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
             Staked balance earning 5% daily
           </div>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000]">
-                Start Mining $Bear Tokens
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Follow the steps below to start mining $bear tokens on the
-                  Solana (SOL) chain
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Send SOL to the address below to start earning 5% daily
-                  returns. Your mining will begin automatically once the
-                  transaction is confirmed.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="my-4 space-y-3">
-                <div className="rounded-lg border p-4 bg-muted">
-                  <p className="text-sm font-medium mb-2">Wallet Address:</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 text-xs break-all bg-background p-2 rounded">
-                      7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
-                    </code>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleCopy}
-                      className="relative"
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="h-4 w-4 mr-1 animate-in zoom-in duration-200" />
-                          Copied
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4 mr-1" />
-                          Copy
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Minimum stake: 0.1 SOL • Network: Solana Mainnet
-                </p>
-                <p className="text-xs text-red-500">
-                  PLease do not close this dialog until you have sent the SOL.
-                  and clicked &quout;"I&apos;'ve sent SOL".
-                </p>
-              </div>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>I've sent SOL</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex w-full justify-between flex-col md:flex-row gap-4 ">
+            <StakeModal />
+            <WithdrawModal />
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">

@@ -5,7 +5,7 @@ const Roadmap = () => {
   const phases = [
     {
       icon: Rocket,
-      quarter: "Q2 2025",
+      quarter: "Q4 2025",
       title: "Launch Phase",
       color: "text-blue-500", // Change for text color
       bgColor: "bg-blue-100",
@@ -42,7 +42,7 @@ const Roadmap = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-white to-[#F8EBDD]">
+    <section id="roadmap" className="py-20 px-4 bg-gradient-to-b from-white to-[#F8EBDD]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">

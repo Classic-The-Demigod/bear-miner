@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 // import data from "./data.json";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import CryptoPriceTracker from "../../components/cyrpto-tracker";
 
 export default async function Page() {
   const session = await auth.api.getSession({
@@ -45,6 +46,11 @@ export default async function Page() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <SectionCards user={user} />
+
+              <div className="px-4 lg:px-6">
+              <CryptoPriceTracker />
+
+              </div>
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>

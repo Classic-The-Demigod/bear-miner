@@ -7,6 +7,8 @@ import Roadmap from "../components/home/Roadmap";
 import Tokenomics from "../components/home/Tokenomics";
 import FaqAccordion from "../components/home/Accordion";
 import Footer from "../components/home/Footer";
+import BMTPurchase from "../components/home/BMTPurchase";
+import TokenDetails from "../components/home/TokenDetails";
 
 export default function Home() {
   return (
@@ -18,9 +20,14 @@ export default function Home() {
       <Hero />
 
       <About />
+
+      <div className="md:px-28 py-8 px-4">
+        <BMTPurchase />
+      </div>
       <HowToPurchase />
       <Roadmap />
       <Tokenomics />
+      <TokenDetails />
       <FaqAccordion />
       <Footer />
     </section>

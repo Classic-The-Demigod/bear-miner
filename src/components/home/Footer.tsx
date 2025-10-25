@@ -63,7 +63,8 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://drive.google.com/file/d/1LaH43Em8GADoJtgt0IXf1a9Y-fg13NSY/view?usp=drive_link"
+                  target="_blank"
                   className="hover:text-[#E29014] transition-colors duration-200"
                 >
                   Whitepaper

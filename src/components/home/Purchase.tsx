@@ -39,7 +39,7 @@ const HowToPurchase = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-[#F8EBDD] to-white">
+    <section id="" className="py-20 px-4 bg-gradient-to-b from-[#F8EBDD] to-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
