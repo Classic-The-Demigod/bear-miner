@@ -23,7 +23,7 @@ export default function BMTPurchase() {
   const [bmtAmount, setBmtAmount] = useState("3589.6");
 
   const BMT_PER_SOL = 3589.6;
-  const totalRaised = 10094162.39;
+  const totalRaised = 5094162.39;
   const percentRaised = 91.76;
   const softcapTarget = 5000000;
   const participants = 15394;
