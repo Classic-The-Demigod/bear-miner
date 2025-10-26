@@ -234,7 +234,7 @@ export default function BMTPurchase() {
                   variant="outline"
                   onClick={handleCopy}
                   className="relative"
-                >
+                >-
                   {copied ? (
                     <>
                       <Check className="h-4 w-4 mr-1 animate-in zoom-in duration-200" />
