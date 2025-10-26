@@ -17,6 +17,7 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
+  IconHome,
   // IconUsers,
 } from "@tabler/icons-react";
 
@@ -57,8 +58,13 @@ const data = {
   },
   navMain: [
     {
+      title: "Home",
+      url: "/",
+      icon: IconHome,
+    },
+    {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
   ],

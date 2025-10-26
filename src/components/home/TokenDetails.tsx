@@ -182,7 +182,7 @@ export default function TokenDetails() {
           {/* Total Supply */}
           <div className="bg-primary backdrop-blur-sm  rounded-2xl p-6">
             <div className="text-gray-100 text-sm mb-2">Total Supply</div>
-            <div className="text-2xl font-bold">1B</div>
+            <div className="text-2xl font-bold">3B</div>
           </div>
         </div>
       </div>

@@ -1,34 +1,33 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-// import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-// import data from "./data.json";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import CryptoPriceTracker from "../../components/cyrpto-tracker";
+import { getBalanceWithGrowth } from "@/app/actions/balance";
+import CryptoPriceTracker from "@/components/cyrpto-tracker";
 
 export default async function Page() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const user = await prisma.user.findUnique({
-    where: { id: session?.user.id },
-  });
-
-  // UagLd60t1b2z1fNG4hXDXIuYNmXSfVcB;
-  console.log("User in dashboard page:", user);
-
-  console.log("Session in dashboard page:", session);
-
-  if (!user) {
+  if (!session?.user) {
     return redirect("/signin");
   }
+
+  // Get user with calculated balance growth
+  const balanceData = await getBalanceWithGrowth(session.user.id);
+
+  if (!balanceData.success || !balanceData.user) {
+    return redirect("/signin");
+  }
+
+  const user = balanceData.user;
+
+  console.log("User with calculated balance:", user);
 
   return (
     <SidebarProvider
@@ -46,15 +45,12 @@ export default async function Page() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <SectionCards user={user} />
-
               <div className="px-4 lg:px-6">
-              <CryptoPriceTracker />
-
+                <CryptoPriceTracker />
               </div>
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              {/* <DataTable data={data} /> */}
             </div>
           </div>
         </div>

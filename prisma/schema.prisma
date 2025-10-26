@@ -35,6 +35,8 @@ model User {
 
 
   role          UserRole   @default(USER)
+
+  lastBalanceUpdate   DateTime? @default(now())
   sessions      Session[]
   accounts      Account[]
 
