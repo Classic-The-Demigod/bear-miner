@@ -67,7 +67,10 @@ export default function TokenDetails() {
   };
 
   return (
-    <div className="min-h-screen  bg-[#2B1311] text-white py-20 px-4">
+    <div
+      id="tokendetails"
+      className="min-h-screen  bg-[#2B1311] text-white py-20 px-4"
+    >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
