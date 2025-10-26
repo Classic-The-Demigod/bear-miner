@@ -227,7 +227,7 @@ export default function BMTPurchase() {
               <p className="text-sm font-medium mb-2">Wallet Address:</p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 text-xs break-all bg-background p-2 rounded">
-                  7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
+                  HjzNMHpUgRy4x4xXkniGciS1JpfKKjjJzogcFWMPWhqb
                 </code>
                 <Button
                   size="sm"
