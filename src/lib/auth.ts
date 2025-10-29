@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { normalizeName, VALID_DOMAINS } from "./utils";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { hashPassword, verifyPassword } from "@/lib/argon2";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -11,6 +12,10 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+  },
+  password: {
+    hash: hashPassword,
+    verify: verifyPassword,
   },
 
   hooks: {

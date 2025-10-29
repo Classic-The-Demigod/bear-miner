@@ -14,8 +14,10 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { signUp } from "../../lib/auth-client";
 import { useRouter } from "next/navigation";
+
+import { useTransition } from "react";
+import { signUpEmailAction } from "../../app/actions/sign-up-email.action";
 
 const signupSchema = z
   .object({
@@ -38,44 +40,35 @@ export function SignupForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });
 
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const onSubmit = async (data: SignupFormData) => {
-    try {
-      // Handle form submission logic here
-      console.log(data);
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("email", data.email);
+        formData.append("password", data.password);
 
-      // Simulate API call
-      await signUp.email(
-        {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        },
-        {
-          fetchOptions: {
-            onRequest: () => {},
-            onResponse: () => {},
-            onError: (ctx) => {
-              toast.error(ctx.error.message);
-            },
-            onSuccess: () => {},
-          },
+        const result = await signUpEmailAction(formData);
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
         }
-      );
 
-      router.push("/dashboard");
-      toast.success("Account created successfully!");
-
-      // Redirect or perform other actions
-    } catch (error) {
-      toast.error("Failed to create account. Please try again.");
-    }
+        toast.success("Account created successfully!");
+        router.push("/dashboard");
+      } catch (error) {
+        toast.error("Failed to create account. Please try again.");
+      }
+    });
   };
 
   return (
@@ -101,6 +94,7 @@ export function SignupForm({
             id="name"
             type="text"
             placeholder="John Doe"
+            disabled={isPending}
             {...register("name")}
           />
           {errors.name && (
@@ -116,6 +110,7 @@ export function SignupForm({
             id="email"
             type="email"
             placeholder="m@example.com"
+            disabled={isPending}
             {...register("email")}
           />
           {errors.email ? (
@@ -132,7 +127,12 @@ export function SignupForm({
 
         <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
-          <Input id="password" type="password" {...register("password")} />
+          <Input
+            id="password"
+            type="password"
+            disabled={isPending}
+            {...register("password")}
+          />
           {errors.password ? (
             <FieldDescription className="text-destructive">
               {errors.password.message}
@@ -149,6 +149,7 @@ export function SignupForm({
           <Input
             id="confirmPassword"
             type="password"
+            disabled={isPending}
             {...register("confirmPassword")}
           />
           {errors.confirmPassword ? (
@@ -164,9 +165,9 @@ export function SignupForm({
           <Button
             className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000] disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isPending ? "Creating Account..." : "Create Account"}
           </Button>
         </Field>
 

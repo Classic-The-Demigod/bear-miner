@@ -14,10 +14,10 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { signIn } from "@/lib/auth-client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { signinAction } from "../../app/actions/auth";
+
+import { useTransition } from "react";
+import { signInEmailAction } from "../../app/actions/sign-in-email.action";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -33,40 +33,34 @@ export function LoginForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const [isPending, setIsPending] = useState(false);
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      // Handle form submission logic here
-      setIsPending(true);
-      const result = await signIn.email(
-        { email: data.email, password: data.password },
-        {
-          fetchOptions: {
-            onResponse: () => {
-              setIsPending(false);
-            },
-            onError: (ctx) => {
-              throw new Error(ctx.error.message);
-            },
-            onSuccess: () => {
-            },
-          },
-        }
-      );
-      toast.success("Successfully logged in!");
-      router.push("/dashboard");
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("password", data.password);
 
-      // Redirect to dashboard or perform other actions
-    } catch (error) {
-      toast.error("Invalid email or password. Please try again.");
-    }
+        const result = await signInEmailAction(formData);
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success("Successfully logged in!");
+        router.push("/dashboard");
+      } catch (error) {
+        toast.error("Invalid email or password. Please try again.");
+      }
+    });
   };
 
   return (
@@ -91,6 +85,7 @@ export function LoginForm({
             id="email"
             type="email"
             placeholder="m@example.com"
+            disabled={isPending}
             {...register("email")}
           />
           {errors.email && (
@@ -110,7 +105,12 @@ export function LoginForm({
               Forgot your password?
             </Link>
           </div>
-          <Input id="password" type="password" {...register("password")} />
+          <Input
+            id="password"
+            type="password"
+            disabled={isPending}
+            {...register("password")}
+          />
           {errors.password && (
             <FieldDescription className="text-destructive">
               {errors.password.message}
@@ -122,9 +122,9 @@ export function LoginForm({
           <Button
             className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000] disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? "Logging in..." : "Login"}
+            {isPending ? "Logging in..." : "Login"}
           </Button>
         </Field>
 
