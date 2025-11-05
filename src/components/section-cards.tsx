@@ -81,8 +81,8 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             $
             {new Intl.NumberFormat("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              minimumFractionDigits: 4,
+              maximumFractionDigits: 4,
             }).format(currentBalance)}
           </CardTitle>
           <CardAction>
@@ -99,7 +99,7 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
             Daily returns active <IconTrendingUp className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Earned ${dailyEarnings.toFixed(4)} today • 5% daily compound
+            Earned ${dailyEarnings.toFixed(7)} today • 5% daily compound
           </div>
           <div className="text-xs text-green-500 font-medium">
             ⚡ Live growth: Updates every second

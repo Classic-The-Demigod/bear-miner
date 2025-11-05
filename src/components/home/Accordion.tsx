@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 const FaqAccordion = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -78,6 +79,60 @@ const FaqAccordion = () => {
           ))}
         </div>
       </div>
+
+      <div className="text-center mt-16 space-y-4 flex flex-col items-center justify-center">
+
+
+        <h1 className="text-xl text-accent">Audited and Approved By</h1>
+
+        <div className="flex justify-center items-center gap-4">
+          <Image
+              src="/assets/solidproof.svg"
+              alt="Bear Miner Logo"
+              width={150}
+              height={150}
+          />
+          <Image
+              src="/assets/coinsult.svg"
+              alt="Bear Miner Logo"
+              width={150}
+              height={150}
+          />
+          <Image
+              src="/assets/certik.svg"
+              alt="Bear Miner Logo"
+              width={150}
+              height={150}
+          />
+
+
+        </div>
+          <h1 className="text-xl text-accent">Verified Ratings</h1>
+
+          <Image
+              src="/assets/Avatar group.png"
+              alt="Bear Miner Logo"
+              width={100}
+              height={100}
+          />
+
+
+        <div className="flex items-center gap-4">
+
+          <h1 className="text-xl text-accent font-bold">4.87/5</h1>
+          <Image
+              src="/assets/stars.png"
+              alt="Bear Miner Logo"
+              width={80}
+              height={80}
+          />
+
+        </div>
+
+
+      </div>
+
+
     </section>
   );
 };
