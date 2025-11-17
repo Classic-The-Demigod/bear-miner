@@ -38,14 +38,14 @@ const Nav = () => {
             </span>
           </Link>
           <Link
-            href="https://x.com/bearminersol?s=21&t=84EU8uEg_R77EpVGfFlzSw"
+            href="https://x.com/bearminer1?s=11&t=84EU8uEg_R77EpVGfFlzSw"
             className="hover:scale-110 transition-transform border-2 border-black rounded-lg p-2 bg-white"
             target="_blank"
           >
             <span>
               <Image
                 src="/assets/twitter.svg"
-                alt="Telegram"
+                alt="Twitter"
                 width={30}
                 height={30}
               />
