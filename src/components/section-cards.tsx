@@ -48,10 +48,11 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
         return newBalance;
       });
 
-      setCurrentTokenBalance((prev) => {
-        const tokenGrowth = prev * growthPerSecond;
-        return prev + tokenGrowth;
-      });
+      // Token balance growth DISABLED - keeping static
+      // setCurrentTokenBalance((prev) => {
+      //   const tokenGrowth = prev * growthPerSecond;
+      //   return prev + tokenGrowth;
+      // });
     }, 1000); // Update every second
 
     return () => clearInterval(interval);
@@ -123,21 +124,22 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
             $Bear
           </CardTitle>
           <CardAction>
-            <Badge
+            {/* Token growth badge removed since tokens are now static */}
+            {/* <Badge
               variant="outline"
               className="bg-green-500/10 text-green-500 border-green-500/20"
             >
               <IconTrendingUp />
               +5.0%
-            </Badge>
+            </Badge> */}
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Token rewards growing <IconTrendingUp className="size-4" />
+            Token balance
           </div>
           <div className="text-muted-foreground">
-            Auto-compounding with your balance
+            Stable token holdings
           </div>
         </CardFooter>
       </Card>

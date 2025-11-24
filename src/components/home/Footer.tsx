@@ -95,14 +95,14 @@ const Footer = () => {
                   Audits
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#"
                   className="hover:text-[#E29014] transition-colors duration-200"
                 >
                   Bug Bounty
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -126,7 +126,7 @@ const Footer = () => {
                   />
                 </span>
               </Link>
-              <Link
+              {/* <Link
                 href="https://x.com/bearminer1?s=11&t=84EU8uEg_R77EpVGfFlzSw"
                 className="hover:scale-110 transition-transform border-2 border-black rounded-lg p-2 bg-white"
                 target="_blank"
@@ -139,7 +139,7 @@ const Footer = () => {
                     height={30}
                   />
                 </span>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

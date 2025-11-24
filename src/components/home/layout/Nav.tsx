@@ -37,7 +37,7 @@ const Nav = () => {
               />
             </span>
           </Link>
-          <Link
+          {/* <Link
             href="https://x.com/bearminer1?s=11&t=84EU8uEg_R77EpVGfFlzSw"
             className="hover:scale-110 transition-transform border-2 border-black rounded-lg p-2 bg-white"
             target="_blank"
@@ -50,7 +50,7 @@ const Nav = () => {
                 height={30}
               />
             </span>
-          </Link>
+          </Link> */}
 
           <Link
             href="/signup"
@@ -99,7 +99,7 @@ const Nav = () => {
               <span className="ml-3 font-serif text-lg">Telegram</span>
             </Link>
 
-            <Link
+            {/* <Link
               href="https://x.com/bearminersol?s=21&t=84EU8uEg_R77EpVGfFlzSw"
               className="hover:scale-105 transition-transform border-2 border-black rounded-lg p-3 bg-white flex items-center justify-center"
               target="_blank"
@@ -112,7 +112,7 @@ const Nav = () => {
                 height={30}
               />
               <span className="ml-3 font-serif text-lg">Twitter</span>
-            </Link>
+            </Link> */}
 
             <Link
               href="/dashboard"

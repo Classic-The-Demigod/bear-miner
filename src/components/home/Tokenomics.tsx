@@ -13,7 +13,7 @@ const Tokenomics = () => {
     {
       icon: TrendingUp,
       category: "Staking Rewards",
-      percentage: "50%",
+      percentage: "30%",
       description: "Distributed daily via smart contract",
       color: "bg-green-500",
       bgColor: "bg-green-100",
@@ -25,6 +25,14 @@ const Tokenomics = () => {
       description: "Supports trading and price stability",
       color: "bg-blue-500",
       bgColor: "bg-blue-100",
+    },
+    {
+      icon: Package, // Using Package for Pre-Sale as it represents a bundle/offering
+      category: "Pre-Sale",
+      percentage: "20%",
+      description: "Early access for community members",
+      color: "bg-yellow-500",
+      bgColor: "bg-yellow-100",
     },
     {
       icon: Megaphone,
@@ -43,7 +51,7 @@ const Tokenomics = () => {
       bgColor: "bg-orange-100",
     },
     {
-      icon: Package,
+      icon: PieChart, // Using PieChart for Reserve as it's a slice for future
       category: "Reserve & Future Utilities",
       percentage: "5%",
       description: "For upcoming features and ecosystem tools",

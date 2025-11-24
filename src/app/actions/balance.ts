@@ -1,9 +1,7 @@
-"use server";
-
 import { prisma } from "@/lib/prisma";
 
 const DAILY_RATE = 0.005; // 5% daily
-const BMT_CONVERSION_RATE = 600; // 1 USD = 3589.6 BMT
+// const BMT_CONVERSION_RATE = 600; // 1 USD = 3589.6 BMT // Commented out for future use
 
 export async function getBalanceWithGrowth(userId: string) {
   try {
@@ -50,11 +48,12 @@ export async function getBalanceWithGrowth(userId: string) {
     // Calculate compound growth: balance × (1.05)^days
     const growthFactor = Math.pow(1 + DAILY_RATE, daysPassed);
     const currentBalance = user.balance * growthFactor;
-    const earnings = currentBalance - user.balance;
+    // const earnings = currentBalance - user.balance;
 
-    // Convert earnings to tokens
-    const tokenEarnings = earnings * BMT_CONVERSION_RATE;
-    const currentTokenBalance = (user.tokenBalance || 0) + tokenEarnings;
+    // Convert earnings to tokens - DISABLED
+    // const tokenEarnings = earnings * BMT_CONVERSION_RATE;
+    // const currentTokenBalance = (user.tokenBalance || 0) + tokenEarnings;
+    const currentTokenBalance = user.tokenBalance || 0; // Keep token balance static
 
     // Update database if more than 1 hour has passed (prevents too frequent updates)
     const shouldUpdate = daysPassed > 0.041667; // 1 hour = 0.041667 days
@@ -64,7 +63,7 @@ export async function getBalanceWithGrowth(userId: string) {
         where: { id: userId },
         data: {
           balance: currentBalance,
-          tokenBalance: currentTokenBalance,
+          // tokenBalance: currentTokenBalance, // Don't update token balance
           lastBalanceUpdate: now,
         },
       });

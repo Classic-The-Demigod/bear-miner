@@ -20,15 +20,15 @@ import Image from "next/image";
 export default function BMTPurchase() {
   const [copied, setCopied] = useState(false);
   const [solAmount, setSolAmount] = useState("1");
-  const [bmtAmount, setBmtAmount] = useState("3589.6");
+  const [bmtAmount, setBmtAmount] = useState("44217");
 
-  const BMT_PER_SOL = 3589.6;
-  const totalRaised = 5094162.39;
-  const percentRaised = 91.76;
-  const softcapTarget = 8000000;
-  const participants = 15394;
+  const BMT_PER_SOL = 44217;
+  const totalRaised = 25000000;
+  const percentRaised = 41.67;
+  const softcapTarget = 60000000;
+  const participants = 150;
   const presalePrice = 0.0029;
-  const launchPrice = 0.05;
+  const launchPrice = 0.004;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
@@ -66,17 +66,17 @@ export default function BMTPurchase() {
             <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
             <span>Buy</span>
           </div>
-          <div className="flex items-center gap-2 bg-black/30 rounded-full px-3 py-1.5">
+          {/* <div className="flex items-center gap-2 bg-black/30 rounded-full px-3 py-1.5">
             <span>Stake</span>
           </div>
           <div className="flex items-center gap-2 bg-black/30 rounded-full px-3 py-1.5">
             <span>History</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="text-center mb-4">
           <div className="text-4xl font-bold text-white mb-2">
-            ${totalRaised.toLocaleString()}
+            BMT{totalRaised.toLocaleString()}
           </div>
           <div className="text-yellow-500 font-medium mb-3">
             {percentRaised}% of softcap raised
@@ -91,7 +91,7 @@ export default function BMTPurchase() {
           </div>
           <div className="flex justify-between text-xs text-gray-500">
             <span></span>
-            <span>${softcapTarget.toLocaleString()}</span>
+            <span>BMT{softcapTarget.toLocaleString()}</span>
           </div>
 
           <div className="text-gray-400 text-sm mt-3">
@@ -287,7 +287,7 @@ export default function BMTPurchase() {
       </AlertDialog>
 
       {/* Promo Code Section */}
-      <div className="mt-6 bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-600/30 rounded-xl p-4">
+      {/* <div className="mt-6 bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-600/30 rounded-xl p-4">
         <div className="text-center">
           <p className="text-green-400 font-medium mb-2">
             Halloween Special: Use code{" "}
@@ -297,7 +297,7 @@ export default function BMTPurchase() {
             to get 40% more BMT for a limited time.
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

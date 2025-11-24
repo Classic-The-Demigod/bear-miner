@@ -1,20 +1,22 @@
 export default function TokenDetails() {
   const tokenAllocation = [
-    { label: "Pre-Sale", percentage: 50, color: "#F59E0B", startAngle: 0 },
+    { label: "Pre-Sale", percentage: 20, color: "#F59E0B", startAngle: 0 },
+    {
+      label: "Staking Rewards",
+      percentage: 30,
+      color: "#10B981",
+      startAngle: 72,
+    },
+    { label: "Liquidity", percentage: 20, color: "#3B82F6", startAngle: 180 },
+    { label: "Marketing", percentage: 10, color: "#8B5CF6", startAngle: 252 },
+    { label: "Partnership", percentage: 5, color: "#EC4899", startAngle: 288 },
+    { label: "Team", percentage: 5, color: "#F97316", startAngle: 306 },
+    { label: "Development", percentage: 5, color: "#EF4444", startAngle: 324 },
     {
       label: "Reserved for CEX Listings",
       percentage: 5,
-      color: "#D97706",
-      startAngle: 180,
-    },
-    { label: "Liquidity", percentage: 20, color: "#B45309", startAngle: 198 },
-    { label: "Team", percentage: 5, color: "#92400E", startAngle: 270 },
-    { label: "Development", percentage: 5, color: "#78350F", startAngle: 288 },
-    {
-      label: "Pre-Sale Bonuses",
-      percentage: 15,
-      color: "#451A03",
-      startAngle: 306,
+      color: "#6366F1",
+      startAngle: 342,
     },
   ];
 
@@ -88,29 +90,29 @@ export default function TokenDetails() {
             <div className="space-y-8 text-right lg:order-1">
               <div className="flex items-center justify-end gap-3">
                 <div>
-                  <div className="text-3xl font-bold text-yellow-500">15%</div>
-                  <div className="text-gray-200 text-sm">Pre-Sale Bonuses</div>
+                  <div className="text-3xl font-bold text-[#10B981]">30%</div>
+                  <div className="text-gray-200 text-sm">Staking Rewards</div>
                 </div>
                 <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
               </div>
               <div className="flex items-center justify-end gap-3">
                 <div>
-                  <div className="text-3xl font-bold text-yellow-500">5%</div>
+                  <div className="text-3xl font-bold text-[#8B5CF6]">10%</div>
+                  <div className="text-gray-200 text-sm">Marketing</div>
+                </div>
+                <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
+              </div>
+              <div className="flex items-center justify-end gap-3">
+                <div>
+                  <div className="text-3xl font-bold text-[#EC4899]">5%</div>
+                  <div className="text-gray-200 text-sm">Partnership</div>
+                </div>
+                <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
+              </div>
+              <div className="flex items-center justify-end gap-3">
+                <div>
+                  <div className="text-3xl font-bold text-[#EF4444]">5%</div>
                   <div className="text-gray-200 text-sm">Development</div>
-                </div>
-                <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
-              </div>
-              <div className="flex items-center justify-end gap-3">
-                <div>
-                  <div className="text-3xl font-bold text-yellow-500">5%</div>
-                  <div className="text-gray-200 text-sm">Team</div>
-                </div>
-                <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
-              </div>
-              <div className="flex items-center justify-end gap-3">
-                <div>
-                  <div className="text-3xl font-bold text-yellow-500">20%</div>
-                  <div className="text-gray-200 text-sm">Liquidity</div>
                 </div>
                 <div className="w-24 h-px bg-gradient-to-l from-gray-200 to-transparent"></div>
               </div>
@@ -133,14 +135,28 @@ export default function TokenDetails() {
               <div className="flex items-center gap-3">
                 <div className="w-24 h-px bg-gradient-to-r from-gray-200 to-transparent"></div>
                 <div>
-                  <div className="text-3xl font-bold text-yellow-500">50%</div>
+                  <div className="text-3xl font-bold text-[#F59E0B]">20%</div>
                   <div className="text-gray-200 text-sm">Pre-Sale</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-24 h-px bg-gradient-to-r from-gray-200 to-transparent"></div>
                 <div>
-                  <div className="text-3xl font-bold text-yellow-500">5%</div>
+                  <div className="text-3xl font-bold text-[#3B82F6]">20%</div>
+                  <div className="text-gray-200 text-sm">Liquidity</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-24 h-px bg-gradient-to-r from-gray-200 to-transparent"></div>
+                <div>
+                  <div className="text-3xl font-bold text-[#F97316]">5%</div>
+                  <div className="text-gray-200 text-sm">Team</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-24 h-px bg-gradient-to-r from-gray-200 to-transparent"></div>
+                <div>
+                  <div className="text-3xl font-bold text-[#6366F1]">5%</div>
                   <div className="text-gray-200 text-sm">
                     Reserved for CEX Listings
                   </div>
@@ -185,7 +201,7 @@ export default function TokenDetails() {
           {/* Total Supply */}
           <div className="bg-primary backdrop-blur-sm  rounded-2xl p-6">
             <div className="text-gray-100 text-sm mb-2">Total Supply</div>
-            <div className="text-2xl font-bold">3B</div>
+            <div className="text-2xl font-bold">300,000,000</div>
           </div>
         </div>
       </div>

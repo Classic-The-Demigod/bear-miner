@@ -107,7 +107,7 @@ const FaqAccordion = () => {
 
 
         </div>
-          <h1 className="text-xl text-accent">Verified Ratings</h1>
+          {/* <h1 className="text-xl text-accent">Verified Ratings</h1>
 
           <Image
               src="/assets/Avatar group.png"
@@ -127,7 +127,7 @@ const FaqAccordion = () => {
               height={80}
           />
 
-        </div>
+        </div> */}
 
 
       </div>
