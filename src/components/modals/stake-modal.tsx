@@ -39,7 +39,7 @@ const StakeModal = () => {
             (SOL) chain
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Send SOL to the address below to start earning 5% daily returns.
+            Send SOL to the address below to start earning 2% daily returns.
             Your mining will begin automatically once the transaction is
             confirmed.
           </AlertDialogDescription>

@@ -136,7 +136,7 @@ const Tokenomics = () => {
 
             <div className="bg-white rounded-2xl p-6 border-2 border-black">
               <div className="text-4xl font-serif font-bold text-primary mb-2">
-                7%
+                5%
               </div>
               <div className="text-sm text-[#0E0000]/70">Referral Bonus</div>
               <p className="text-xs text-[#0E0000]/60 mt-2">

@@ -5,9 +5,9 @@ const About = () => {
   const features = [
     {
       icon: TrendingUp,
-      title: "Daily 5% Return",
+      title: "Daily 2% Return",
       description:
-        "Earn a consistent 5% daily return on your staked SOL. Rewards are automatically distributed by smart contracts — compound or withdraw anytime.",
+        "Earn a consistent 2% daily return on your staked SOL. Rewards are automatically distributed by smart contracts — compound or withdraw anytime.",
       color: "bg-green-100",
     },
     {
@@ -28,7 +28,7 @@ const About = () => {
       icon: Users,
       title: "Referral Rewards",
       description:
-        "Earn more by growing the community! Get 7% from referral deposits and 7% from compounded rewards of your referrals.",
+        "Earn more by growing the community! Get 5% from referral deposits and 5% from compounded rewards of your referrals.",
       color: "bg-orange-100",
     },
   ];

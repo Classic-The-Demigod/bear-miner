@@ -39,8 +39,8 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
     if (!user?.balance || user.balance <= 0) return;
 
     // Real-time growth animation
-    // 5% per day = 0.05 / 86400 per second
-    const growthPerSecond = 0.05 / 86400;
+    // 2% per day = 0.05 / 86400 per second
+    const growthPerSecond = 0.02 / 86400;
 
     const interval = setInterval(() => {
       setCurrentBalance((prev) => {
@@ -100,7 +100,7 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
             Daily returns active <IconTrendingUp className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Earned ${dailyEarnings.toFixed(7)} today • 5% daily compound
+            Earned ${dailyEarnings.toFixed(7)} today •2% daily compound
           </div>
           <div className="text-xs text-green-500 font-medium">
             ⚡ Live growth: Updates every second

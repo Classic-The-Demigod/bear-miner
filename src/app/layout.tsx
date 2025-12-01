@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Bear Miner",
-  description: "Bear Miner is a decentralized staking platform built on the Solana blockchain offering a sustainable 5% daily return on your staked SOL.Transparent. Secure. Rewarding.",
+  description: "Bear Miner is a decentralized staking platform built on the Solana blockchain offering a sustainable 2% daily return on your staked SOL.Transparent. Secure. Rewarding.",
 };
 
 export default function RootLayout({

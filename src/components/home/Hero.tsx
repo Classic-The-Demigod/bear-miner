@@ -12,7 +12,7 @@ const Hero = () => {
 
         <p className="md:text-2xl text-lg max-w-3xl text-black font-medium">
           Bear Miner is a decentralized staking platform built on the Solana
-          blockchain, offering a sustainable 5% daily return on your staked SOL.
+          blockchain, offering a sustainable 2% daily return on your staked SOL.
           Transparent. Secure. Rewarding.
         </p>
 
