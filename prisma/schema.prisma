@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -17,84 +11,42 @@ datasource db {
 enum UserRole {
   USER
   ADMIN
-} 
+}
 
 model User {
-  id            String    @id
+  id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-
-
-
-  name          String
-  email         String  @unique
-  emailVerified Boolean   @default(false)
-  balance       Float?     @default(0.0)
-  tokenBalance  Float?     @default(0)
-  image         String?
-
-
-  role          UserRole   @default(USER)
-
-  lastBalanceUpdate   DateTime? @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  walletAddress String    @unique  // Solana public key (base58 format)
+  nonce         String?              // For signature verification
+  
+  name          String?              // Optional: user can set later
+  email         String?   @unique    // Optional: for notifications
+  image         String?              // Optional: profile picture
+  
+  balance       Float     @default(0.0)
+  tokenBalance  Float     @default(0)
+  
+  role          UserRole  @default(USER)
+  
+  lastBalanceUpdate DateTime? @default(now())
+  
   sessions      Session[]
-  accounts      Account[]
-
-
+  
   @@map("users")
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-
+  
   expiresAt DateTime
-  token     String  @unique
-  ipAddress String?
-  userAgent String?
+  token     String   @unique
+  
   userId    String
-
-
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-
+  
   @@map("sessions")
 }
-
-model Account {
-  id                    String    @id
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-
-  accountId             String
-  providerId            String
-  userId                String
-
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("accounts")
-}
-
-model Verification {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  identifier String
-  value      String
-  expiresAt  DateTime
-
-  @@map("verifications")
-}
-
