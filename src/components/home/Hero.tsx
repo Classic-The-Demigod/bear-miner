@@ -17,12 +17,12 @@ const Hero = () => {
         </p>
 
         <div className="md:flex-row flex-col flex  gap-4 mt-6">
-          <Link
+          {/* <Link
             href="/signup"
             className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000]"
           >
             Start Mining
-          </Link>
+          </Link> */}
           <Link
             href="https://drive.google.com/file/d/1LN2k1Nhu2DrA1r8FlyaWRImNESoeQabd/view?usp=sharing"
             target="_blank"

@@ -4,6 +4,8 @@ import Link from "next/link";
 // import { Button, buttonVariants } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,14 +52,15 @@ const Nav = () => {
                 height={30}
               />
             </span>
-          </Link> */}
+          </Link> 
 
           <Link
             href="/signup"
             className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000]"
           >
             Start Mining
-          </Link>
+          </Link> */}
+          <WalletMultiButton />
         </div>
 
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -114,13 +117,15 @@ const Nav = () => {
               <span className="ml-3 font-serif text-lg">Twitter</span>
             </Link> */}
 
-            <Link
+            {/* <Link
               href="/dashboard"
               className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-4 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000] text-center text-lg mt-4"
               onClick={() => setIsOpen(false)}
             >
               Start Mining
-            </Link>
+            </Link> */}
+
+            <WalletMultiButton />
           </div>
         </div>
       </div>

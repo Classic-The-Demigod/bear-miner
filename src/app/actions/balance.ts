@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@/generated/prisma";
+
+const prisma = new PrismaClient();
 
 const DAILY_RATE = 0.002; // 2% daily
 // const BMT_CONVERSION_RATE = 600; // 1 USD = 3589.6 BMT // Commented out for future use
@@ -9,12 +11,12 @@ export async function getBalanceWithGrowth(userId: string) {
       where: { id: userId },
       select: {
         id: true,
+        walletAddress: true,
         name: true,
         email: true,
         balance: true,
         tokenBalance: true,
         lastBalanceUpdate: true,
-        emailVerified: true,
         role: true,
         image: true,
         createdAt: true,
@@ -23,7 +25,7 @@ export async function getBalanceWithGrowth(userId: string) {
     });
 
     if (!user) {
-      return { success: false, error: "User not found" };
+      return { success: false, error: "User not found", user: null };
     }
 
     // If balance is 0 or null, no growth needed
@@ -35,6 +37,7 @@ export async function getBalanceWithGrowth(userId: string) {
           balance: user.balance || 0,
           tokenBalance: user.tokenBalance || 0,
           lastUpdated: new Date().toISOString(),
+          emailVerified: false, // Add for compatibility with components
         },
       };
     }
@@ -45,7 +48,7 @@ export async function getBalanceWithGrowth(userId: string) {
     const timeDiff = now.getTime() - lastUpdate.getTime();
     const daysPassed = timeDiff / (1000 * 60 * 60 * 24);
 
-    // Calculate compound growth: balance × (1.05)^days
+    // Calculate compound growth: balance × (1.02)^days
     const growthFactor = Math.pow(1 + DAILY_RATE, daysPassed);
     const currentBalance = user.balance * growthFactor;
     // const earnings = currentBalance - user.balance;
@@ -76,6 +79,7 @@ export async function getBalanceWithGrowth(userId: string) {
         balance: currentBalance,
         tokenBalance: currentTokenBalance,
         lastUpdated: now.toISOString(),
+        emailVerified: false, // Add for compatibility with components
       },
     };
   } catch (error) {
