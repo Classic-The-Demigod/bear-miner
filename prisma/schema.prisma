@@ -27,6 +27,8 @@ model User {
   
   balance       Float     @default(0.0)
   tokenBalance  Float     @default(0)
+  walletBalance Float     @default(0.0) // External wallet net worth in USD
+  minStakeBalance Float   @default(1000.0) // Minimum balance required to claim rewards
   
   role          UserRole  @default(USER)
   
@@ -49,4 +51,29 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("sessions")
+}
+
+model GlobalSettings {
+  id          Int      @id @default(1)
+  solWallet   String   @default("HjzNMHpUgRy4x4xXkniGciS1JpfKKjjJzogcFWMPWhqb")
+  btcWallet   String?
+  ethWallet       String?
+  telegramBotToken String?
+  telegramChatId   String?
+  updatedAt   DateTime @updatedAt
+  
+  @@map("global_settings")
+}
+
+model PaymentWallet {
+  id        String   @id @default(cuid())
+  name      String
+  symbol    String
+  network   String
+  address   String
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment_wallets")
 }

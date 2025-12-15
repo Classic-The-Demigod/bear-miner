@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, RefreshCw, Search } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw, Search, ArrowRight, Activity } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Crypto {
   id: string;
@@ -25,11 +30,11 @@ export default function CryptoPriceTracker() {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h"
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h"
       );
       const data: Crypto[] = await response.json();
       setCryptos(data);
-      setLastUpdate(new Date().toLocaleTimeString());
+      setLastUpdate(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     } catch (error) {
       console.error("Error fetching crypto data:", error);
     } finally {
@@ -40,7 +45,7 @@ export default function CryptoPriceTracker() {
   useEffect(() => {
     setMounted(true);
     fetchCryptoData();
-    const interval = setInterval(fetchCryptoData, 60000); // Update every minute
+    const interval = setInterval(fetchCryptoData, 60000); // 1 min update
     return () => clearInterval(interval);
   }, []);
 
@@ -50,186 +55,147 @@ export default function CryptoPriceTracker() {
       crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const formatPrice = (price: number): string => {
-    if (price < 0.01) return `$${price.toFixed(6)}`;
-    if (price < 1) return `$${price.toFixed(4)}`;
-    return `$${price.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: price < 1 ? 4 : 2,
+      maximumFractionDigits: price < 1 ? 6 : 2
+    }).format(price);
   };
 
-  const formatMarketCap = (cap: number): string => {
-    if (cap >= 1e12) return `$${(cap / 1e12).toFixed(2)}T`;
-    if (cap >= 1e9) return `$${(cap / 1e9).toFixed(2)}B`;
-    if (cap >= 1e6) return `$${(cap / 1e6).toFixed(2)}M`;
-    return `$${cap.toLocaleString()}`;
+  const formatLargeNumber = (num: number) => {
+    return new Intl.NumberFormat('en-US', {
+      notation: "compact",
+      maximumFractionDigits: 1
+    }).format(num);
   };
 
-  // Don't render time-sensitive content until mounted on client
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/90 via-primary/70 to-primary/80 rounded-t-4xl">
-        <div className="flex items-center justify-center py-20">
-          <RefreshCw className="w-8 h-8 text-accent animate-spin" />
-        </div>
-      </div>
-    );
-  }
+  if (!mounted) return <Skeleton className="w-full h-[400px] rounded-xl" />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/90 via-primary/70 to-primary/80 rounded-t-4xl">
-      {/* Header */}
-      <div className="bg-primary/50 backdrop-blur-sm sticky top-0 z-10 rounded-t-4xl">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-extrabold text-accent font-sans">
-              Cryptocurrency Prices
-            </h1>
-            <button
-              onClick={fetchCryptoData}
-              disabled={loading}
-              className="bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-[0_4px_0_rgba(0,0,0,1)] border-2 border-[#0E0000] flex items-center gap-2"
-            >
-              <RefreshCw
-                className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </button>
-          </div>
+    <Card className="border-none shadow-2xl bg-gradient-to-br from-[#1a1510]/95 to-[#0E0000]/95 backdrop-blur-xl overflow-hidden ring-1 ring-[#F4D2AF]/20">
+      <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 pt-6 px-6 border-b border-[#F4D2AF]/10 bg-[#0E0000]/40">
+        <div className="space-y-1">
+          <CardTitle className="text-2xl font-bold flex items-center gap-3 font-serif text-[#F4D2AF] tracking-wide">
+            <Activity className="w-6 h-6 text-primary animate-pulse" />
+            Live Market Data
+          </CardTitle>
+          <CardDescription className="text-xs font-mono opacity-80 text-[#F4D2AF]/60 uppercase tracking-widest pl-9">
+            Global Avg. • Updated: {lastUpdate}
+          </CardDescription>
+        </div>
 
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white w-5 h-5 rounded-top" />
-            <input
-              type="text"
-              placeholder="Search cryptocurrency..."
+        <div className="flex items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#F4D2AF]/50" />
+            <Input
+              placeholder="Search coin..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-transparent border-2 border-accent rounded-lg text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-accent"
+              className="pl-9 h-10 bg-[#0E0000]/60 border-[#F4D2AF]/20 focus:border-[#F4D2AF]/50 text-[#F4D2AF] placeholder:text-[#F4D2AF]/30 rounded-lg transition-all"
             />
           </div>
-
-          {lastUpdate && (
-            <p className="text-white text-sm mt-2">
-              Last updated: {lastUpdate}
-            </p>
-          )}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fetchCryptoData}
+            disabled={loading}
+            className="h-10 w-10 shrink-0 bg-[#0E0000]/60 border-[#F4D2AF]/20 text-[#F4D2AF] hover:bg-[#F4D2AF] hover:text-[#0E0000] transition-all duration-300 rounded-lg"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          </Button>
         </div>
-      </div>
+      </CardHeader>
 
-      {/* Crypto List */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {loading && cryptos.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-accent animate-spin" />
-          </div>
-        ) : (
-          <div className="bg-primary/30 backdrop-blur-sm rounded-xl border border-primary/70 overflow-hidden">
-            {/* Table Header - Hidden on mobile */}
-            <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-primary/30 border-b border-primary/70 text-accent text-sm font-semibold">
+      <CardContent className="p-0">
+        <div className="h-[500px] overflow-y-auto custom-scrollbar">
+          <div className="min-w-[800px] md:min-w-0">
+            {/* Table Header */}
+            <div className="grid grid-cols-12 px-6 py-4 text-xs font-bold text-[#F4D2AF]/70 uppercase tracking-widest bg-[#0E0000]/60 sticky top-0 backdrop-blur-md z-10 border-b border-[#F4D2AF]/5">
               <div className="col-span-1">#</div>
-              <div className="col-span-3">Name</div>
-              <div className="col-span-2 text-right">Price</div>
-              <div className="col-span-2 text-right">24h Change</div>
-              <div className="col-span-2 text-right">Market Cap</div>
-              <div className="col-span-2 text-right">Volume (24h)</div>
+              <div className="col-span-4 md:col-span-3">Asset</div>
+              <div className="col-span-3 text-right">Price</div>
+              <div className="col-span-2 text-right">24h</div>
+              <div className="col-span-2 text-right hidden md:block">Mkt Cap</div>
             </div>
 
-            {/* Crypto Rows */}
-            {filteredCryptos.map((crypto) => (
-              <div
-                key={crypto.id}
-                className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-4 md:px-6 py-4 border-b border-primary/50 hover:bg-primary/20 transition-colors"
-              >
-                {/* Rank */}
-                <div className="hidden md:flex col-span-1 items-center text-accent font-medium">
-                  {crypto.market_cap_rank}
+            {/* List */}
+            <div className="divide-y divide-[#F4D2AF]/5">
+              {loading && cryptos.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-60 space-y-4">
+                  <RefreshCw className="h-10 w-10 text-[#F4D2AF]/40 animate-spin" />
+                  <p className="text-sm font-serif text-[#F4D2AF]/60 tracking-wider">Loading premium markets...</p>
                 </div>
-
-                {/* Name & Logo */}
-                <div className="col-span-1 md:col-span-3 flex items-center gap-3">
-                  <span className="md:hidden text-slate-300 text-sm font-medium mr-2">
-                    #{crypto.market_cap_rank}
-                  </span>
-                  <img
-                    src={crypto.image}
-                    alt={crypto.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-white font-semibold">
-                      {crypto.name}
-                    </span>
-                    <span className="text-slate-300 text-sm uppercase">
-                      {crypto.symbol}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Price */}
-                <div className="col-span-1 md:col-span-2 flex md:justify-end items-center">
-                  <span className="md:hidden text-slate-300 text-sm mr-2">
-                    Price:
-                  </span>
-                  <span className="text-white font-semibold">
-                    {formatPrice(crypto.current_price)}
-                  </span>
-                </div>
-
-                {/* 24h Change */}
-                <div className="col-span-1 md:col-span-2 flex md:justify-end items-center">
-                  <span className="md:hidden text-slate-300 text-sm mr-2">
-                    24h:
-                  </span>
+              ) : filteredCryptos.length > 0 ? (
+                filteredCryptos.map((crypto) => (
                   <div
-                    className={`flex items-center gap-1 px-2 py-1 rounded ${
-                      crypto.price_change_percentage_24h >= 0
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-red-500/20 text-red-400"
-                    }`}
+                    key={crypto.id}
+                    className="grid grid-cols-12 px-6 py-4 items-center hover:bg-[#F4D2AF]/5 transition-colors group cursor-default"
                   >
-                    {crypto.price_change_percentage_24h >= 0 ? (
-                      <TrendingUp className="w-4 h-4" />
-                    ) : (
-                      <TrendingDown className="w-4 h-4" />
-                    )}
-                    <span className="font-semibold">
-                      {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
-                    </span>
+                    <div className="col-span-1 text-xs font-mono text-[#F4D2AF]/50 group-hover:text-[#F4D2AF] transition-colors">
+                      {crypto.market_cap_rank}
+                    </div>
+
+                    <div className="col-span-4 md:col-span-3 flex items-center gap-3">
+                      <div className="relative">
+                        <img
+                          src={crypto.image}
+                          alt={crypto.name}
+                          className="w-9 h-9 rounded-full shadow-lg ring-2 ring-[#0E0000] group-hover:scale-110 group-hover:ring-[#F4D2AF]/40 transition-all duration-300"
+                        />
+                        {/* Rank Badge for Top 3 */}
+                        {crypto.market_cap_rank <= 3 && (
+                          <div className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#F4D2AF] text-[9px] font-bold text-[#0E0000] shadow-sm">
+                            ♛
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-serif font-bold text-[#F4D2AF] text-sm group-hover:text-white transition-colors">{crypto.name}</span>
+                        <span className="text-[10px] text-[#F4D2AF]/60 font-mono uppercase bg-[#F4D2AF]/5 px-2 py-0.5 rounded-sm w-fit border border-[#F4D2AF]/10">
+                          {crypto.symbol}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="col-span-3 text-right font-mono font-medium text-sm text-[#F4D2AF]/90">
+                      {formatPrice(crypto.current_price)}
+                    </div>
+
+                    <div className="col-span-2 flex justify-end">
+                      <Badge
+                        variant="secondary"
+                        className={`font-mono text-xs px-2.5 py-0.5 border backdrop-blur-md ${crypto.price_change_percentage_24h >= 0
+                          ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                          : 'bg-red-500/10 text-red-400 border-red-500/20'
+                          }`}
+                      >
+                        {crypto.price_change_percentage_24h >= 0 ? (
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                        ) : (
+                          <TrendingDown className="w-3 h-3 mr-1" />
+                        )}
+                        {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
+                      </Badge>
+                    </div>
+
+                    <div className="col-span-2 text-right hidden md:block">
+                      <span className="text-xs text-[#F4D2AF]/60 font-mono tracking-tight">
+                        ${formatLargeNumber(crypto.market_cap)}
+                      </span>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="py-20 text-center">
+                  <p className="text-[#F4D2AF]/40 font-serif italic">No assets found.</p>
                 </div>
-
-                {/* Market Cap */}
-                <div className="col-span-1 md:col-span-2 flex md:justify-end items-center">
-                  <span className="md:hidden text-slate-300 text-sm mr-2">
-                    Market Cap:
-                  </span>
-                  <span className="text-white">
-                    {formatMarketCap(crypto.market_cap)}
-                  </span>
-                </div>
-
-                {/* Volume */}
-                <div className="col-span-1 md:col-span-2 flex md:justify-end items-center">
-                  <span className="md:hidden text-slate-300 text-sm mr-2">
-                    Volume:
-                  </span>
-                  <span className="text-white">
-                    {formatMarketCap(crypto.total_volume)}
-                  </span>
-                </div>
-              </div>
-            ))}
-
-            {filteredCryptos.length === 0 && (
-              <div className="text-center py-12 text-slate-300">
-                No cryptocurrencies found matching "{searchTerm}"
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

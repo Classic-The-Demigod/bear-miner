@@ -45,9 +45,14 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <Link href={item.url}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  className="cursor-pointer transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.02] active:scale-[0.98] group h-12"
+                >
+                  {item.icon && (
+                    <item.icon className="h-6 w-6 text-primary stroke-[2.5] transition-transform group-hover:rotate-6" />
+                  )}
+                  <span className="font-serif text-lg font-bold text-primary tracking-wide">{item.title}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
