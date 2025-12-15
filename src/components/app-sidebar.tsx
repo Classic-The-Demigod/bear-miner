@@ -4,22 +4,20 @@ import * as React from "react";
 import Image from "next/image";
 import {
   IconCamera,
-  // IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  // IconFolder,
   IconHelp,
-  // IconInnerShadowTop,
-  // IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconHome,
-  // IconUsers,
+  IconShieldLock,
 } from "@tabler/icons-react";
+
+import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 
 // import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -153,35 +151,49 @@ const data = {
 };
 
 export function AppSidebar({ user, ...props }: AppSidebarCombinedProps) {
+  const { role } = useWalletPortfolio();
+
+  const navMain = [...data.navMain];
+  if (role === 'ADMIN') {
+    navMain.push({
+      title: "Admin Panel",
+      url: "/admin/dashboard",
+      icon: IconShieldLock,
+    });
+  }
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="icon" className="border-r border-border/40 bg-background/95 backdrop-blur-xl" {...props}>
+      <SidebarHeader className="h-16 flex items-center justify-center border-b border-border/20 px-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-transparent"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 pl-2">
                 <Image
                   src="/assets/logo.svg"
                   alt="Bear Miner Logo"
-                  width={30}
-                  height={30}
+                  width={34}
+                  height={34}
+                  className="transition-transform duration-300 hover:rotate-12"
                 />
-
-                <h1 className="text-2xl font-serif">Bear Miner</h1>
+                <span className="font-serif text-2xl font-bold tracking-tight text-foreground/90">Bear Miner</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        {/* <NavDocuments items={data.documents} /> */}
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+
+      <SidebarContent className="px-2 py-4">
+        {/* Main Nav */}
+        <NavMain items={navMain} />
+
+        {/* Secondary Groups could go here */}
       </SidebarContent>
-      <SidebarFooter>
+
+      <SidebarFooter className="border-t border-border/20 bg-muted/5 p-4">
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
