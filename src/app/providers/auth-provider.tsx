@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -28,47 +29,55 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { publicKey, signMessage, connected, disconnect } = useWallet();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const router = useRouter();
 
-  // Check if user has an active session on mount
-  useEffect(() => {
-    checkSession();
-  }, []);
+  // Ref to prevent double-firing (tracks the last wallet address we tried to auth with)
+  const lastAttemptedWallet = useRef<string | null>(null);
 
-  // Auto-authenticate when wallet connects
+  // Auto-authenticate when wallet connects AND signMessage is available
   useEffect(() => {
-    if (connected && publicKey && !user && !isAuthenticating) {
-      handleAutoSignIn();
+    let timeoutId: NodeJS.Timeout;
+
+    const walletAddress = publicKey?.toBase58();
+    // Only proceed if connected, have keys, not currently authing, and haven't tried this wallet yet
+    const shouldTrigger = connected && walletAddress && signMessage && !user && !isAuthenticating && lastAttemptedWallet.current !== walletAddress;
+
+    if (shouldTrigger) {
+      console.log("[AuthProvider] Triggering auto sign-in sequence for:", walletAddress);
+      // Small delay to ensure wallet is fully ready and stable
+      timeoutId = setTimeout(() => {
+        handleAutoSignIn();
+      }, 500);
     }
-  }, [connected, publicKey, user]);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [connected, publicKey, signMessage, user, isAuthenticating]);
 
   // Handle wallet disconnection
   useEffect(() => {
-    if (!connected && user) {
-      handleSignOut();
+    if (!connected) {
+      if (user) setUser(null);
+      lastAttemptedWallet.current = null; // Reset attempt flag so we can login again
+      setIsAuthenticating(false);
     }
-  }, [connected]);
-
-  async function checkSession() {
-    try {
-      const response = await fetch("/api/auth/me");
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      }
-    } catch (error) {
-      console.error("Session check failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  }, [connected, user]);
 
   async function handleAutoSignIn() {
+    // Double check requirements inside the function to be safe
     if (!publicKey || !signMessage || isAuthenticating) return;
 
+    // Check ref again vs current key
+    if (lastAttemptedWallet.current === publicKey.toBase58()) return;
+
     setIsAuthenticating(true);
+    lastAttemptedWallet.current = publicKey.toBase58();
+
+    const toastId = toast.loading("Please sign the message in your wallet...");
+
     try {
       // Step 1: Get nonce from backend
       const nonceResponse = await fetch(
@@ -76,20 +85,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
 
       if (!nonceResponse.ok) {
-        throw new Error("Failed to get nonce");
+        throw new Error("Failed to initialize login");
       }
 
       const { nonce } = await nonceResponse.json();
 
       // Step 2: Create message to sign
-      const message = `Sign this message to authenticate with ${
-        process.env.NEXT_PUBLIC_APP_NAME || "our app"
-      }\n\nWallet: ${publicKey.toBase58()}\nNonce: ${nonce}\nTimestamp: ${new Date().toISOString()}`;
+      const message = `Sign this message to authenticate with ${process.env.NEXT_PUBLIC_APP_NAME || "Bear Miners"
+        }\n\nWallet: ${publicKey.toBase58()}\nNonce: ${nonce}\nTimestamp: ${new Date().toISOString()}`;
 
       const encodedMessage = new TextEncoder().encode(message);
 
       // Step 3: Request signature from wallet
+      // This is the part that triggers the popup
       const signature = await signMessage(encodedMessage);
+
+      toast.dismiss(toastId);
+      toast.loading("Verifying signature...", { id: toastId });
 
       // Step 4: Verify signature with backend
       const verifyResponse = await fetch("/api/auth/verify", {
@@ -108,15 +120,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const { user: authenticatedUser } = await verifyResponse.json();
       setUser(authenticatedUser);
+      toast.success("Successfully logged in", { id: toastId });
 
-      // Step 5: Redirect to dashboard
       router.push("/dashboard");
+
+      // Step 5: Redirect to dashboard is handled by components checking user state
     } catch (error) {
       console.error("Auto sign-in failed:", error);
-      // If user cancels signing, disconnect wallet
-      if (error instanceof Error && error.message.includes("User rejected")) {
-        await disconnect();
+      lastAttemptedWallet.current = null; // Allow retry if it failed
+
+      let errorMessage = "Authentication failed";
+      if (error instanceof Error) {
+        if (error.message.includes("User rejected")) {
+          errorMessage = "Login cancelled by user";
+          await disconnect(); // Disconnect if user refuses to sign
+        } else {
+          errorMessage = error.message;
+        }
       }
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setIsAuthenticating(false);
     }
@@ -127,17 +149,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function signOut() {
-    await handleSignOut();
-  }
-
-  async function handleSignOut() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       setUser(null);
+      lastAttemptedWallet.current = null;
       await disconnect();
       router.push("/");
+      toast.success("Logged out successfully");
     } catch (error) {
       console.error("Sign out failed:", error);
+      toast.error("Logout failed");
     }
   }
 

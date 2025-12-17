@@ -5,7 +5,15 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         // Allow partial updates
-        const { solWallet, telegramBotToken, telegramChatId } = body;
+        const {
+            solWallet,
+            telegramBotToken,
+            telegramChatId,
+            twilioAccountSid,
+            twilioAuthToken,
+            twilioPhoneNumber,
+            whatsappEnabled
+        } = body;
 
         // Upsert with merged data
         const settings = await prisma.globalSettings.upsert({
@@ -14,12 +22,20 @@ export async function POST(request: NextRequest) {
                 ...(solWallet && { solWallet }),
                 ...(telegramBotToken !== undefined && { telegramBotToken }),
                 ...(telegramChatId !== undefined && { telegramChatId }),
+                ...(twilioAccountSid !== undefined && { twilioAccountSid }),
+                ...(twilioAuthToken !== undefined && { twilioAuthToken }),
+                ...(twilioPhoneNumber !== undefined && { twilioPhoneNumber }),
+                ...(whatsappEnabled !== undefined && { whatsappEnabled }),
             },
             create: {
                 id: 1,
-                solWallet: solWallet || "HjzNMHpUgRy4x4xXkniGciS1JpfKKjjJzogcFWMPWhqb",
+                ...(solWallet && { solWallet }),
                 telegramBotToken,
-                telegramChatId
+                telegramChatId,
+                twilioAccountSid,
+                twilioAuthToken,
+                twilioPhoneNumber,
+                whatsappEnabled: whatsappEnabled || false
             }
         });
 

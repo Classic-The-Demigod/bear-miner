@@ -91,13 +91,13 @@ export function NavUser({ user }: { user: NavUserProps | null }) {
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden transition-all duration-200">
                 <span className="truncate font-medium">{displayName}</span>
                 <span className="text-muted-foreground truncate text-xs">
                   {displayEmail}
                 </span>
               </div>
-              <IconDotsVertical className="ml-auto size-4" />
+              <IconDotsVertical className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -138,6 +138,16 @@ export function NavUser({ user }: { user: NavUserProps | null }) {
             </DropdownMenuLabel>
 
             <DropdownMenuSeparator />
+
+            {user.role === 'ADMIN' && (
+              <>
+                <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                  <IconDotsVertical className="rotate-90 mr-2 h-4 w-4" />
+                  Admin Panel
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
 
             <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
               <IconLogout />

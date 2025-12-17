@@ -165,10 +165,10 @@ export function ChartAreaInteractive() {
   })
 
   return (
-    <Card className="@container/card">
+    <Card className="@container/card bg-[#d3c4bc] border-none shadow-xl">
       <CardHeader>
-        <CardTitle>Total Mined $Bear Token in Circulation</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-[#2D1B0D]">Total Mined $Bear Token in Circulation</CardTitle>
+        <CardDescription className="text-[#2D1B0D]/70">
           <span className="hidden @[540px]/card:block">
             Total for the last 3 months
           </span>
@@ -182,13 +182,13 @@ export function ChartAreaInteractive() {
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d" className="bg-white/40 data-[state=on]:bg-[#2D1B0D] data-[state=on]:text-[#F4D2AF] hover:bg-white/60 text-[#2D1B0D]">Last 3 months</ToggleGroupItem>
+            <ToggleGroupItem value="30d" className="bg-white/40 data-[state=on]:bg-[#2D1B0D] data-[state=on]:text-[#F4D2AF] hover:bg-white/60 text-[#2D1B0D]">Last 30 days</ToggleGroupItem>
+            <ToggleGroupItem value="7d" className="bg-white/40 data-[state=on]:bg-[#2D1B0D] data-[state=on]:text-[#F4D2AF] hover:bg-white/60 text-[#2D1B0D]">Last 7 days</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
+              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden bg-white/40 border-[#2D1B0D]/20 text-[#2D1B0D]"
               size="sm"
               aria-label="Select a value"
             >
@@ -218,35 +218,36 @@ export function ChartAreaInteractive() {
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={1.0}
+                  stopColor="#2D1B0D"
+                  stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="#2D1B0D"
                   stopOpacity={0.1}
                 />
               </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="#7A4A33"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="#7A4A33"
                   stopOpacity={0.1}
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} stroke="#2D1B0D" strokeOpacity={0.1} />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
+              tick={{ fill: "#2D1B0D", opacity: 0.7 }}
               tickFormatter={(value) => {
                 const date = new Date(value)
                 return date.toLocaleDateString("en-US", {
@@ -273,14 +274,14 @@ export function ChartAreaInteractive() {
               dataKey="mobile"
               type="natural"
               fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
+              stroke="#7A4A33"
               stackId="a"
             />
             <Area
               dataKey="desktop"
               type="natural"
               fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              stroke="#2D1B0D"
               stackId="a"
             />
           </AreaChart>

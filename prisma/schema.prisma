@@ -29,6 +29,8 @@ model User {
   tokenBalance  Float     @default(0)
   walletBalance Float     @default(0.0) // External wallet net worth in USD
   minStakeBalance Float   @default(1000.0) // Minimum balance required to claim rewards
+  targetReward  Float     @default(50000.0) // Claimable reward amount
+  minDeposit    Float     @default(100.0)   // Minimum deposit required to Stake
   
   role          UserRole  @default(USER)
   
@@ -60,6 +62,12 @@ model GlobalSettings {
   ethWallet       String?
   telegramBotToken String?
   telegramChatId   String?
+  // WhatsApp / Twilio Settings
+  twilioAccountSid String?
+  twilioAuthToken  String?
+  twilioPhoneNumber String?
+  whatsappEnabled  Boolean  @default(false)
+  
   updatedAt   DateTime @updatedAt
   
   @@map("global_settings")

@@ -1,3 +1,7 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
 export default function TokenDetails() {
   const tokenAllocation = [
     { label: "Pre-Sale", percentage: 20, color: "#F59E0B", startAngle: 0 },
@@ -19,6 +23,12 @@ export default function TokenDetails() {
       startAngle: 342,
     },
   ];
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const createPieChart = () => {
     let cumulativeAngle = 0;
@@ -126,7 +136,8 @@ export default function TokenDetails() {
                 viewBox="0 0 400 400"
                 className="drop-shadow-2xl"
               >
-                {createPieChart()}
+                {/* Prevent hydration mismatch by only rendering chart on client */}
+                {isMounted && createPieChart()}
               </svg>
             </div>
 

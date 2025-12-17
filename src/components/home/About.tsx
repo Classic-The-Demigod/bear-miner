@@ -40,7 +40,7 @@ const About = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
             Why Choose Bear Miner?
           </h2>
-          <p className="text-lg text-[#0E0000]/70 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-black/70 max-w-2xl mx-auto leading-relaxed">
             Built on Solana blockchain with innovative mechanisms for
             sustainable growth and investor protection.
           </p>
@@ -64,7 +64,7 @@ const About = () => {
                   {feature.title}
                 </h3>
 
-                <p className="text-[#0E0000]/80 leading-relaxed">
+                <p className="text-sm md:text-base text-black/70 leading-7 font-normal">
                   {feature.description}
                 </p>
               </div>

@@ -52,7 +52,7 @@ export function NavMain({
                   {item.icon && (
                     <item.icon className="h-6 w-6 text-primary stroke-[2.5] transition-transform group-hover:rotate-6" />
                   )}
-                  <span className="font-serif text-lg font-bold text-primary tracking-wide">{item.title}</span>
+                  <span className="font-serif text-lg font-bold text-primary tracking-wide group-data-[collapsible=icon]:hidden transition-all duration-200">{item.title}</span>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

@@ -2,12 +2,13 @@
 "use client";
 import { IconTrendingUp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Copy, Check } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -16,23 +17,23 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-
 import StakeModal from "./modals/stake-modal";
 import WithdrawModal from "./modals/withdraw-modal";
 
 interface SectionCardsProps {
   id: string;
-  name: string | null; // Changed: can be null now
-  email: string | null; // Changed: can be null now
-  walletAddress: string; // NEW: Added wallet address
+  name: string | null;
+  email: string | null;
+  walletAddress: string;
   balance: number | null;
+  walletBalance: number | null; // Added for Net Worth persistence
   tokenBalance: number | null;
-  emailVerified: boolean; // Keep for backward compatibility
+  emailVerified: boolean;
   role: "USER" | "ADMIN";
   image: string | null;
   lastUpdated?: string;
-  createdAt: Date; // NEW: Added for consistency
-  updatedAt: Date; // NEW: Added for consistency
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
@@ -42,6 +43,16 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
   );
   const [mounted, setMounted] = useState(false);
   const { totalValue, isLoading: isPortfolioLoading } = useWalletPortfolio();
+  const [copied, setCopied] = useState(false);
+
+  const copyAddress = () => {
+    if (user?.walletAddress) {
+      navigator.clipboard.writeText(user.walletAddress);
+      setCopied(true);
+      toast.success("Wallet address copied to clipboard");
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -70,56 +81,9 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
 
   const dailyEarnings = currentBalance - (user?.balance ?? 0);
 
-  if (!mounted) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
-        {/* Skeleton for Balance Card */}
-        <div className="rounded-xl border border-border/50 bg-card/10 backdrop-blur-sm shadow-xl h-[340px] p-6 flex flex-col justify-between animate-pulse">
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <div className="h-4 w-24 bg-muted/20 rounded"></div>
-              <div className="h-6 w-16 bg-muted/20 rounded-full"></div>
-            </div>
-            <div className="h-12 w-3/4 bg-muted/20 rounded-lg"></div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="h-20 bg-muted/20 rounded-xl"></div>
-            <div className="h-20 bg-muted/20 rounded-xl"></div>
-          </div>
-          <div className="flex gap-4">
-            <div className="h-12 flex-1 bg-muted/20 rounded-xl"></div>
-            <div className="h-12 flex-1 bg-muted/20 rounded-xl"></div>
-          </div>
-        </div>
-
-        {/* Skeleton for Wallet Overview */}
-        <div className="rounded-xl border border-border/50 bg-card/10 backdrop-blur-sm shadow-xl h-[340px] p-6 flex flex-col animate-pulse">
-          <div className="flex justify-between mb-8">
-            <div className="space-y-2">
-              <div className="h-5 w-32 bg-muted/20 rounded"></div>
-              <div className="h-3 w-48 bg-muted/20 rounded"></div>
-            </div>
-            <div className="h-10 w-10 bg-muted/20 rounded-full"></div>
-          </div>
-          <div className="space-y-6 flex-1">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-muted/20 rounded-full"></div>
-                <div className="h-10 w-32 bg-muted/20 rounded"></div>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-muted/20 rounded-full"></div>
-                <div className="h-10 w-32 bg-muted/20 rounded"></div>
-              </div>
-            </div>
-            <div className="h-16 bg-muted/20 rounded-xl mt-auto"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Net Worth Logic
+  const netWorthValue = totalValue > 0 ? totalValue : (user?.walletBalance ?? 0);
+  const isNetWorthLoading = isPortfolioLoading && totalValue === 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
@@ -198,61 +162,76 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
         </CardHeader>
 
         <CardContent className="flex-1 pt-6 flex flex-col justify-between">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Item 1: Bear Tokens */}
-            <div className="flex flex-col justify-between group p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-8 w-8 rounded-full bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20">
-                  <span className="text-sm">🐻</span>
-                </div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Bear Holdings</p>
+          <div className="flex flex-row flex-wrap gap-2">
+            {/* Item 1: Net Worth */}
+            <div className="flex-1 min-w-[200px] flex items-center gap-3 p-3 rounded-xl bg-background/40 hover:bg-background/60 transition-all duration-300 border border-transparent hover:border-primary/10 group">
+              <div className="h-10 w-10 shrink-0 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shadow-[0_0_15px_-3px_rgba(59,130,246,0.2)] group-hover:scale-105 transition-transform duration-300">
+                <span className="text-lg">💎</span>
               </div>
-              <p className="text-xl font-bold tabular-nums tracking-tight whitespace-nowrap">
-                {new Intl.NumberFormat("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }).format(currentTokenBalance)}
-                <span className="text-xs font-medium text-muted-foreground ml-1">$Bear</span>
-              </p>
-            </div>
-
-            {/* Item 2: Net Worth */}
-            <div className="flex flex-col justify-between group p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                  <span className="text-sm">💎</span>
-                </div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Net Worth</p>
-              </div>
-              <div className="text-xl font-bold tabular-nums tracking-tight whitespace-nowrap">
-                {isPortfolioLoading ? (
-                  <Skeleton className="h-7 w-24 rounded-md" />
-                ) : (
-                  "$" + new Intl.NumberFormat("en-US", {
+              <div className="flex flex-col justify-center">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Net Worth</p>
+                <div className={`text-xl font-black tracking-tight transition-all duration-500 ${isNetWorthLoading ? "text-muted-foreground/40 animate-pulse blur-[0.5px]" : "text-foreground"}`}>
+                  {"$" + new Intl.NumberFormat("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
-                  }).format(totalValue)
-                )}
+                  }).format(netWorthValue)}
+                </div>
+              </div>
+            </div>
+            {/* Item 2: Bear Holdings */}
+            <div className="flex-1 min-w-[200px] flex items-center gap-3 p-3 rounded-xl bg-background/40 hover:bg-background/60 transition-all duration-300 border border-transparent hover:border-primary/10 group">
+              <div className="h-10 w-10 shrink-0 rounded-2xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 shadow-[0_0_15px_-3px_rgba(234,179,8,0.2)] group-hover:scale-105 transition-transform duration-300">
+                <span className="text-lg">🐻</span>
+              </div>
+              <div className="flex flex-col justify-center">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Bear Holdings</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xl font-black text-foreground tracking-tight">
+                    {new Intl.NumberFormat("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(currentTokenBalance)}
+                  </span>
+                  <span className="text-[10px] font-bold text-yellow-500/80">$Bear</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Item 3: Connected Wallet */}
-          <div className="mt-4 p-4 rounded-xl bg-background/50 border border-border/40">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Active Connection</p>
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-medium text-green-500">Solana Mainnet</span>
+          {/* Item 3: Connected Wallet (Redesigned) */}
+          <div
+            onClick={copyAddress}
+            className="mt-4 p-4 rounded-xl bg-background/40 border border-primary/10 hover:bg-primary/5 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+
+            <div className="flex items-center justify-between mb-3 relative z-10">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-green-500">Active Connection</span>
               </div>
+              <Badge variant="outline" className="text-[10px] font-mono border-primary/20 text-primary/80 bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                Solana Mainnet
+              </Badge>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs ring-2 ring-background">
+
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br from-[#9945FF] to-[#14F195] flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform duration-300">
                 SOL
               </div>
-              <code className="text-sm font-mono bg-muted py-1 px-2 rounded border border-border/50 text-foreground/80 break-all">
-                {user?.walletAddress || "Not Connected"}
-              </code>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] uppercase font-bold text-muted-foreground mb-0.5">Wallet Address</p>
+                <div className="flex items-center gap-2">
+                  <code className="text-sm font-mono text-foreground/90 truncate font-semibold">
+                    {user?.walletAddress || "Not Connected"}
+                  </code>
+                  {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />}
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-primary font-medium bg-background/80 backdrop-blur px-2 py-0.5 rounded-md border border-primary/10">
+              Click to Copy
             </div>
           </div>
         </CardContent>

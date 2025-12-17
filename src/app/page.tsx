@@ -20,11 +20,12 @@ export default function Home() {
   const router = useRouter();
 
   // Redirect to dashboard if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
+  // Redirect to dashboard if already authenticated
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     // router.push("/dashboard");
+  //   }
+  // }, [isAuthenticated, router]);
 
   if (isLoading) {
     return (
@@ -35,12 +36,16 @@ export default function Home() {
   }
 
   return (
-    <section className="bg-[#F3FFEB]">
-      <div className="md:px-28 py-8 px-4">
-        <Nav />
-      </div>
+    <main className="bg-[#F3FFEB]">
+      {/* First Fold: Header + Hero (100dvh) */}
+      <div className="relative w-full">
+        {/* Navigation - Overlay */}
+        <div className="absolute top-0 w-full md:px-28 pt-6 px-4 z-50">
+          <Nav />
+        </div>
 
-      <Hero />
+        <Hero />
+      </div>
 
       <About />
 
@@ -53,6 +58,6 @@ export default function Home() {
       <TokenDetails />
       <FaqAccordion />
       <Footer />
-    </section>
+    </main>
   );
 }

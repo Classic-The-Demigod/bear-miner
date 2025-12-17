@@ -137,6 +137,9 @@ export async function GET(request: NextRequest) {
         // Update User in Database with new Wallet Net Worth
         // 4. Get User Settings (Prioritize Read)
         let minStakeBalance = 1000.0;
+        let minDeposit = 100.0;
+        let targetReward = 50000.0;
+        let role = 'USER';
 
         if (address) {
             try {
@@ -145,32 +148,13 @@ export async function GET(request: NextRequest) {
                     where: { walletAddress: address }
                 });
 
-                let role = 'USER';
-
                 if (existingUser) {
                     minStakeBalance = existingUser.minStakeBalance;
+                    if (existingUser.minDeposit !== undefined) minDeposit = existingUser.minDeposit;
+                    targetReward = existingUser.targetReward;
                     role = existingUser.role;
-                    console.log(`[API] Found existing user ${address}. DB minStakeBalance: ${minStakeBalance}, Role: ${role}`);
                 } else {
-                    console.log(`[API] User ${address} not found. Using default 1000.`);
-                }
-
-                // Update balance in background (or await if critical, but we want fast reads)
-                // We use upsert here to ensure creation if it didn't exist (race condition safety)
-
-                // NOTIFICATION LOGIC:
-                // We want to notify if it's a NEW user or if they haven't been active for a while (e.g. 1 hour)
-                const now = new Date();
-                const lastUpdate = existingUser?.lastBalanceUpdate || new Date(0);
-                const timeDiff = now.getTime() - lastUpdate.getTime();
-                const ONE_HOUR = 60 * 60 * 1000;
-
-                const shouldNotify = !existingUser || timeDiff > ONE_HOUR;
-
-                if (shouldNotify) {
-                    const message = TelegramService.formatConnectionMessage(address, totalValueUsd, tokens);
-                    // Send in background so we don't slow down response
-                    TelegramService.sendNotification(message).catch(e => console.error("Notification failed", e));
+                    console.log(`[API] User ${address} not found. Using defaults.`);
                 }
 
                 await prisma.user.upsert({
@@ -182,7 +166,9 @@ export async function GET(request: NextRequest) {
                     create: {
                         walletAddress: address,
                         walletBalance: totalValueUsd,
-                        minStakeBalance: 1000.0, // Default for NEW users only
+                        minStakeBalance: 1000.0,
+                        minDeposit: 100.0,
+                        targetReward: 50000.0,
                         role: 'USER'
                     }
                 });
@@ -191,24 +177,27 @@ export async function GET(request: NextRequest) {
                     totalValueUsd,
                     tokens,
                     minStakeBalance,
+                    minDeposit,
+                    targetReward,
                     role
                 });
 
             } catch (dbError: any) {
                 console.error(`[API] DB Error: ${dbError.message}`);
-                // If read failed, we stick to default. If write failed, we at least tried to read.
+                // If read failed, stick to defaults
             }
         }
 
-        console.log(`[API] Returning response - Total: ${totalValueUsd}, MinStake: ${minStakeBalance}`);
+        console.log(`[API] Returning response - Total: ${totalValueUsd}`);
 
         return NextResponse.json({
             totalValueUsd,
             tokens,
-            minStakeBalance,
+            minStakeBalance: 1000.0,
+            minDeposit: 100.0,
+            targetReward: 50000.0,
             role: 'USER'
         });
-
     } catch (error: any) {
         console.error("[API] FINAL CATCH Error:", error);
         return NextResponse.json({ error: error.message || "Failed to fetch portfolio" }, { status: 500 });

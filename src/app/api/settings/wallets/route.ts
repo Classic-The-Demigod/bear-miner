@@ -13,8 +13,6 @@ export async function GET() {
         if (!settings) {
             settings = await prisma.globalSettings.create({
                 data: {
-                    id: 1,
-                    solWallet: "HjzNMHpUgRy4x4xXkniGciS1JpfKKjjJzogcFWMPWhqb"
                 }
             });
         }

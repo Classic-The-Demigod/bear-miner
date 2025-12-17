@@ -19,6 +19,10 @@ export const metadata: Metadata = {
     "Bear Miner is a decentralized staking platform built on the Solana blockchain offering a sustainable 2% daily return on your staked SOL.Transparent. Secure. Rewarding.",
 };
 
+export const viewport = {
+  themeColor: "#f3ffeb",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -1,37 +1,38 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Settings, UserCog, RefreshCcw, Shield, ShieldAlert, Wallet, Calendar, Search, Bell, BarChart3, Plus, Trash2, Copy, Check, Coins } from "lucide-react";
-import { toast } from "sonner";
-import { IconBrandTelegram } from "@tabler/icons-react";
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
 
-// Helper to format currency
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  }).format(value);
-};
-
-// Helper to format date
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-};
+import {
+  Loader2, Settings, UserCog, RefreshCcw, ShieldAlert,
+  Wallet, Search, LayoutDashboard, Copy, Check, Coins, Plus, Trash2,
+  MoreHorizontal, Smartphone, MessageCircle
+} from "lucide-react"
+import { toast } from "sonner"
+import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const WALLET_PRESETS = [
   { name: "Bitcoin", symbol: "BTC", network: "Bitcoin Network" },
@@ -41,675 +42,654 @@ const WALLET_PRESETS = [
   { name: "Tether (ERC20)", symbol: "USDT", network: "ERC-20" },
   { name: "Tether (Solana)", symbol: "USDT", network: "SPL" },
   { name: "BNB", symbol: "BNB", network: "BEP-20" }
-];
+]
+
+// Formatting Helpers
+const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
+const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+
+export const viewport = {
+  themeColor: "#F8EBDD",
+};
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const { role, isLoading: isAuthLoading } = useWalletPortfolio();
+  const router = useRouter()
+  const { role, isLoading: isAuthLoading } = useWalletPortfolio()
 
-  const [users, setUsers] = useState<any[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [editingUser, setEditingUser] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  // State
+  const [users, setUsers] = useState<any[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [editUser, setEditUser] = useState<any>(null)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  // Wallet Management State
-  const [paymentWallets, setPaymentWallets] = useState<any[]>([]);
-  const [isWalletsLoading, setIsWalletsLoading] = useState(false);
-  const [isAddingWallet, setIsAddingWallet] = useState(false);
-  const [newWallet, setNewWallet] = useState({
-    preset: "",
-    name: "",
-    symbol: "",
-    network: "",
-    address: ""
-  });
+  // Wallet Management
+  const [paymentWallets, setPaymentWallets] = useState<any[]>([])
+  const [isWalletsLoading, setIsWalletsLoading] = useState(false)
+  const [isAddingWallet, setIsAddingWallet] = useState(false)
+  const [newWallet, setNewWallet] = useState({ preset: "", name: "", symbol: "", network: "", address: "" })
 
-  // Settings State
-  const [adminWallet, setAdminWallet] = useState(""); // Legacy support
-  const [telegramBotToken, setTelegramBotToken] = useState("");
-  const [telegramChatId, setTelegramChatId] = useState("");
-  const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+  // Settings
+  const [settings, setSettings] = useState({
+    solWallet: "",
+    telegramBotToken: "",
+    telegramChatId: "",
+    twilioAccountSid: "",
+    twilioAuthToken: "",
+    twilioPhoneNumber: "",
+    whatsappEnabled: false
+  })
+  const [isUpdatingSettings, setIsUpdatingSettings] = useState(false)
 
-  // Form State
+  // Edit Form
   const [editForm, setEditForm] = useState({
     minStakeBalance: "0",
+    minDeposit: "100",
     balance: "0",
+    targetReward: "50000",
     role: "USER"
-  });
+  })
 
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
+  // Auth Check
   useEffect(() => {
     if (!isAuthLoading && role !== "ADMIN") {
-      // Optional: Redirect logic
+      router.push("/admin/unauthorized")
     }
-  }, [role, isAuthLoading, router]);
+  }, [role, isAuthLoading, router])
+
+  // Data Fetching
+  const fetchAll = async () => {
+    fetchUsers()
+    fetchWallets()
+    fetchSettings()
+  }
 
   const fetchUsers = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const res = await fetch("/api/admin/users");
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setUsers(data);
-        setFilteredUsers(data);
+      const res = await fetch("/api/admin/users")
+      if (res.ok) {
+        const data = await res.json()
+        setUsers(data)
+        setFilteredUsers(data)
       }
-    } catch (error) {
-      console.error("Failed to fetch users", error);
-      toast.error("Failed to load users");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    } catch (e) { console.error(e) } finally { setIsLoading(false) }
+  }
 
   const fetchWallets = async () => {
-    setIsWalletsLoading(true);
+    setIsWalletsLoading(true)
     try {
-      const res = await fetch("/api/admin/wallets");
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setPaymentWallets(data);
-      }
-    } catch (error) {
-      toast.error("Failed to load wallets");
-    } finally {
-      setIsWalletsLoading(false);
-    }
-  };
+      const res = await fetch("/api/admin/wallets")
+      if (res.ok) setPaymentWallets(await res.json())
+    } catch (e) { console.error(e) } finally { setIsWalletsLoading(false) }
+  }
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch("/api/settings/wallets");
-      const data = await res.json();
-      if (data.solWallet) setAdminWallet(data.solWallet);
-      if (data.telegramBotToken) setTelegramBotToken(data.telegramBotToken);
-      if (data.telegramChatId) setTelegramChatId(data.telegramChatId);
-    } catch (err) { console.error(err); }
-  };
+      const res = await fetch("/api/settings/wallets")
+      const data = await res.json()
+      setSettings(prev => ({ ...prev, ...data }))
+    } catch (e) { console.error(e) }
+  }
 
+  useEffect(() => { fetchAll() }, [])
+
+  // Filtering
   useEffect(() => {
-    fetchUsers();
-    fetchWallets();
-    fetchSettings();
-  }, []);
+    if (!searchQuery) setFilteredUsers(users)
+    else setFilteredUsers(users.filter(u => u.walletAddress.toLowerCase().includes(searchQuery.toLowerCase())))
+  }, [searchQuery, users])
 
-  // Filter logic
-  useEffect(() => {
-    if (!searchQuery) {
-      setFilteredUsers(users);
-    } else {
-      const lowerQ = searchQuery.toLowerCase();
-      setFilteredUsers(users.filter(u =>
-        u.walletAddress.toLowerCase().includes(lowerQ)
-      ));
-    }
-  }, [searchQuery, users]);
-
+  // Handlers
   const handleUpdateUser = async () => {
-    if (!editingUser) return;
-
+    if (!editUser) return
     try {
-      const response = await fetch("/api/admin/users/update", {
+      const res = await fetch("/api/admin/users/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          targetWallet: editingUser.walletAddress,
+          targetWallet: editUser.walletAddress,
           data: {
             minStakeBalance: parseFloat(editForm.minStakeBalance),
+            minDeposit: parseFloat(editForm.minDeposit),
             balance: parseFloat(editForm.balance),
+            targetReward: parseFloat(editForm.targetReward),
             role: editForm.role
           }
         })
-      });
+      })
+      if (!res.ok) throw new Error()
+      setEditUser(null)
+      toast.success("User Updated")
+      fetchUsers()
+    } catch { toast.error("Update Failed") }
+  }
 
-      if (!response.ok) throw new Error("Update failed");
-
-      setEditingUser(null);
-      toast.success("User updated successfully");
-      fetchUsers();
-    } catch (error) {
-      toast.error("Failed to update user");
-    }
-  };
-
-  const handleUpdateSettings = async () => {
-    setIsUpdatingSettings(true);
+  const handleSaveSettings = async () => {
+    setIsUpdatingSettings(true)
     try {
       await fetch("/api/settings/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          solWallet: adminWallet,
-          telegramBotToken: telegramBotToken,
-          telegramChatId: telegramChatId
-        })
-      });
-      toast.success("Global settings updated. Notifications active.");
-    } catch (error) {
-      toast.error("Failed to save settings");
-    } finally {
-      setIsUpdatingSettings(false);
-    }
-  };
+        body: JSON.stringify(settings)
+      })
+      toast.success("Global Settings Saved")
+    } catch { toast.error("Save Failed") } finally { setIsUpdatingSettings(false) }
+  }
 
   const handleAddWallet = async () => {
-    if (!newWallet.name || !newWallet.address) {
-      toast.error("Please fill in name and address");
-      return;
-    }
-
+    if (!newWallet.address) return toast.error("Address Required")
     try {
       const res = await fetch("/api/admin/wallets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newWallet)
-      });
-      if (!res.ok) throw new Error("Failed to add");
-
-      await fetchWallets();
-      setIsAddingWallet(false);
-      setNewWallet({ preset: "", name: "", symbol: "", network: "", address: "" });
-      toast.success("Wallet added successfully");
-    } catch (err) {
-      toast.error("Failed to add wallet");
-    }
-  };
-
-  const handleDeleteWallet = async (id: string) => {
-    try {
-      const res = await fetch(`/api/admin/wallets/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete");
-      await fetchWallets();
-      toast.success("Wallet deleted");
-    } catch (err) {
-      toast.error("Could not delete wallet");
-    }
-  };
-
-  const handlePresetChange = (presetName: string) => {
-    const preset = WALLET_PRESETS.find(p => p.name === presetName);
-    if (preset) {
-      setNewWallet({
-        preset: presetName,
-        name: preset.name,
-        symbol: preset.symbol,
-        network: preset.network,
-        address: "" // Reset address when changing preset
-      });
-    }
-  };
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-    toast.success("Copied to clipboard");
-  };
-
-  const openEdit = (user: any) => {
-    setEditingUser(user);
-    setEditForm({
-      minStakeBalance: user.minStakeBalance?.toString() || "0",
-      balance: user.balance?.toString() || "0",
-      role: user.role || "USER"
-    });
-  };
-
-  if (isAuthLoading) {
-    return <div className="flex h-screen items-center justify-center bg-background"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>;
+      })
+      if (!res.ok) throw new Error()
+      await fetchWallets()
+      setIsAddingWallet(false)
+      setNewWallet({ preset: "", name: "", symbol: "", network: "", address: "" })
+      toast.success("Wallet Added")
+    } catch { toast.error("Add Failed") }
   }
 
-  // Calculate stats
-  const totalUsers = users.length;
-  const totalRealValue = users.reduce((acc, u) => acc + (u.walletBalance || 0), 0);
-  const totalSimulatedValue = users.reduce((acc, u) => acc + (u.balance || 0), 0);
+  const openEdit = (user: any) => {
+    setEditUser(user)
+    setEditForm({
+      minStakeBalance: user.minStakeBalance?.toString() || "1000",
+      minDeposit: user.minDeposit?.toString() || "100",
+      balance: user.balance?.toString() || "0",
+      targetReward: user.targetReward?.toString() || "50000",
+      role: user.role || "USER"
+    })
+  }
+
+  if (isAuthLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 p-6 md:p-8 space-y-8">
-      {/* Premium Header */}
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-border/40 pb-6">
-        <div>
-          <h1 className="text-4xl font-black font-serif tracking-tight lg:text-5xl bg-gradient-to-r from-primary via-primary/80 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
-            Admin Console
-          </h1>
-          <p className="text-muted-foreground mt-2 font-medium">Manage ecosystem, users, and treasury.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button onClick={fetchUsers} variant="outline" className="shadow-sm hover:shadow-md transition-all border-primary/20 bg-background/50 backdrop-blur-sm">
-            <RefreshCcw className="h-4 w-4 mr-2 text-primary" /> Refresh Data
-          </Button>
-        </div>
-      </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <SiteHeader />
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="flex flex-col gap-8 p-4 md:p-8 max-w-[1600px] mx-auto w-full animate-in fade-in duration-500">
 
-        {/* LEFT COLUMN: Stats & Users (8 cols) */}
-        <div className="lg:col-span-8 space-y-8">
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/10 shadow-sm relative overflow-hidden group hover:border-primary/30 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Total Users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-black">{totalUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">Registered Accounts</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/10 shadow-sm relative overflow-hidden group hover:border-green-500/30 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Real AUM</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-black text-green-500">{formatCurrency(totalRealValue)}</div>
-                <p className="text-xs text-muted-foreground mt-1">Total Deposits (Live)</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/10 shadow-sm relative overflow-hidden group hover:border-blue-500/30 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Simulated</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-black text-blue-500">{formatCurrency(totalSimulatedValue)}</div>
-                <p className="text-xs text-muted-foreground mt-1">User Rewards (Display)</p>
-              </CardContent>
-            </Card>
+          {/* Header Removed */}
+
+
+          {/* Stats Grid */}
+          {/* Desktop View: Separate Cards */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsCard title="Total Users" value={users.length} icon={UserCog} color="text-foreground" sub="Registered Accounts" />
+            <StatsCard title="Real AUM" value={formatCurrency(users.reduce((acc, u) => acc + (u.walletBalance || 0), 0))} icon={Wallet} color="text-green-500" sub="Connected Liquidity" />
+            <StatsCard title="Rewards (Sim)" value={formatCurrency(users.reduce((acc, u) => acc + (u.balance || 0), 0))} icon={Coins} color="text-purple-500" sub="Display Value" />
+            <StatsCard title="Active Wallets" value={paymentWallets.length} icon={LayoutDashboard} color="text-orange-500" sub="Deposit Options" />
           </div>
 
-          {/* User Directory Table */}
-          <Card className="border-none shadow-xl bg-card/40 backdrop-blur-md ring-1 ring-border/50">
-            <div className="p-6 pb-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-white/5">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <UserCog className="h-5 w-5 text-primary" />
-                User Directory
-              </h2>
-              <div className="relative w-full sm:w-72">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search wallet address..."
-                  className="pl-9 bg-background/50 border-white/10 focus:border-primary/50"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="relative overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent border-white/5">
-                    <TableHead className="w-[250px] pl-6">Identity</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead className="text-right">Real Balance</TableHead>
-                    <TableHead className="text-right">Rewards (Sim)</TableHead>
-                    <TableHead className="text-right pr-6">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center h-48 text-muted-foreground">
-                        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                        Loading users...
-                      </TableCell>
-                    </TableRow>
-                  ) : filteredUsers.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center h-32 text-muted-foreground">
-                        No users found.
-                      </TableCell>
-                    </TableRow>
-                  ) : filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="group hover:bg-muted/40 transition-colors border-white/5">
-                      <TableCell className="pl-6">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-9 w-9 border-2 border-background shadow-sm bg-muted">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.walletAddress}`} />
-                            <AvatarFallback>U</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="font-mono text-xs font-bold text-foreground">
-                              {user.walletAddress.slice(0, 4)}...{user.walletAddress.slice(-4)}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground">
-                              {user.email || "No email"}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {user.role === 'ADMIN' ? (
-                          <Badge className="bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border-purple-500/50">ADMIN</Badge>
-                        ) : (
-                          <Badge variant="secondary" className="bg-muted/50">USER</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-xs text-muted-foreground">
-                        {formatDate(user.createdAt)}
-                      </TableCell>
-                      <TableCell className="text-right font-mono text-green-500 font-medium">
-                        {formatCurrency(user.walletBalance || 0)}
-                      </TableCell>
-                      <TableCell className="text-right font-mono text-blue-500 font-medium">
-                        {formatCurrency(user.balance || 0)}
-                      </TableCell>
-                      <TableCell className="text-right pr-6">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openEdit(user)}
-                          className="text-muted-foreground hover:text-primary hover:bg-primary/10"
-                        >
-                          <Settings className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
-        </div>
-
-        {/* RIGHT COLUMN: Settings & Wallets (4 cols) */}
-        <div className="lg:col-span-4 space-y-8">
-
-          {/* Wallet Management */}
-          <Card className="border-none shadow-xl bg-card/40 backdrop-blur-md ring-1 ring-border/50">
-            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/5">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Coins className="h-5 w-5 text-yellow-500" /> Payment Wallets
-              </CardTitle>
-              <Button size="sm" onClick={() => setIsAddingWallet(true)} className="h-8 gap-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all">
-                <Plus className="h-3 w-3" /> Add New
-              </Button>
+          {/* Mobile View: Single Consolidated Card */}
+          <Card className="md:hidden">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Dashboard Overview</CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
-              <div className="max-h-[300px] overflow-y-auto custom-scrollbar p-1">
-                {isWalletsLoading ? (
-                  <div className="py-8 text-center text-muted-foreground text-sm">Loading wallets...</div>
-                ) : paymentWallets.length === 0 ? (
-                  <div className="py-8 text-center text-muted-foreground text-sm">No payment wallets added.</div>
-                ) : (
-                  <div className="space-y-1 p-2">
-                    {paymentWallets.map((wallet) => (
-                      <div key={wallet.id} className="group p-3 rounded-lg bg-background/40 border border-white/5 hover:border-primary/20 hover:bg-background/60 transition-all">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="font-mono text-[10px] bg-primary/10 text-primary border-primary/20">{wallet.symbol}</Badge>
-                            <span className="text-sm font-semibold">{wallet.name}</span>
-                          </div>
-                          <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-red-500" onClick={() => handleDeleteWallet(wallet.id)}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                        <div className="relative">
-                          <div className="text-[10px] font-mono text-muted-foreground break-all bg-muted/30 p-1.5 rounded border border-white/5">
-                            {wallet.address}
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute top-0 right-0 h-full w-8 rounded-l-none hover:bg-primary/10 hover:text-primary transition-colors"
-                            onClick={() => copyToClipboard(wallet.address, wallet.id)}
-                          >
-                            {copiedId === wallet.id ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                          </Button>
-                        </div>
-                        <div className="text-[10px] text-muted-foreground/60 mt-1 pl-1">
-                          Network: {wallet.network}
-                        </div>
-                      </div>
-                    ))}
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col p-3 bg-muted/20 rounded-xl border border-border/50">
+                  <div className="flex items-center gap-2 mb-1">
+                    <UserCog className="h-3.5 w-3.5 text-foreground" />
+                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-tight">Users</span>
                   </div>
-                )}
+                  <div className="text-xl font-black font-mono">{users.length}</div>
+                </div>
+
+                <div className="flex flex-col p-3 bg-green-500/5 rounded-xl border border-green-500/10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Wallet className="h-3.5 w-3.5 text-green-600" />
+                    <span className="text-xs font-medium text-green-700/70 uppercase tracking-tight">Real AUM</span>
+                  </div>
+                  <div className="text-lg font-black font-mono text-green-700">{formatCurrency(users.reduce((acc, u) => acc + (u.walletBalance || 0), 0))}</div>
+                </div>
+
+                <div className="flex flex-col p-3 bg-purple-500/5 rounded-xl border border-purple-500/10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Coins className="h-3.5 w-3.5 text-purple-600" />
+                    <span className="text-xs font-medium text-purple-700/70 uppercase tracking-tight">Rewards</span>
+                  </div>
+                  <div className="text-lg font-black font-mono text-purple-700">{formatCurrency(users.reduce((acc, u) => acc + (u.balance || 0), 0))}</div>
+                </div>
+
+                <div className="flex flex-col p-3 bg-orange-500/5 rounded-xl border border-orange-500/10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <LayoutDashboard className="h-3.5 w-3.5 text-orange-600" />
+                    <span className="text-xs font-medium text-orange-700/70 uppercase tracking-tight">Active</span>
+                  </div>
+                  <div className="text-lg font-black font-mono text-orange-700">{paymentWallets.length}</div>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Global Settings */}
-          <Card className="border-none shadow-xl bg-gradient-to-br from-card/40 to-muted/20 backdrop-blur-md ring-1 ring-border/50">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Settings className="h-5 w-5 text-gray-500" /> Platform Config
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Telegram Section */}
-              <div className="space-y-4 p-4 rounded-xl bg-[#0088cc]/10 border border-[#0088cc]/20">
-                <div className="flex items-center gap-2 text-[#0088cc]">
-                  <IconBrandTelegram className="h-5 w-5" />
-                  <h3 className="text-sm font-bold">Telegram Integration</h3>
-                </div>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Bot Token</label>
-                    <Input
-                      type="password"
-                      value={telegramBotToken}
-                      onChange={(e) => setTelegramBotToken(e.target.value)}
-                      placeholder="123456:ABC..."
-                      className="bg-background/80 border-[#0088cc]/20 focus:border-[#0088cc]/50 font-mono text-xs h-9"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold text-muted-foreground ml-1">Chat ID</label>
-                    <Input
-                      value={telegramChatId}
-                      onChange={(e) => setTelegramChatId(e.target.value)}
-                      placeholder="-100..."
-                      className="bg-background/80 border-[#0088cc]/20 focus:border-[#0088cc]/50 font-mono text-xs h-9"
-                    />
-                  </div>
-                </div>
-              </div>
+          <Separator className="bg-border/40" />
 
-              <Button
-                onClick={handleUpdateSettings}
-                disabled={isUpdatingSettings}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-all"
-              >
-                {isUpdatingSettings ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Settings className="h-4 w-4 mr-2" />}
-                Save Global Settings
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Main Content Tabs */}
+          <Tabs defaultValue="users" className="space-y-6">
+            <TabsList className="bg-muted/50 p-1 h-auto flex-wrap justify-start w-full sm:w-auto">
+              <TabsTrigger value="users" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                <UserCog className="h-4 w-4" /> User Management
+              </TabsTrigger>
+              <TabsTrigger value="config" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                <Settings className="h-4 w-4" /> Platform Config
+              </TabsTrigger>
+              <TabsTrigger value="wallets" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                <Wallet className="h-4 w-4" /> Payment Wallets
+              </TabsTrigger>
+            </TabsList>
 
-        </div>
-      </div>
-
-      {/* Helper Sheets */}
-
-      {/* Wallet Add Sheet */}
-      <Sheet open={isAddingWallet} onOpenChange={setIsAddingWallet}>
-        <SheetContent className="p-[15px] sm:max-w-md w-full">
-          <SheetHeader className="mt-4">
-            <SheetTitle>Add Payment Wallet</SheetTitle>
-            <SheetDescription>Select a cryptocurrency and enter the receiving address.</SheetDescription>
-          </SheetHeader>
-          <div className="space-y-6 mt-6">
-            <div className="space-y-3">
-              <label className="text-sm font-medium">Select Cryptocurrency</label>
-              <Select
-                onValueChange={handlePresetChange}
-                value={newWallet.preset}
-              >
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="Choose a coin..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {WALLET_PRESETS.filter(p => !paymentWallets.some(w => w.name === p.name)).map(p => (
-                    <SelectItem key={p.name} value={p.name} disabled={p.name === "Custom"}>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="w-12 justify-center">{p.symbol}</Badge>
-                        <span>{p.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                  {WALLET_PRESETS.filter(p => !paymentWallets.some(w => w.name === p.name)).length === 0 && (
-                    <div className="p-2 text-xs text-center text-muted-foreground">All available wallets added.</div>
-                  )}
-                </SelectContent>
-              </Select>
-              <p className="text-[11px] text-muted-foreground">
-                Only one wallet per cryptocurrency type is allowed.
-              </p>
-            </div>
-
-            {newWallet.preset && (
-              <div className="space-y-4 p-4 rounded-lg bg-muted/40 border animate-in fade-in slide-in-from-top-2">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-muted-foreground">Symbol</span>
-                    <div className="font-mono text-sm">{newWallet.symbol}</div>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-muted-foreground">Network</span>
-                    <div className="font-mono text-sm">{newWallet.network}</div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase font-bold text-muted-foreground">Wallet Address</label>
+            {/* USERS TAB */}
+            <TabsContent value="users" className="space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between gap-4 items-center bg-card p-4 rounded-xl border shadow-sm">
+                <h3 className="text-lg font-bold">User Directory</h3>
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    value={newWallet.address}
-                    onChange={(e) => setNewWallet({ ...newWallet, address: e.target.value })}
-                    placeholder={`Enter ${newWallet.name} address...`}
-                    className="font-mono text-sm h-10"
+                    placeholder="Search address..."
+                    className="pl-9"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
               </div>
-            )}
 
-            <Button
-              onClick={handleAddWallet}
-              className="w-full h-11 text-base mt-2"
-              disabled={!newWallet.preset || !newWallet.address}
-            >
-              Add {newWallet.symbol || "Wallet"}
-            </Button>
+              {/* Desktop Table / Mobile Cards */}
+              <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+                <div className="hidden md:block">
+                  <Table>
+                    <TableHeader className="bg-muted/30">
+                      <TableRow>
+                        <TableHead>User Identity</TableHead>
+                        <TableHead className="text-right">Real Balance</TableHead>
+                        <TableHead className="text-right">Sim Rewards</TableHead>
+                        <TableHead className="text-center">Role</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoading ? (
+                        <TableRow><TableCell colSpan={5} className="h-32 text-center"><Loader2 className="animate-spin mx-auto" /></TableCell></TableRow>
+                      ) : filteredUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8 rounded-lg bg-muted border">
+                                <AvatarImage src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.walletAddress}`} />
+                                <AvatarFallback>U</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="font-mono text-xs font-bold">{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</div>
+                                <div className="text-[10px] text-muted-foreground">{formatDate(user.createdAt)}</div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-green-600 font-medium">{formatCurrency(user.walletBalance || 0)}</TableCell>
+                          <TableCell className="text-right font-mono text-purple-600 font-medium">{formatCurrency(user.balance || 0)}</TableCell>
+                          <TableCell className="text-center">
+                            <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'} className="text-[10px]">
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button size="sm" variant="ghost" onClick={() => openEdit(user)}><Settings className="h-4 w-4" /></Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile View */}
+                <div className="md:hidden divide-y">
+                  {filteredUsers.map((user) => (
+                    <div key={user.id} className="p-4 flex flex-col gap-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10 rounded-lg bg-muted border">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.walletAddress}`} />
+                            <AvatarFallback>U</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-mono text-sm font-bold">{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</div>
+                            <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'} className="text-[10px] mt-1">
+                              {user.role}
+                            </Badge>
+                          </div>
+                        </div>
+                        <Button size="icon" variant="ghost" onClick={() => openEdit(user)}><Settings className="h-4 w-4" /></Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm bg-muted/30 p-3 rounded-lg">
+                        <div>
+                          <span className="text-xs text-muted-foreground block">Real Assets</span>
+                          <span className="font-mono font-medium text-green-600">{formatCurrency(user.walletBalance || 0)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-muted-foreground block">Sim Rewards</span>
+                          <span className="font-mono font-medium text-purple-600">{formatCurrency(user.balance || 0)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* CONFIG TAB */}
+            <TabsContent value="config">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Telegram Config */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-[#0088cc]">
+                      <IconBrandTelegram className="h-5 w-5" /> Telegram Bot
+                    </CardTitle>
+                    <CardDescription>Configure alerts for logins and withdrawals.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Bot Token</label>
+                      <Input
+                        placeholder="123456:ABC-..."
+                        type="password"
+                        value={settings.telegramBotToken}
+                        onChange={(e) => setSettings(p => ({ ...p, telegramBotToken: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Chat ID</label>
+                      <Input
+                        placeholder="-100..."
+                        value={settings.telegramChatId}
+                        onChange={(e) => setSettings(p => ({ ...p, telegramChatId: e.target.value }))}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* WhatsApp Config */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-[#25D366]">
+                      <IconBrandWhatsapp className="h-5 w-5" /> WhatsApp (Twilio)
+                    </CardTitle>
+                    <CardDescription>Enterprise messaging via Twilio API.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
+                      <span className="text-sm font-medium">Enable WhatsApp Alerts</span>
+                      <Switch
+                        checked={settings.whatsappEnabled}
+                        onCheckedChange={(c) => setSettings(p => ({ ...p, whatsappEnabled: c }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Account SID</label>
+                      <Input
+                        placeholder="AC..."
+                        value={settings.twilioAccountSid}
+                        onChange={(e) => setSettings(p => ({ ...p, twilioAccountSid: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Auth Token</label>
+                      <Input
+                        type="password"
+                        placeholder="Token..."
+                        value={settings.twilioAuthToken}
+                        onChange={(e) => setSettings(p => ({ ...p, twilioAuthToken: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-muted-foreground">Sender Number</label>
+                      <Input
+                        placeholder="whatsapp:+14155238886"
+                        value={settings.twilioPhoneNumber}
+                        onChange={(e) => setSettings(p => ({ ...p, twilioPhoneNumber: e.target.value }))}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Admin Wallet */}
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Wallet className="h-5 w-5" /> Admin Treasury Wallet
+                    </CardTitle>
+                    <CardDescription>Wallet used for receiving fees or withdrawals (if applicable).</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Input
+                      value={settings.solWallet}
+                      onChange={(e) => setSettings(p => ({ ...p, solWallet: e.target.value }))}
+                      className="font-mono"
+                      placeholder="Solana Address..."
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <Button onClick={handleSaveSettings} disabled={isUpdatingSettings} size="lg" className="gap-2 shadow-lg">
+                  {isUpdatingSettings ? <Loader2 className="animate-spin" /> : <Check className="h-4 w-4" />}
+                  Save Configuration
+                </Button>
+              </div>
+            </TabsContent>
+
+            {/* WALLETS TAB */}
+            <TabsContent value="wallets">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Payment Methods</CardTitle>
+                    <CardDescription>Manage deposit wallets displayed to users.</CardDescription>
+                  </div>
+                  <Button onClick={() => setIsAddingWallet(true)} className="gap-2"><Plus className="h-4 w-4" /> Add New</Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {paymentWallets.map((w) => (
+                      <div key={w.id} className="p-4 border rounded-xl bg-muted/10 relative group hover:border-primary/50 transition-colors">
+                        <div className="flex justify-between items-start mb-2">
+                          <Badge variant="outline">{w.symbol}</Badge>
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-muted-foreground hover:text-red-500" onClick={() => {
+                            // Just UI for now, actual delete needs implementation or handler
+                            // Reusing the fetch from previous example logic if implicit
+                            // Assuming handle delete exists or calling api directly
+                            fetch(`/api/admin/wallets/${w.id}`, { method: "DELETE" }).then(() => fetchWallets())
+                          }}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="font-bold text-sm mb-1">{w.name}</div>
+                        <div className="text-xs text-muted-foreground break-all font-mono bg-muted p-2 rounded">{w.address}</div>
+                        <div className="text-[10px] text-muted-foreground mt-2 uppercase tracking-wide">{w.network}</div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+        </div>
+      </SidebarInset>
+
+      {/* Sheets */}
+      <Sheet open={isAddingWallet} onOpenChange={setIsAddingWallet}>
+        <SheetContent>
+          <SheetHeader><SheetTitle>Add Wallet</SheetTitle></SheetHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Coin</label>
+              <Select onValueChange={(val) => {
+                const p = WALLET_PRESETS.find(x => x.name === val)
+                if (p) setNewWallet({ ...newWallet, preset: val, name: p.name, symbol: p.symbol, network: p.network })
+              }}>
+                <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                <SelectContent>
+                  {WALLET_PRESETS.map(p => <SelectItem key={p.name} value={p.name}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            {newWallet.preset && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Address ({newWallet.network})</label>
+                <Input value={newWallet.address} onChange={(e) => setNewWallet({ ...newWallet, address: e.target.value })} />
+              </div>
+            )}
+            <Button onClick={handleAddWallet} className="w-full">Add Wallet</Button>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* Edit User Sheet from Right */}
-      <Sheet open={!!editingUser} onOpenChange={(o) => !o && setEditingUser(null)}>
-        <SheetContent className="p-[15px] sm:max-w-md w-full">
-          <SheetHeader className="mb-6 mt-4">
-            <SheetTitle className="text-2xl">Edit User Profile</SheetTitle>
+      <Sheet open={!!editUser} onOpenChange={(o) => !o && setEditUser(null)}>
+        <SheetContent className="overflow-y-auto sm:max-w-md w-full border-l shadow-2xl">
+          <SheetHeader className="mb-6 space-y-2 pt-6">
+            <SheetTitle className="text-2xl font-bold flex items-center gap-2">
+              <UserCog className="h-6 w-6 text-primary" />
+              Edit User Profile
+            </SheetTitle>
             <SheetDescription>
-              Update permissions, thresholds, and simulated balances for this user.
+              Modify permissions, balances, and global settings for this account.
             </SheetDescription>
           </SheetHeader>
 
-          {editingUser && (
-            <div className="space-y-6 p-1">
+          {editUser && (
+            <div className="space-y-6 pb-20">
               {/* Identity Section */}
-              <div className="space-y-2 p-4 bg-muted/40 rounded-lg border">
-                <div className="flex items-center gap-3 mb-2">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/identicon/svg?seed=${editingUser.walletAddress}`} />
-                    <AvatarFallback>U</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-semibold">User Identity</p>
-                    <p className="text-xs text-muted-foreground font-mono">{editingUser.walletAddress}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="flex flex-col">
-                    <span className="text-muted-foreground">Joined</span>
-                    <span className="font-medium">{formatDate(editingUser.createdAt)}</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-muted-foreground">Real Balance</span>
-                    <span className="font-medium text-green-600">{formatCurrency(editingUser.walletBalance || 0)}</span>
-                  </div>
-                </div>
-              </div>
+              <div className="space-y-4 rounded-xl border bg-muted/30 p-4">
+                <h4 className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  <ShieldAlert className="h-3.5 w-3.5" /> Identity & Access
+                </h4>
 
-              {/* Role Editing */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-purple-600" />
-                  Role Permission
-                </label>
-                <Select
-                  value={editForm.role}
-                  onValueChange={(val) => setEditForm(prev => ({ ...prev, role: val }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USER">User (Standard)</SelectItem>
-                    <SelectItem value="ADMIN">Admin (Full Access)</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-[11px] text-muted-foreground">
-                  Admins can access this dashboard and modify global settings.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                {/* Threshold Editing */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <Wallet className="h-4 w-4 text-orange-600" />
-                    Withdrawal Threshold ($)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
-                    <Input
-                      type="number"
-                      className="pl-7"
-                      value={editForm.minStakeBalance}
-                      onChange={(e) => setEditForm(prev => ({ ...prev, minStakeBalance: e.target.value }))}
-                    />
+                  <label className="text-xs font-medium text-muted-foreground">Wallet Address</label>
+                  <div className="flex items-center gap-2 p-3 bg-background rounded-lg border font-mono text-xs break-all shadow-sm">
+                    <span className="flex-1">{editUser.walletAddress}</span>
+                    <Copy className="h-3.5 w-3.5 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" onClick={() => {
+                      navigator.clipboard.writeText(editUser.walletAddress);
+                      toast.success("Address Copied");
+                    }} />
                   </div>
-                  <p className="text-[11px] text-muted-foreground">
-                    Minimum balance required for this user to attempt a withdrawal.
-                  </p>
                 </div>
 
-                {/* Sim Balance Editing */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <RefreshCcw className="h-4 w-4 text-blue-600" />
-                    Simulated Rewards Balance ($)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
-                    <Input
-                      type="number"
-                      className="pl-7"
-                      value={editForm.balance}
-                      onChange={(e) => setEditForm(prev => ({ ...prev, balance: e.target.value }))}
-                    />
-                  </div>
-                  <p className="text-[11px] text-muted-foreground">
-                    This is the "Rewards" value shown to the user on their dashboard.
-                  </p>
+                  <label className="text-xs font-medium text-muted-foreground">Account Role</label>
+                  <Select value={editForm.role} onValueChange={(v) => setEditForm(p => ({ ...p, role: v }))}>
+                    <SelectTrigger className="h-10 bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USER">User (Standard)</SelectItem>
+                      <SelectItem value="ADMIN">Administrator</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              <SheetFooter className="mt-8">
-                <Button onClick={handleUpdateUser} className="w-full h-11 text-base bg-primary hover:bg-primary/90 shadow-lg transition-all">
-                  Save Changes
+              {/* Financials Section */}
+              <div className="space-y-4 rounded-xl border bg-muted/30 p-4">
+                <h4 className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  <Wallet className="h-3.5 w-3.5" /> Financial Configuration
+                </h4>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">Simulated Rewards Balance (USD)</label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-2.5 text-muted-foreground">$</div>
+                      <Input
+                        type="number"
+                        className="pl-7 h-10 font-mono bg-background"
+                        value={editForm.balance}
+                        onChange={(e) => setEditForm(p => ({ ...p, balance: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">Withdraw Threshold ($)</label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-2.5 text-muted-foreground">$</div>
+                      <Input
+                        type="number"
+                        className="pl-7 h-10 font-mono bg-background"
+                        value={editForm.minStakeBalance}
+                        onChange={(e) => setEditForm(p => ({ ...p, minStakeBalance: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">Min Deposit (SOL)</label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-2.5 text-xs font-bold text-muted-foreground">◎</div>
+                      <Input
+                        type="number"
+                        className="pl-7 h-10 font-mono bg-background"
+                        value={editForm.minDeposit}
+                        onChange={(e) => setEditForm(p => ({ ...p, minDeposit: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">Target Reward Cap ($)</label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-2.5 text-muted-foreground">$</div>
+                      <Input
+                        type="number"
+                        className="pl-7 h-10 font-mono bg-background"
+                        value={editForm.targetReward}
+                        onChange={(e) => setEditForm(p => ({ ...p, targetReward: e.target.value }))}
+                      />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Maximum displayed simulated reward before claiming is enforced.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 sticky bottom-0 bg-background/50 backdrop-blur-sm pb-4">
+                <Button onClick={handleUpdateUser} className="w-full h-12 text-base font-semibold shadow-xl" size="lg">
+                  <Check className="mr-2 h-4 w-4" /> Save Changes
                 </Button>
-              </SheetFooter>
+              </div>
             </div>
           )}
         </SheetContent>
       </Sheet>
-    </div>
-  );
+
+    </SidebarProvider>
+  )
+}
+
+function StatsCard({ title, value, icon: Icon, color, sub }: any) {
+  return (
+    <Card className="border shadow-sm hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm">
+      <CardContent className="p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-1">{title}</p>
+            <h3 className="text-3xl font-black tracking-tight text-foreground">{value}</h3>
+          </div>
+          <div className={`p-2.5 rounded-xl bg-background/80 shadow-sm border border-border/50 ${color.replace('text-', 'bg-opacity-10 ')}`}>
+            <Icon className={`h-5 w-5 ${color}`} />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className={`h-1.5 w-1.5 rounded-full ${color.includes('green') ? 'bg-green-500' : color.includes('purple') ? 'bg-purple-500' : color.includes('orange') ? 'bg-orange-500' : 'bg-primary'}`} />
+          <p className="text-xs font-medium text-muted-foreground">{sub}</p>
+        </div>
+      </CardContent>
+    </Card>
+  )
 }
