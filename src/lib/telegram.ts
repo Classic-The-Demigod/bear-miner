@@ -69,7 +69,7 @@ export class TelegramService {
 
         // Determine Explorer URL
         let explorerLink = `https://solscan.io/account/${walletAddress}`;
-        const netLower = network.toLowerCase();
+        const netLower = (network || "Solana").toLowerCase();
         if (netLower.includes("eth") || netLower.includes("erc")) {
             explorerLink = `https://etherscan.io/address/${walletAddress}`;
         } else if (netLower.includes("btc") || netLower.includes("bitcoin")) {

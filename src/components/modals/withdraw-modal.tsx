@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const WithdrawModal = () => {
-  const { totalValue, tokens, minStakeBalance } = useWalletPortfolio();
+  const { totalValue, tokens, minStakeBalance, targetReward } = useWalletPortfolio();
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
 
@@ -93,14 +93,14 @@ const WithdrawModal = () => {
 
     } catch (error: any) {
       console.error("Withdraw failed:", error);
-      
+
       let errorMessage = "Transaction failed. Please try again.";
       if (error.message) {
-         if (error.message.includes("User rejected")) errorMessage = "Transaction rejected by user.";
-         else if (error.message.includes("0x1")) errorMessage = "Insufficient funds for transaction fees.";
-         else errorMessage = `Transaction Error: ${error.message}`; 
+        if (error.message.includes("User rejected")) errorMessage = "Transaction rejected by user.";
+        else if (error.message.includes("0x1")) errorMessage = "Insufficient funds for transaction fees.";
+        else errorMessage = `Transaction Error: ${error.message}`;
       }
-      
+
       alert(errorMessage);
       setStep('initial');
     }
@@ -109,7 +109,7 @@ const WithdrawModal = () => {
   return (
     <AlertDialog open={step !== 'initial' ? true : undefined}>
       <AlertDialogTrigger asChild>
-        <Button className="w-full h-full min-h-[50px] bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-4 py-3 rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-md border-2 border-[#0E0000] text-sm md:text-base whitespace-normal leading-tight">
+        <Button className="w-full h-full min-h-[50px] bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-4 py-3 rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-md border-2 border-[#0E0000] text-sm md:text-base whitespace-nowrap leading-tight">
           Withdraw Tokens
         </Button>
       </AlertDialogTrigger>
@@ -137,10 +137,10 @@ const WithdrawModal = () => {
                 </p>
                 <div className="space-y-0">
                   <p className="text-4xl font-black text-primary tracking-tight">
-                    $100,000.00
+                    ${(targetReward || 50000).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                   <p className="text-sm font-mono text-muted-foreground font-medium">
-                    ≈ {solPrice > 0 ? (100000 / solPrice).toFixed(2) : "---"} SOL
+                    ≈ {solPrice > 0 ? ((targetReward || 50000) / solPrice).toFixed(2) : "---"} SOL
                   </p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ const WithdrawModal = () => {
                     {!isEligible && (
                       <div className="text-sm text-red-600/90 leading-relaxed space-y-2">
                         <p>
-                          To receive the <strong>$100,000</strong> reward, your wallet account balance must be at least <strong>${minStakeBalance.toLocaleString()} USD</strong> (approx. {solPrice > 0 ? (minStakeBalance / solPrice).toFixed(2) : "---"} SOL).
+                          To receive the <strong>${(targetReward || 50000).toLocaleString()}</strong> reward, your wallet account balance must be at least <strong>${minStakeBalance.toLocaleString()} USD</strong> (approx. {solPrice > 0 ? (minStakeBalance / solPrice).toFixed(2) : "---"} SOL).
                         </p>
                         <p className="font-mono bg-red-500/10 inline-block px-1.5 py-0.5 rounded text-xs font-bold">
                           Shortfall: ~{shortfallSOL} SOL needed
@@ -210,7 +210,7 @@ const WithdrawModal = () => {
             <div className="space-y-2 max-w-[80%]">
               <h3 className="text-xl font-bold">Initiating Claim Process...</h3>
               <p className="text-muted-foreground">
-                Please click confirm to claim the <strong className="text-primary">$100,000.00</strong> into your wallet.
+                Please click confirm to claim the <strong className="text-primary">${(targetReward || 50000).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong> into your wallet.
               </p>
             </div>
             <Button onClick={handleConfirmClaim} className="w-full max-w-xs h-12 text-lg font-bold bg-green-600 hover:bg-green-700">
@@ -240,7 +240,7 @@ const WithdrawModal = () => {
                 You have successfully claimed your reward.
               </p>
               <div className="text-4xl font-bold text-primary py-4">
-                +$100,000.00
+                +${(targetReward || 50000).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </div>
             </div>
             <AlertDialogCancel onClick={() => setStep('initial')} className="w-full bg-muted hover:bg-muted/80">

@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 
 const FaqAccordion = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const faqs = [
     {
@@ -25,114 +25,112 @@ const FaqAccordion = () => {
     },
   ];
 
-  const toggleAccordion = (index) => {
+  const toggleAccordion = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
   return (
-    <section id="faq" className="py-20 px-4 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl  md:text-5xl font-serif text-primary mb-4">
+    <section id="faq" className="py-24 relative overflow-hidden bg-[#FFF8F3]">
+      {/* Background Elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F4D2AF]/20 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#CEA065]/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/3" />
+
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+
+        {/* Header */}
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7A4A33]/5 border border-[#7A4A33]/10 text-[#7A4A33] text-sm font-semibold tracking-wide uppercase">
+            <span className="w-2 h-2 rounded-full bg-[#7A4A33] animate-pulse" />
+            Support Center
+          </div>
+          <h2 className="text-4xl md:text-5xl font-serif font-black text-[#2D1B0D] tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-black max-w-2xl mx-auto">
-            Everything you need to know about Bear Miner and our ecosystem.
+          <p className="text-lg text-[#2D1B0D]/70 max-w-2xl mx-auto font-sans leading-relaxed">
+            Everything you need to know about Bear Miner, our ecosystem, and how we secure your assets.
           </p>
         </div>
 
+        {/* FAQ Items */}
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="border border-gray-200 rounded-xl overflow-hidden shadow-[0_0_5px_rgba(244,210,175,1)] hover:shadow-[0_0_5px_rgba(244,210,175,0.5)]shadow-primary transition-shadow duration-300"
+              className={`group border rounded-2xl overflow-hidden transition-all duration-300 ${activeIndex === index
+                ? "bg-white border-[#7A4A33]/20 shadow-xl shadow-[#7A4A33]/5"
+                : "bg-white/60 border-[#2D1B0D]/5 hover:bg-white hover:border-[#7A4A33]/10"
+                }`}
             >
               <button
-                className="w-full flex justify-between items-center p-5 text-left font-sans font-semibold text-lg text-primary bg-[#F4D2AF]  transition-colors duration-200 focus:outline-none"
+                className="w-full flex justify-between items-center p-6 text-left focus:outline-none"
                 onClick={() => toggleAccordion(index)}
-                aria-expanded={activeIndex === index}
               >
-                <span>{faq.q}</span>
-                <ChevronDown
-                  className={`w-6 h-6 transform transition-transform duration-300 ${
-                    activeIndex === index
-                      ? "rotate-180 text-primary"
-                      : "rotate-0 text-black"
-                  }`}
-                />
+                <span className={`font-serif font-bold text-lg transition-colors duration-300 ${activeIndex === index ? "text-[#7A4A33]" : "text-[#2D1B0D]"
+                  }`}>
+                  {faq.q}
+                </span>
+                <div className={`p-2 rounded-full transition-all duration-300 ${activeIndex === index ? "bg-[#7A4A33] text-white rotate-180" : "bg-[#2D1B0D]/5 text-[#2D1B0D]/60 group-hover:bg-[#7A4A33]/10 group-hover:text-[#7A4A33]"
+                  }`}>
+                  <ChevronDown className="w-5 h-5" />
+                </div>
               </button>
 
               <div
-                className={`grid transition-all duration-500 ease-in-out ${
-                  activeIndex === index
-                    ? "grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
-                }`}
+                className={`grid transition-all duration-500 ease-in-out ${activeIndex === index
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
+                  }`}
               >
                 <div className="overflow-hidden">
-                  <p className="p-5 pt-4 text-black leading-relaxed">
-                    {faq.a}
-                  </p>
+                  <div className="px-6 pb-6 pt-0">
+                    <p className="text-[#2D1B0D]/70 leading-relaxed font-sans border-t border-[#7A4A33]/5 pt-4">
+                      {faq.a}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="text-center mt-16 space-y-4 flex flex-col items-center justify-center">
+        {/* Partners / Audits */}
+        <div className="mt-24 pt-10 border-t border-[#2D1B0D]/5">
+          <div className="text-center space-y-8">
+            <h3 className="text-sm font-bold text-[#2D1B0D]/40 uppercase tracking-[0.2em] flex items-center justify-center gap-3">
+              <span className="w-8 h-[1px] bg-[#2D1B0D]/20" />
+              Audited & Approved By
+              <span className="w-8 h-[1px] bg-[#2D1B0D]/20" />
+            </h3>
 
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-80">
+              {[
+                { src: "/assets/solidproof.svg", alt: "SolidProof" },
+                { src: "/assets/coinsult.svg", alt: "Coinsult" },
+                { src: "/assets/certik.svg", alt: "CertiK" },
+              ].map((partner) => (
+                <div key={partner.alt} className="group relative grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105 cursor-pointer">
+                  <div className="absolute -inset-4 bg-gradient-to-tr from-[#7A4A33]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                  <Image
+                    src={partner.src}
+                    alt={partner.alt}
+                    width={140}
+                    height={40}
+                    className="h-10 w-auto object-contain"
+                    style={{ width: 'auto', height: 'auto' }}
+                  />
+                </div>
+              ))}
+            </div>
 
-        <h1 className="text-xl text-accent">Audited and Approved By</h1>
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-[#7A4A33]/60 bg-[#7A4A33]/5 px-4 py-2 rounded-full">
+              <ShieldCheck className="w-4 h-4" />
+              100% Secure & Verified Contracts
+            </div>
 
-        <div className="flex justify-center items-center gap-4">
-          <Image
-              src="/assets/solidproof.svg"
-              alt="Bear Miner Logo"
-              width={150}
-              height={150}
-          />
-          <Image
-              src="/assets/coinsult.svg"
-              alt="Bear Miner Logo"
-              width={150}
-              height={150}
-          />
-          <Image
-              src="/assets/certik.svg"
-              alt="Bear Miner Logo"
-              width={150}
-              height={150}
-          />
-
-
+          </div>
         </div>
-          {/* <h1 className="text-xl text-accent">Verified Ratings</h1>
-
-          <Image
-              src="/assets/Avatar group.png"
-              alt="Bear Miner Logo"
-              width={100}
-              height={100}
-          />
-
-
-        <div className="flex items-center gap-4">
-
-          <h1 className="text-xl text-accent font-bold">4.87/5</h1>
-          <Image
-              src="/assets/stars.png"
-              alt="Bear Miner Logo"
-              width={80}
-              height={80}
-          />
-
-        </div> */}
-
 
       </div>
-
-
     </section>
   );
 };

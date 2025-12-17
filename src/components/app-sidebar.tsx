@@ -17,7 +17,7 @@ import {
   IconShieldLock,
 } from "@tabler/icons-react";
 
-import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
+import { useAuth } from "@/app/providers/auth-provider";
 
 // import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -150,11 +150,11 @@ const data = {
   ],
 };
 
-export function AppSidebar({ user, ...props }: AppSidebarCombinedProps) {
-  const { role } = useWalletPortfolio();
+export function AppSidebar({ user: propUser, ...props }: AppSidebarCombinedProps) {
+  const { user } = useAuth(); // Use client auth state for roles to be instant
 
   const navMain = [...data.navMain];
-  if (role === 'ADMIN') {
+  if (user?.role === 'ADMIN') {
     navMain.push({
       title: "Admin Panel",
       url: "/admin/dashboard",
@@ -169,17 +169,26 @@ export function AppSidebar({ user, ...props }: AppSidebarCombinedProps) {
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-transparent"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-transparent transition-all duration-300"
             >
-              <div className="flex items-center gap-3 pl-2">
-                <Image
-                  src="/assets/logo.svg"
-                  alt="Bear Miner Logo"
-                  width={34}
-                  height={34}
-                  className="transition-transform duration-300 hover:rotate-12"
-                />
-                <span className="font-serif text-2xl font-bold tracking-tight text-foreground/90">Bear Miner</span>
+              <div className="flex items-center justify-center gap-3 w-full">
+                <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
+                  <Image
+                    src="/assets/logo.svg"
+                    alt="Bear Miner Logo"
+                    width={34}
+                    height={34}
+                    className="transition-transform duration-300 hover:rotate-12 object-contain"
+                  />
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden transition-all duration-300 ease-in-out opacity-100 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden">
+                  <span className="font-serif text-xl font-bold tracking-tight text-foreground/90 whitespace-nowrap">
+                    Bear Miner
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground/80 font-semibold text-left">
+                    Dashboard
+                  </span>
+                </div>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
