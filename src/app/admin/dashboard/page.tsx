@@ -48,9 +48,7 @@ const WALLET_PRESETS = [
 const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
 const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
-export const viewport = {
-  themeColor: "#F8EBDD",
-};
+
 
 export default function AdminDashboard() {
   const router = useRouter()
