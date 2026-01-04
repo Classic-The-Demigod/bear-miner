@@ -35,14 +35,28 @@ const StakeModal = ({ userId }: { userId?: string }) => {
     }
   }, [treasuryError]);
 
-  // Fetch Max Balance
+  // Fetch Max Balance (Auto-refresh)
   useEffect(() => {
-    if (publicKey && connection) {
-      connection.getBalance(publicKey).then((bal) => {
-        setMaxSol(bal / LAMPORTS_PER_SOL);
-      });
-    }
-  }, [publicKey, connection, step]); // Refresh on step change
+    let interval: NodeJS.Timeout;
+
+    const fetchBalance = async () => {
+      if (publicKey && connection) {
+        try {
+          const bal = await connection.getBalance(publicKey);
+          setMaxSol(bal / LAMPORTS_PER_SOL);
+        } catch (e) {
+          console.error("Failed to fetch balance:", e);
+        }
+      }
+    };
+
+    fetchBalance();
+
+    // Auto-refresh every 10 seconds while modal is open
+    interval = setInterval(fetchBalance, 10000);
+
+    return () => clearInterval(interval);
+  }, [publicKey, connection]);
 
   const handleMax = () => {
     // Leave 0.005 for gas
@@ -131,10 +145,10 @@ const StakeModal = ({ userId }: { userId?: string }) => {
             <AlertDialogHeader>
               <AlertDialogTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
                 <TrendingUp className="h-6 w-6 text-primary" />
-                Stake SOL
+                Deposit SOL
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center">
-                Stake SOL to the master <b>Deposit, Presale and Stake address</b> to start earning 2% daily rewards.
+                Deposit SOL to start earning 2% daily rewards
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -142,7 +156,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
               {/* Input Section */}
               <div className="bg-muted/30 p-4 rounded-xl border space-y-3">
                 <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                  <span>Amount to Stake</span>
+                  <span>Amount to Deposit</span>
                   <span>Available: {maxSol.toFixed(4)} SOL</span>
                 </div>
                 <div className="flex gap-2">
@@ -193,7 +207,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                 disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) < (minDeposit || 100)}
                 className="w-full h-12 text-lg font-bold shadow-lg shadow-primary/20"
               >
-                Proceed to Stake
+                Proceed to Deposit
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <AlertDialogCancel onClick={reset} className="w-full mt-2 border-none hover:bg-muted">Cancel</AlertDialogCancel>
