@@ -71,7 +71,7 @@ export function SiteHeader() {
             {/* Glow Effect */}
             <div className="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-50" />
             <Image
-              src="/assets/logo.svg"
+              src="/img/logo.svg"
               alt="Bear Miner Logo"
               width={36}
               height={36}

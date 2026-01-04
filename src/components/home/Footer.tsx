@@ -20,7 +20,7 @@ const Footer = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-[#7A4A33]/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <Image
-                  src="/assets/logo.svg"
+                  src="/img/logo.svg"
                   alt="Bear Miner Logo"
                   width={48}
                   height={48}
@@ -42,7 +42,7 @@ const Footer = () => {
                 className="group flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 hover:bg-[#0088cc]/20 hover:border-[#0088cc]/30 transition-all duration-300"
               >
                 <Image
-                  src="/assets/telegram.svg"
+                  src="/img/telegram.svg"
                   alt="Telegram"
                   width={24}
                   height={24}

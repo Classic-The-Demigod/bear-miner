@@ -104,9 +104,9 @@ const FaqAccordion = () => {
 
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-80">
               {[
-                { src: "/assets/solidproof.svg", alt: "SolidProof" },
-                { src: "/assets/coinsult.svg", alt: "Coinsult" },
-                { src: "/assets/certik.svg", alt: "CertiK" },
+                { src: "/img/solidproof.svg", alt: "SolidProof" },
+                { src: "/img/coinsult.svg", alt: "Coinsult" },
+                { src: "/img/certik.svg", alt: "CertiK" },
               ].map((partner) => (
                 <div key={partner.alt} className="group relative grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105 cursor-pointer">
                   <div className="absolute -inset-4 bg-gradient-to-tr from-[#7A4A33]/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
