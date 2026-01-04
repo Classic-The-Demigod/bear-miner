@@ -3,7 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { headers } from "next/headers";
+
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getBalanceWithGrowth } from "@/app/actions/balance";
