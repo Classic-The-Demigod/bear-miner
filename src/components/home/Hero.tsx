@@ -37,7 +37,7 @@ const Hero = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-[150%] bg-white/40 blur-[100px] rounded-full -z-10" />
 
         <Image
-          src="/assets/hero.svg"
+          src="/img/hero.svg"
           alt="Bear Miner Hero"
           width={1920}
           height={600}

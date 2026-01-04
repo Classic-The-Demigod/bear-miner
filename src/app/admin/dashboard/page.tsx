@@ -842,7 +842,7 @@ export default function AdminDashboard() {
                             <div className="flex items-center gap-4">
                               <div className="h-10 w-10 rounded-xl bg-background border flex items-center justify-center font-bold text-xs ring-1 ring-border/50 group-hover:ring-primary/30 transition-all">
                                 {token.symbol === 'SOL' ? (
-                                  <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-6 w-6" />
+                                  <img src="/img/solana-logo.svg" alt="SOL" className="h-6 w-6" />
                                 ) : (
                                   <span>{token.symbol?.[0] || 'T'}</span>
                                 )}
@@ -931,7 +931,7 @@ export default function AdminDashboard() {
                       </label>
                       <div className="relative">
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-6 w-6" />
+                          <img src="/img/solana-logo.svg" alt="SOL" className="h-6 w-6" />
                         </div>
                         <Input
                           type="number"
@@ -973,7 +973,7 @@ export default function AdminDashboard() {
                       <label className="text-xs font-bold text-muted-foreground">Min Deposit (SOL)</label>
                       <div className="relative">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-4 w-4 opacity-80" />
+                          <img src="/img/solana-logo.svg" alt="SOL" className="h-4 w-4 opacity-80" />
                         </div>
                         <Input
                           type="number"

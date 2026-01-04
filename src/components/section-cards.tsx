@@ -156,7 +156,7 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
           <h2 className="text-6xl md:text-8xl font-black text-foreground tracking-tighter flex flex-wrap justify-center items-baseline gap-2 leading-none filter drop-shadow-sm">
             {currentBalance.toFixed(4)}
             <div className="flex items-center gap-2">
-              <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-8 w-8 md:h-12 md:w-12" />
+              <img src="/img/solana-logo.svg" alt="SOL" className="h-8 w-8 md:h-12 md:w-12" />
               <span className="text-2xl md:text-4xl text-primary font-bold">SOL</span>
             </div>
           </h2>

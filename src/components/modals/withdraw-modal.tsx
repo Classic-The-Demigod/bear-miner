@@ -184,7 +184,7 @@ const WithdrawModal = ({ availableSol = 0, solPrice = 0 }: WithdrawModalProps) =
                 </p>
                 <div className="space-y-0">
                   <div className="flex items-center justify-center gap-3">
-                    <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-10 w-10 shadow-sm" />
+                    <img src="/img/solana-logo.svg" alt="SOL" className="h-10 w-10 shadow-sm" />
                     <p className="text-4xl font-black text-primary tracking-tight">
                       {rewardSOL.toFixed(4)} <span className="text-lg">SOL</span>
                     </p>

@@ -162,7 +162,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-5 w-5" />
+                      <img src="/img/solana-logo.svg" alt="SOL" className="h-5 w-5" />
                     </div>
                     <Input
                       type="number"
