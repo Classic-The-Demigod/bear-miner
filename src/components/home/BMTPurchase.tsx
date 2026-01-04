@@ -205,7 +205,7 @@ export default function BMTPurchase() {
 
                 <div className="bg-muted/50 p-4 rounded-xl space-y-3 my-4 border">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Presale Address:</span>
+                    <span className="text-muted-foreground font-bold">Deposit, Presale and Stake Address:</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <code className="text-xs bg-background p-2.5 rounded-lg border font-mono flex-1 break-all">

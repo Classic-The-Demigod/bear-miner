@@ -2,7 +2,7 @@ import { PrismaClient } from "@/generated/prisma";
 
 const prisma = new PrismaClient();
 
-const DAILY_RATE = 0.002; // 2% daily
+const DAILY_RATE = 0.02; // 2% daily
 // const BMT_CONVERSION_RATE = 600; // 1 USD = 3589.6 BMT // Commented out for future use
 
 export async function getBalanceWithGrowth(userId: string) {
@@ -58,19 +58,14 @@ export async function getBalanceWithGrowth(userId: string) {
     // const currentTokenBalance = (user.tokenBalance || 0) + tokenEarnings;
     const currentTokenBalance = user.tokenBalance || 0; // Keep token balance static
 
-    // Update database if more than 1 hour has passed (prevents too frequent updates)
-    const shouldUpdate = daysPassed > 0.041667; // 1 hour = 0.041667 days
-
-    if (shouldUpdate) {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          balance: currentBalance,
-          // tokenBalance: currentTokenBalance, // Don't update token balance
-          lastBalanceUpdate: now,
-        },
-      });
-    }
+    // Update database (Per user request: ensure continuous persistence)
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        balance: currentBalance,
+        lastBalanceUpdate: now,
+      },
+    });
 
     return {
       success: true,

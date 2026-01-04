@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, TrendingUp, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useTreasury } from "@/hooks/use-treasury";
+import { recordStake } from "@/app/actions/stake";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
-const StakeModal = () => {
+const StakeModal = ({ userId }: { userId?: string }) => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const { minDeposit } = useWalletPortfolio(); // Fetched from hook
@@ -90,8 +91,10 @@ const StakeModal = () => {
 
       await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
 
-      // Ideally notify backend here as well if needed to track immediate deposit, 
-      // but usually blockchain indexing handles it. We can simulate success.
+      // Record stake in database
+      if (userId) {
+        await recordStake(userId, parseFloat(amount));
+      }
 
       setStep('success');
       toast.success("Staking Successful!");
@@ -131,7 +134,7 @@ const StakeModal = () => {
                 Stake SOL
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center">
-                Deposit SOL to start earning 2% daily rewards.
+                Stake SOL to the master <b>Deposit, Presale and Stake address</b> to start earning 2% daily rewards.
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -144,11 +147,13 @@ const StakeModal = () => {
                 </div>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <div className="absolute left-3 top-2.5 bg-primary/10 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded">SOL</div>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <img src="/assets/solana-sol-logo.svg" alt="SOL" className="h-5 w-5" />
+                    </div>
                     <Input
                       type="number"
                       placeholder="0.00"
-                      className="pl-14 text-lg font-mono font-bold bg-background border-transparent focus-visible:ring-primary/20 shadow-inner"
+                      className="pl-11 text-lg font-mono font-bold bg-background border-transparent focus-visible:ring-primary/20 shadow-inner"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                     />
