@@ -56,7 +56,7 @@ const Nav = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <Image
-              src="/assets/logo.svg"
+              src="/img/logo.svg"
               alt="Bear Miner Logo"
               width={45}
               height={45}
@@ -78,7 +78,7 @@ const Nav = () => {
           className="group flex items-center justify-center p-2 rounded-2xl bg-white/50 hover:bg-[#0088cc]/10 border border-transparent hover:border-[#0088cc]/20 transition-all duration-300 hover:scale-110"
         >
           <Image
-            src="/assets/telegram.svg"
+            src="/img/telegram.svg"
             alt="Telegram"
             width={32}
             height={32}
@@ -196,7 +196,7 @@ const Nav = () => {
           >
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-[#0088cc]/10 group-hover:border-[#0088cc]/30 transition-all">
               <Image
-                src="/assets/telegram.svg"
+                src="/img/telegram.svg"
                 alt="Telegram"
                 width={20}
                 height={20}

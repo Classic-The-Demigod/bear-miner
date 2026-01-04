@@ -174,7 +174,7 @@ export function AppSidebar({ user: propUser, ...props }: AppSidebarCombinedProps
               <div className="flex items-center justify-center gap-3 w-full">
                 <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
                   <Image
-                    src="/assets/logo.svg"
+                    src="/img/logo.svg"
                     alt="Bear Miner Logo"
                     width={34}
                     height={34}

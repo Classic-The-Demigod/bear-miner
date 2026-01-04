@@ -129,7 +129,7 @@ export default function BMTPurchase() {
         {/* Right Side: Purchase Card */}
         <Card className="border-none shadow-2xl bg-gradient-to-b from-card to-background ring-1 ring-border/50 overflow-hidden relative">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-            <Image src="/assets/logo.svg" alt="bg" width={200} height={200} />
+            <Image src="/img/logo.svg" alt="bg" width={200} height={200} />
           </div>
 
           <CardHeader>
@@ -153,7 +153,7 @@ export default function BMTPurchase() {
                   step="0.01"
                 />
                 <div className="absolute right-2 top-2 bottom-2 bg-background rounded-lg border shadow-sm px-3 flex items-center gap-2 pointer-events-none">
-                  <Image src="/assets/solana-sol-logo.svg" alt="SOL" width={20} height={20} />
+                  <Image src="/img/solana-logo.svg" alt="SOL" width={20} height={20} />
                   <span className="font-bold text-sm">SOL</span>
                 </div>
               </div>
@@ -180,7 +180,7 @@ export default function BMTPurchase() {
                   step="1"
                 />
                 <div className="absolute right-2 top-2 bottom-2 bg-background rounded-lg border shadow-sm px-3 flex items-center gap-2 pointer-events-none">
-                  <Image src="/assets/logo.svg" alt="BMT" width={20} height={20} className="rounded-full" />
+                  <Image src="/img/logo.svg" alt="BMT" width={20} height={20} className="rounded-full" />
                   <span className="font-bold text-sm">BMT</span>
                 </div>
               </div>
