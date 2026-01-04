@@ -67,6 +67,7 @@ model GlobalSettings {
   twilioAuthToken  String?
   twilioPhoneNumber String?
   whatsappEnabled  Boolean  @default(false)
+  bearTokenPrice   Float    @default(0.0)
   
   updatedAt   DateTime @updatedAt
   

@@ -1,0 +1,3 @@
+module.exports=[83220,a=>{"use strict";a.s(["default",()=>e,"metadata",()=>c,"viewport",()=>d]);var b=a.i(7997);let c={title:"Bear Miner | Admin",description:"Admin Dashboard"},d={themeColor:[{media:"(prefers-color-scheme: light)",color:"#FFFFFF"},{media:"(prefers-color-scheme: dark)",color:"#09090B"}]};function e({children:a}){return(0,b.jsx)(b.Fragment,{children:a})}}];
+
+//# sourceMappingURL=src_app_admin_dashboard_layout_tsx_73e3e6ff._.js.map

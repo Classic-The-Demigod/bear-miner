@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "/api/auth/logout/route": [
+      "static/chunks/c62b4372c26b460f.js",
+      "static/chunks/2008ffcf9e5b170c.js",
+      "static/chunks/9089c7244322c0c2.js",
+      "static/chunks/111c2078ff56494a.js",
+      "static/chunks/8082ab48faca5ea1.js",
+      "static/chunks/turbopack-6549eaa71824b447.js"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "/api/admin/notifications/withdrawal-alert/route": "app/api/admin/notifications/withdrawal-alert/route.js"
+}

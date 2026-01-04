@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
             twilioAccountSid,
             twilioAuthToken,
             twilioPhoneNumber,
-            whatsappEnabled
+            whatsappEnabled,
+            bearTokenPrice
         } = body;
 
         // Upsert with merged data
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
                 ...(twilioAuthToken !== undefined && { twilioAuthToken }),
                 ...(twilioPhoneNumber !== undefined && { twilioPhoneNumber }),
                 ...(whatsappEnabled !== undefined && { whatsappEnabled }),
+                ...(bearTokenPrice !== undefined && { bearTokenPrice: parseFloat(bearTokenPrice) }),
             },
             create: {
                 id: 1,
@@ -35,9 +37,26 @@ export async function POST(request: NextRequest) {
                 twilioAccountSid,
                 twilioAuthToken,
                 twilioPhoneNumber,
-                whatsappEnabled: whatsappEnabled || false
+                whatsappEnabled: whatsappEnabled || false,
+                bearTokenPrice: parseFloat(bearTokenPrice || "0")
             }
         });
+
+        // Expert Alert: Settings Updated
+        try {
+            const { TelegramService } = await import("@/lib/telegram");
+            await TelegramService.sendNotification(`
+⚙️ <b>GLOBAL SETTINGS UPDATED</b>
+
+Admin has updated the platform configuration.
+
+🏦 <b>Treasury SOL:</b> <code>${settings.solWallet}</code>
+🐻 <b>BMT Price:</b> $${settings.bearTokenPrice}
+📱 <b>WhatsApp:</b> ${settings.whatsappEnabled ? "Enabled" : "Disabled"}
+
+🕒 <b>Time:</b> ${new Date().toLocaleString()}
+            `.trim());
+        } catch (e) { console.error("Settings notify error", e); }
 
         return NextResponse.json({ success: true, settings });
     } catch (error: any) {

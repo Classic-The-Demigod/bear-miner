@@ -1,0 +1,20 @@
+{
+  "node": {
+    "607b760d914cdd436474f733cbbfb67f05227849ab": {
+      "workers": {
+        "app/dashboard/page": {
+          "moduleId": "1098",
+          "async": false,
+          "exportedName": "recordStake",
+          "filename": "src/app/actions/stake.ts"
+        }
+      },
+      "layer": {
+        "app/dashboard/page": "action-browser"
+      },
+      "exportedName": "recordStake",
+      "filename": "src/app/actions/stake.ts"
+    }
+  },
+  "edge": {}
+}

@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -63,9 +63,7 @@ export default async function Page() {
               <div className="px-4 lg:px-6">
                 <CryptoPriceTracker />
               </div>
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
+
             </div>
           </div>
         </div>

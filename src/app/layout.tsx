@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -19,8 +19,11 @@ export const metadata: Metadata = {
     "Bear Miner is a decentralized staking platform built on the Solana blockchain offering a sustainable 2% daily return on your staked SOL.Transparent. Secure. Rewarding.",
 };
 
-export const viewport = {
-  themeColor: "#f3ffeb",
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F3FFEB" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090B" },
+  ],
 };
 
 export default function RootLayout({
