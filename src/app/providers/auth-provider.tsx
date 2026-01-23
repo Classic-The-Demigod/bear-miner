@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 interface User {
@@ -20,6 +20,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAuthenticating: boolean;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -27,44 +28,39 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { publicKey, signMessage, connected, disconnect } = useWallet();
+  const { publicKey, signMessage, connected, disconnect, connecting } = useWallet();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Ref to prevent double-firing (tracks the last wallet address we tried to auth with)
   const lastAttemptedWallet = useRef<string | null>(null);
 
-  // Auto-authenticate when wallet connects AND signMessage is available
+  // Auto-authenticate removed to avoid "WalletSignMessageError" (gesture requirement) 
+  // Authentication must now be triggered by a user click via signIn()
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    const walletAddress = publicKey?.toBase58();
-    // Only proceed if connected, have keys, not currently authing, and haven't tried this wallet yet
-    const shouldTrigger = connected && walletAddress && signMessage && !user && !isAuthenticating && lastAttemptedWallet.current !== walletAddress;
-
-    if (shouldTrigger) {
-      console.log("[AuthProvider] Triggering auto sign-in sequence for:", walletAddress);
-      // Small delay to ensure wallet is fully ready and stable
-      timeoutId = setTimeout(() => {
-        handleAutoSignIn();
-      }, 500);
+    if (connected && !user && !isAuthenticating) {
+      console.log("[AuthProvider] Wallet connected. Waiting for manual sign-in.");
     }
+  }, [connected, user, isAuthenticating]);
 
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [connected, publicKey, signMessage, user, isAuthenticating]);
-
-  // Handle wallet disconnection
+  // Handle wallet disconnection and redirection
   useEffect(() => {
     if (!connected) {
       if (user) setUser(null);
       lastAttemptedWallet.current = null; // Reset attempt flag so we can login again
       setIsAuthenticating(false);
+
+      // Redirect if on protected path and not currently trying to connect or authenticate
+      const isProtectedRoute = pathname?.startsWith("/dashboard") || pathname?.startsWith("/admin");
+      if (isProtectedRoute && !isLoading && !isAuthenticating && !connecting) {
+        console.log("[AuthProvider] Unauthorized access detected. Redirecting to home...");
+        router.push("/");
+      }
     }
-  }, [connected, user]);
+  }, [connected, user, pathname, isLoading, isAuthenticating, connecting, router]);
 
   async function handleAutoSignIn() {
     // Double check requirements inside the function to be safe
@@ -168,6 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isAuthenticating,
         signIn,
         signOut,
       }}

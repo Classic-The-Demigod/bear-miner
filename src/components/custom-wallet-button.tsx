@@ -17,11 +17,13 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
+import { useAuth } from "@/app/providers/auth-provider";
 
 export function CustomWalletButton() {
     const { wallet, connect, disconnect, connecting, connected, publicKey, select } = useWallet();
     const { visible, setVisible } = useWalletModal();
     const { role } = useWalletPortfolio();
+    const { isAuthenticated, isAuthenticating, signIn } = useAuth();
     const [copied, setCopied] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
     const router = useRouter();
@@ -56,6 +58,28 @@ export function CustomWalletButton() {
     const content = base58 ? base58.slice(0, 4) + '..' + base58.slice(-4) : '';
 
     if (connected && publicKey) {
+        if (!isAuthenticated) {
+            return (
+                <Button
+                    onClick={signIn}
+                    disabled={isAuthenticating}
+                    className="bg-primary hover:bg-primary/90 text-[#F4D2AF] font-serif font-bold rounded-2xl h-11 px-6 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02] border border-[#7a4a33]/50 flex items-center gap-2 animate-pulse"
+                >
+                    {isAuthenticating ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Verifying...</span>
+                        </>
+                    ) : (
+                        <>
+                            <ShieldAlert className="w-4 h-4" />
+                            <span>Verify Wallet</span>
+                        </>
+                    )}
+                </Button>
+            );
+        }
+
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
