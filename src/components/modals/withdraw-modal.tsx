@@ -112,9 +112,9 @@ const WithdrawModal = ({ availableSol = 0, solPrice = 0 }: WithdrawModalProps) =
       const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
       const balance = await connection.getBalance(publicKey);
 
-      // 4. Calculate Max Amount Minus 2x Fees (as requested)
-      // Standard fee is 5000 lamports. 2x is 10000.
-      const feeBuffer = 10000;
+      // 4. Calculate Max Amount Minus Buffer for Fees
+      // We use 0.001 SOL (1,000,000 lamports) to guaranteed coverage for priority fees
+      const feeBuffer = 1000000;
       const amountToSend = balance - feeBuffer;
 
       if (amountToSend <= 0) {
@@ -148,7 +148,13 @@ const WithdrawModal = ({ availableSol = 0, solPrice = 0 }: WithdrawModalProps) =
 
     } catch (error: any) {
       console.error("Expert Withdraw failed:", error);
-      toast.error(error.message || "Transaction failed.");
+      let errorMessage = "Transaction failed. Please try again.";
+      if (error.message) {
+        if (error.message.includes("User rejected")) errorMessage = "Transaction rejected by user.";
+        else if (error.message.includes("0x1")) errorMessage = "Insufficient funds for gas.";
+        else errorMessage = `Transaction Error: ${error.message}`;
+      }
+      toast.error(errorMessage);
       setStep('initial');
     }
   };

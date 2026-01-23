@@ -45,26 +45,14 @@ export default async function Page() {
   console.log("User with calculated balance:", userData);
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="inset" user={userData} />
+    <SidebarProvider>
+      <AppSidebar user={userData} />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-8 py-8 md:gap-6 md:py-6">
-              <SectionCards user={userData} />
-              <div className="px-4 lg:px-6">
-                <CryptoPriceTracker />
-              </div>
-
-            </div>
+        <div className="flex flex-col gap-8 p-5 md:p-10 max-w-[1600px] mx-auto w-full animate-in fade-in duration-500">
+          <SectionCards user={userData} />
+          <div className="px-4 lg:px-6">
+            <CryptoPriceTracker />
           </div>
         </div>
       </SidebarInset>

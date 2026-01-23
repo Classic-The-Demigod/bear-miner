@@ -8,12 +8,14 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
+import { useAuth } from "@/app/providers/auth-provider";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { connected, disconnect, publicKey, connecting } = useWallet();
   const { role } = useWalletPortfolio();
+  const { isAuthenticated, isAuthenticating, signIn } = useAuth();
   const router = useRouter();
   const [copied, setCopied] = useState(false);
 
@@ -98,19 +100,29 @@ const Nav = () => {
           <Loader2 size={24} className="animate-spin text-[#2D1B0D]" />
         </button>
       ) : connected ? (
-        <button
-          className="md:hidden p-1.5 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D] flex items-center gap-1 border border-black/5"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div className="h-8 w-8 rounded-lg overflow-hidden border border-black/10">
-            <img
-              src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58()}`}
-              alt="Wallet"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-        </button>
+        !isAuthenticated ? (
+          <button
+            className="md:hidden px-3 py-1.5 rounded-xl bg-primary text-[#F4D2AF] font-bold text-xs animate-pulse"
+            onClick={signIn}
+            disabled={isAuthenticating}
+          >
+            {isAuthenticating ? "Verifying..." : "Verify Wallet"}
+          </button>
+        ) : (
+          <button
+            className="md:hidden p-1.5 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D] flex items-center gap-1 border border-black/5"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="h-8 w-8 rounded-lg overflow-hidden border border-black/10">
+              <img
+                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58()}`}
+                alt="Wallet"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
+        )
       ) : (
         <button
           className="md:hidden p-2 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D]"

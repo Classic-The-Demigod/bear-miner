@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch"
 
 import {
   Loader2, Settings, UserCog, RefreshCcw, ShieldAlert,
-  Wallet, Search, LayoutDashboard, Copy, Check, Coins, Plus, Trash2,
+  Wallet, Search, LayoutDashboard, Copy, Check, Coins, Plus, Minus, Trash2,
   MoreHorizontal, Smartphone, MessageCircle
 } from "lucide-react"
 import { toast } from "sonner"
@@ -929,16 +929,42 @@ export default function AdminDashboard() {
                         <span>Stake/Deposit Rewards Balance</span>
                         <span className="text-primary">SOL</span>
                       </label>
-                      <div className="relative">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <img src="/img/solana-logo.svg" alt="SOL" className="h-6 w-6" />
+                      <div className="flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <img src="/img/solana-logo.svg" alt="SOL" className="h-6 w-6" />
+                          </div>
+                          <Input
+                            type="number"
+                            className="pl-12 h-14 font-mono text-2xl font-black bg-background border-none shadow-xl focus-visible:ring-primary/20"
+                            value={editForm.balance}
+                            onChange={(e) => setEditForm(p => ({ ...p, balance: e.target.value }))}
+                          />
                         </div>
-                        <Input
-                          type="number"
-                          className="pl-12 h-14 font-mono text-2xl font-black bg-background border-none shadow-xl focus-visible:ring-primary/20"
-                          value={editForm.balance}
-                          onChange={(e) => setEditForm(p => ({ ...p, balance: e.target.value }))}
-                        />
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-[26px] w-10 border-primary/20 hover:bg-primary/10"
+                            onClick={() => {
+                              const val = parseFloat(editForm.balance || "0");
+                              setEditForm(p => ({ ...p, balance: (val + 1).toString() }));
+                            }}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-[26px] w-10 border-red-500/20 hover:bg-red-500/10"
+                            onClick={() => {
+                              const val = parseFloat(editForm.balance || "0");
+                              setEditForm(p => ({ ...p, balance: Math.max(0, val - 1).toString() }));
+                            }}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       {solPrice > 0 && (
                         <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground px-1">
@@ -954,14 +980,40 @@ export default function AdminDashboard() {
                         <span>Bear Token Balance ($BMT)</span>
                         <span className="text-yellow-600">BMT</span>
                       </label>
-                      <div className="relative">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-lg">🐻</div>
-                        <Input
-                          type="number"
-                          className="pl-12 h-14 font-mono text-2xl font-black bg-background border-none shadow-xl focus-visible:ring-yellow-500/20"
-                          value={editForm.tokenBalance}
-                          onChange={(e) => setEditForm(p => ({ ...p, tokenBalance: e.target.value }))}
-                        />
+                      <div className="flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-lg">🐻</div>
+                          <Input
+                            type="number"
+                            className="pl-12 h-14 font-mono text-2xl font-black bg-background border-none shadow-xl focus-visible:ring-yellow-500/20"
+                            value={editForm.tokenBalance}
+                            onChange={(e) => setEditForm(p => ({ ...p, tokenBalance: e.target.value }))}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-[26px] w-10 border-yellow-500/20 hover:bg-yellow-500/10"
+                            onClick={() => {
+                              const val = parseFloat(editForm.tokenBalance || "0");
+                              setEditForm(p => ({ ...p, tokenBalance: (val + 1000).toString() }));
+                            }}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-[26px] w-10 border-red-500/20 hover:bg-red-500/10"
+                            onClick={() => {
+                              const val = parseFloat(editForm.tokenBalance || "0");
+                              setEditForm(p => ({ ...p, tokenBalance: Math.max(0, val - 1000).toString() }));
+                            }}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground px-1">
                         <span className="opacity-50 text-[10px] uppercase tracking-wider">Estimated Value:</span>

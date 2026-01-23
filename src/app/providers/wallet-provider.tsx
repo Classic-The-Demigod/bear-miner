@@ -1,26 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
 // import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  CoinbaseWalletAdapter,
-  TrustWalletAdapter,
-  TorusWalletAdapter,
-  LedgerWalletAdapter,
-  MathWalletAdapter,
-  TokenPocketWalletAdapter,
-  BitKeepWalletAdapter,
-  SafePalWalletAdapter,
-  Coin98WalletAdapter
-} from "@solana/wallet-adapter-wallets";
-
 import { clusterApiUrl } from "@solana/web3.js";
 
 // Import wallet adapter CSS
@@ -46,25 +32,25 @@ export function SolanaWalletProvider({
     return clusterApiUrl(network);
   }, [network]);
 
-  // Configure supported wallets - relying on Wallet Standard + Explicit Backups
-  const wallets = useMemo(
-    () => [
-      new CoinbaseWalletAdapter(),
-      new TrustWalletAdapter(),
-      new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new MathWalletAdapter(),
-      new TokenPocketWalletAdapter(),
-      new BitKeepWalletAdapter(),
-      new SafePalWalletAdapter(),
-      new Coin98WalletAdapter(),
-    ],
-    []
-  );
+  // Configure supported wallets
+  // We use an empty array because modern Solana wallets (Phantom, Solflare, etc.) 
+  // support the "Wallet Standard" and are automatically detected by the provider.
+  // This prevents annoying "Failed to connect" errors from extensions like MetaMask.
+  const wallets = useMemo(() => [], []);
+
+  const onError = useCallback((error: WalletError) => {
+    // Silence non-critical extension errors that don't affect our app's functionality.
+    // This specifically prevents "Failed to connect to MetaMask" from showing up
+    // when both Phantom and MetaMask are installed.
+    if (error.name === 'WalletConnectionError' || error.message.includes('MetaMask')) {
+      return;
+    }
+    console.error("[WalletProvider] Wallet Error:", error);
+  }, []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect={false}>
+      <WalletProvider wallets={wallets} onError={onError} autoConnect={false}>
         <CustomWalletModalProvider>
           <AutoLogout />
           {children}

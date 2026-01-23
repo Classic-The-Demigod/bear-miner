@@ -7,6 +7,7 @@ import { Loader2, TrendingUp, CheckCircle2, AlertTriangle, ArrowRight } from "lu
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useTreasury } from "@/hooks/use-treasury";
 import { recordStake } from "@/app/actions/stake";
+import { useAuth } from "@/app/providers/auth-provider";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -21,7 +22,8 @@ import { toast } from "sonner";
 
 const StakeModal = ({ userId }: { userId?: string }) => {
   const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey, sendTransaction, wallet } = useWallet();
+  const { isAuthenticated, signIn, isAuthenticating } = useAuth();
   const { minDeposit } = useWalletPortfolio(); // Fetched from hook
 
   const { address: adminWallet, error: treasuryError } = useTreasury("SOL");
@@ -59,9 +61,9 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   }, [publicKey, connection]);
 
   const handleMax = () => {
-    // Leave 0.005 for gas
-    const max = Math.max(0, maxSol - 0.005);
-    setAmount(max.toFixed(4));
+    // Leave a very safe buffer (0.001 SOL) to cover priority fees (Phantom/Solflare)
+    const max = Math.max(0, maxSol - 0.001);
+    setAmount(max.toFixed(6));
   };
 
   const validateAndProceed = () => {
@@ -82,12 +84,29 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   };
 
   const handleStake = async () => {
-    if (!publicKey || !adminWallet) return;
+    if (!publicKey) {
+      toast.error("Please connect your wallet first.");
+      return;
+    }
+
+    if (!adminWallet) {
+      toast.error("Deposit address not configured. Please contact administrator.");
+      console.error("Treasury SOL Address is missing in global settings.");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      toast.error("Session expired. Please verify your wallet again.");
+      await signIn();
+      setStep('initial');
+      return;
+    }
 
     try {
       setStep('processing');
+      console.log("[StakeModal] Initializing transaction to:", adminWallet);
       const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-      const lamports = parseFloat(amount) * LAMPORTS_PER_SOL;
+      const lamports = Math.floor(parseFloat(amount) * LAMPORTS_PER_SOL);
 
       const transaction = new Transaction({
         feePayer: publicKey,
@@ -96,10 +115,11 @@ const StakeModal = ({ userId }: { userId?: string }) => {
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: new PublicKey(adminWallet),
-          lamports: parseInt(lamports.toString()),
+          lamports,
         })
       );
 
+      console.log("[StakeModal] Requesting signature via sendTransaction...");
       const signature = await sendTransaction(transaction, connection);
       console.log("Staking sent:", signature);
 

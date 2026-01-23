@@ -216,8 +216,17 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
         {/* FOOTER ACTIONS */}
         <CardFooter className="flex-col pb-8 pt-4 px-8 z-10 relative">
           <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
-            <StakeModal userId={user?.id} />
-            <WithdrawModal availableSol={currentBalance} solPrice={solPrice} />
+            {mounted ? (
+              <>
+                <StakeModal userId={user?.id} />
+                <WithdrawModal availableSol={currentBalance} solPrice={solPrice} />
+              </>
+            ) : (
+              <>
+                <div className="h-12 bg-muted animate-pulse rounded-xl" />
+                <div className="h-12 bg-muted animate-pulse rounded-xl" />
+              </>
+            )}
           </div>
         </CardFooter>
       </Card>
