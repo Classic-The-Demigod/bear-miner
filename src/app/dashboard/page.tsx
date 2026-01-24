@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getBalanceWithGrowth } from "@/app/actions/balance";
 import CryptoPriceTracker from "@/components/cyrpto-tracker";
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
 
