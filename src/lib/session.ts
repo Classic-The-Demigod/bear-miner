@@ -1,6 +1,6 @@
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
