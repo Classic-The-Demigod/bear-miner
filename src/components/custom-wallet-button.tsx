@@ -42,9 +42,9 @@ export function CustomWalletButton() {
     }, [publicKey]);
 
     const handleConnect = useCallback(() => {
-        if (connected) return;
+        if (connected && isAuthenticated) return;
         setVisible(true);
-    }, [connected, setVisible]);
+    }, [connected, isAuthenticated, setVisible]);
 
     const handleDisconnect = useCallback(async () => {
         await disconnect();
@@ -57,29 +57,7 @@ export function CustomWalletButton() {
     const base58 = publicKey?.toBase58();
     const content = base58 ? base58.slice(0, 4) + '..' + base58.slice(-4) : '';
 
-    if (connected && publicKey) {
-        if (!isAuthenticated) {
-            return (
-                <Button
-                    onClick={signIn}
-                    disabled={isAuthenticating}
-                    className="bg-primary hover:bg-primary/90 text-[#F4D2AF] font-serif font-bold rounded-2xl h-11 px-6 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02] border border-[#7a4a33]/50 flex items-center gap-2 animate-pulse"
-                >
-                    {isAuthenticating ? (
-                        <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Verifying...</span>
-                        </>
-                    ) : (
-                        <>
-                            <ShieldAlert className="w-4 h-4" />
-                            <span>Verify Wallet</span>
-                        </>
-                    )}
-                </Button>
-            );
-        }
-
+    if (isAuthenticated && connected && publicKey) {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

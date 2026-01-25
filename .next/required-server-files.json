@@ -98,7 +98,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\User\\Documents\\codebox\\bear-miner",
+    "outputFileTracingRoot": "C:\\Users\\cryptohive\\Desktop\\Softwares\\Bear Miners",
     "experimental": {
       "useSkewCookie": false,
       "cacheLife": {
@@ -157,7 +157,7 @@
       "middlewarePrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 3,
+      "cpus": 7,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -290,10 +290,10 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "C:\\Users\\User\\Documents\\codebox\\bear-miner"
+      "root": "C:\\Users\\cryptohive\\Desktop\\Softwares\\Bear Miners"
     }
   },
-  "appDir": "C:\\Users\\User\\Documents\\codebox\\bear-miner",
+  "appDir": "C:\\Users\\cryptohive\\Desktop\\Softwares\\Bear Miners",
   "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",

@@ -66,11 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Double check requirements inside the function to be safe
     if (!publicKey || !signMessage || isAuthenticating) return;
 
-    // Check ref again vs current key
-    if (lastAttemptedWallet.current === publicKey.toBase58()) return;
-
     setIsAuthenticating(true);
-    lastAttemptedWallet.current = publicKey.toBase58();
 
     const toastId = toast.loading("Please sign the message in your wallet...");
 
