@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "../../../../generated/prisma";
+import { PrismaClient } from "@/generated/prisma";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
