@@ -8,6 +8,7 @@ import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useTreasury } from "@/hooks/use-treasury";
 import { recordStake } from "@/app/actions/stake";
 import { useAuth } from "@/app/providers/auth-provider";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -25,6 +26,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   const { publicKey, sendTransaction, wallet } = useWallet();
   const { isAuthenticated, signIn, isAuthenticating } = useAuth();
   const { minDeposit } = useWalletPortfolio(); // Fetched from hook
+  const router = useRouter();
 
   const { address: adminWallet, error: treasuryError } = useTreasury("SOL");
   const [amount, setAmount] = useState("");
@@ -130,6 +132,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
         await recordStake(userId, parseFloat(amount));
       }
 
+      router.refresh(); // Trigger page data refresh
       setStep('success');
       toast.success("Staking Successful!");
 

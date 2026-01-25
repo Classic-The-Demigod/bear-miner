@@ -6,9 +6,11 @@ import { X, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/app/providers/auth-provider";
 
 export function WalletModal({ onClose }: { onClose: () => void }) {
     const { wallets, select, connect, connecting, wallet } = useWallet();
+    const { signIn } = useAuth();
     const [expanded, setExpanded] = useState(false);
     const [pendingWallet, setPendingWallet] = useState<WalletName | null>(null);
 
@@ -26,17 +28,22 @@ export function WalletModal({ onClose }: { onClose: () => void }) {
         const connectWallet = async () => {
             if (pendingWallet && wallet?.adapter.name === pendingWallet) {
                 try {
-                    await connect();
+                    // Check if already connected but not authenticated
+                    if (!wallet.adapter.connected) {
+                        await connect();
+                    }
+                    // Automatically trigger verification (signIn) after connection state is confirmed
+                    await signIn();
                     setPendingWallet(null);
                     onClose();
                 } catch (error) {
-                    console.error("Connection failed:", error);
+                    console.error("Connection/Authentication failed:", error);
                     setPendingWallet(null);
                 }
             }
         };
         connectWallet();
-    }, [pendingWallet, wallet, connect, onClose]);
+    }, [pendingWallet, wallet, connect, signIn, onClose]);
 
     // Filter wallets: show installed first, then others
     const { installed, others } = useMemo(() => {
