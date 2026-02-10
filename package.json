@@ -66,9 +66,10 @@
   "name": "bear-miner",
   "private": true,
   "scripts": {
-    "build": "prisma generate && next build --turbopack",
-    "dev": "prisma generate && next dev --turbopack",
+    "build": "prisma generate && next build",
+    "dev": "next dev --turbopack",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "start": "next start"
   },
   "version": "0.1.0"
