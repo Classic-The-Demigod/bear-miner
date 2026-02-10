@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
+
 const StakeModal = ({ userId }: { userId?: string }) => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction, wallet } = useWallet();
@@ -41,16 +42,20 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    const fetchBalance = async () => {
-      if (publicKey && connection) {
-        try {
-          const bal = await connection.getBalance(publicKey);
-          setMaxSol(bal / LAMPORTS_PER_SOL);
-        } catch (e) {
-          console.error("Failed to fetch balance:", e);
-        }
-      }
-    };
+   const fetchBalance = async () => {
+     if (!connection) {
+       console.error("Connection is undefined - check your ConnectionProvider");
+       return;
+     }
+     if (publicKey && connection) {
+       try {
+         const bal = await connection.getBalance(publicKey);
+         setMaxSol(bal / LAMPORTS_PER_SOL);
+       } catch (e) {
+         console.error("Failed to fetch balance:", e);
+       }
+     }
+   };
 
     fetchBalance();
 
@@ -152,15 +157,17 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   };
 
   return (
-    <AlertDialog open={step !== 'initial' ? true : undefined} onOpenChange={(open) => !open && reset()}>
+    <AlertDialog
+      open={step !== "initial" ? true : undefined}
+      onOpenChange={(open) => !open && reset()}
+    >
       <AlertDialogTrigger asChild>
         <Button className="w-full h-full min-h-[50px] bg-primary text-[#F4D2AF] font-serif hover:bg-primary/90 px-4 py-3 rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-md border-2 border-[#0E0000] text-sm md:text-base whitespace-nowrap leading-tight truncate">
           Start Mining $Bear
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-md border-none shadow-2xl bg-card">
-
-        {step === 'initial' && (
+        {step === "initial" && (
           <>
             <AlertDialogHeader>
               <AlertDialogTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
@@ -182,7 +189,11 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <img src="/img/solana-logo.svg" alt="SOL" className="h-5 w-5" />
+                      <img
+                        src="/img/solana-logo.svg"
+                        alt="SOL"
+                        className="h-5 w-5"
+                      />
                     </div>
                     <Input
                       type="number"
@@ -192,7 +203,11 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                       onChange={(e) => setAmount(e.target.value)}
                     />
                   </div>
-                  <Button variant="outline" onClick={handleMax} className="px-3 font-bold text-xs text-primary border-primary/20 hover:bg-primary/5">
+                  <Button
+                    variant="outline"
+                    onClick={handleMax}
+                    className="px-3 font-bold text-xs text-primary border-primary/20 hover:bg-primary/5"
+                  >
                     MAX
                   </Button>
                 </div>
@@ -209,9 +224,14 @@ const StakeModal = ({ userId }: { userId?: string }) => {
               {/* Info Logic */}
               <div className="space-y-3">
                 <div className="flex justify-between text-sm p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <span className="text-muted-foreground">Daily Return (Est.)</span>
+                  <span className="text-muted-foreground">
+                    Daily Return (Est.)
+                  </span>
                   <span className="font-bold text-green-600">
-                    +{((parseFloat(amount) || 0) * 0.02).toFixed(4)} SOL <span className="text-xs text-muted-foreground font-normal">(2%)</span>
+                    +{((parseFloat(amount) || 0) * 0.02).toFixed(4)} SOL{" "}
+                    <span className="text-xs text-muted-foreground font-normal">
+                      (2%)
+                    </span>
                   </span>
                 </div>
                 <div className="flex justify-between text-xs px-2 text-muted-foreground">
@@ -224,18 +244,36 @@ const StakeModal = ({ userId }: { userId?: string }) => {
             <AlertDialogFooter className="flex-col gap-2 sm:flex-col">
               <Button
                 onClick={validateAndProceed}
-                disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) < (minDeposit || 100)}
+                // disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) < (minDeposit || 100)}
                 className="w-full h-12 text-lg font-bold shadow-lg shadow-primary/20"
               >
                 Proceed to Deposit
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <AlertDialogCancel onClick={reset} className="w-full mt-2 border-none hover:bg-muted">Cancel</AlertDialogCancel>
+              <div className="flex justify-between text-xs font-medium text-muted-foreground">
+                <span>Amount to Deposit</span>
+                <span className="font-bold text-primary">
+                  Available: {maxSol.toFixed(4)} SOL
+                </span>
+              </div>
+
+              {/* Add this below to debug */}
+              <div className="text-[10px] text-muted-foreground/50 text-right">
+                Raw: {maxSol} | Connected: {publicKey ? "✓" : "✗"} | Wallet:{" "}
+                {publicKey?.toBase58().slice(0, 8)}...
+              </div>
+
+              <AlertDialogCancel
+                onClick={reset}
+                className="w-full mt-2 border-none hover:bg-muted"
+              >
+                Cancel
+              </AlertDialogCancel>
             </AlertDialogFooter>
           </>
         )}
 
-        {step === 'confirming' && (
+        {step === "confirming" && (
           <div className="py-8 flex flex-col items-center justify-center text-center space-y-6">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse"></div>
@@ -244,33 +282,48 @@ const StakeModal = ({ userId }: { userId?: string }) => {
             <div className="space-y-2">
               <h3 className="text-xl font-bold">Waiting for Wallet...</h3>
               <p className="text-muted-foreground text-sm max-w-[80%] mx-auto">
-                Please approve the transaction of <strong className="text-foreground">{amount} SOL</strong> in your wallet.
+                Please approve the transaction of{" "}
+                <strong className="text-foreground">{amount} SOL</strong> in
+                your wallet.
               </p>
             </div>
-            <Button onClick={handleStake} className="w-full max-w-xs font-bold animate-pulse">
+            <Button
+              onClick={handleStake}
+              className="w-full max-w-xs font-bold animate-pulse"
+            >
               Confirm in Wallet
             </Button>
-            <Button variant="ghost" onClick={() => setStep('initial')} className="text-sm">Go Back</Button>
+            <Button
+              variant="ghost"
+              onClick={() => setStep("initial")}
+              className="text-sm"
+            >
+              Go Back
+            </Button>
           </div>
         )}
 
-        {step === 'processing' && (
+        {step === "processing" && (
           <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
             <Loader2 className="h-16 w-16 text-primary animate-spin" />
             <div className="space-y-2">
               <h3 className="text-xl font-bold">Processing Transaction</h3>
-              <p className="text-muted-foreground text-sm">Sending transaction to Solana network...</p>
+              <p className="text-muted-foreground text-sm">
+                Sending transaction to Solana network...
+              </p>
             </div>
           </div>
         )}
 
-        {step === 'success' && (
+        {step === "success" && (
           <div className="py-8 flex flex-col items-center justify-center text-center space-y-6">
             <div className="h-24 w-24 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-2 animate-in zoom-in duration-300">
               <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-500" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-foreground">STAKING SUCCESSFUL!</h3>
+              <h3 className="text-2xl font-black text-foreground">
+                STAKING SUCCESSFUL!
+              </h3>
               <p className="text-muted-foreground text-sm">
                 Your deposit has been received. Mining starts immediately.
               </p>
@@ -278,12 +331,14 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                 {amount} SOL
               </div>
             </div>
-            <AlertDialogCancel onClick={reset} className="w-full bg-muted hover:bg-muted/80">
+            <AlertDialogCancel
+              onClick={reset}
+              className="w-full bg-muted hover:bg-muted/80"
+            >
               Done
             </AlertDialogCancel>
           </div>
         )}
-
       </AlertDialogContent>
     </AlertDialog>
   );

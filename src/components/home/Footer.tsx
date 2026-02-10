@@ -13,7 +13,6 @@ const Footer = () => {
 
       <div className="max-w-7xl mx-auto pt-20 pb-10 px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
-
           {/* Brand Section (4 cols) */}
           <div className="lg:col-span-5 space-y-6 pr-0 lg:pr-12">
             <Link href="/" className="inline-flex items-center gap-3 group">
@@ -25,19 +24,22 @@ const Footer = () => {
                   width={48}
                   height={48}
                   className="relative transform transition-transform duration-500 group-hover:rotate-12"
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{ width: "auto", height: "auto" }}
                 />
               </div>
-              <span className="text-2xl font-serif font-black tracking-tight text-[#F8EBDD]">Bear Miner</span>
+              <span className="text-2xl font-serif font-black tracking-tight text-[#F8EBDD]">
+                Bear Miner
+              </span>
             </Link>
 
             <p className="text-[#F8EBDD]/60 leading-relaxed max-w-sm text-base">
-              The future of DeFi staking on the Solana ecosystem. Powered by community, built for sustainable yield.
+              The future of DeFi staking on the Solana ecosystem. Powered by
+              community, built for sustainable yield.
             </p>
 
             <div className="flex items-center gap-4 pt-2">
               <Link
-                href="https://t.me/bearminers"
+                href="https://t.me/bearminerwordwide"
                 target="_blank"
                 className="group flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 hover:bg-[#0088cc]/20 hover:border-[#0088cc]/30 transition-all duration-300"
               >
@@ -47,7 +49,7 @@ const Footer = () => {
                   width={24}
                   height={24}
                   className="opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300"
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{ width: "auto", height: "auto" }}
                 />
               </Link>
             </div>
@@ -58,12 +60,13 @@ const Footer = () => {
 
           {/* Links Section (Use Grid for remaining 6 cols) */}
           <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8">
-
             {/* Quick Links */}
             <div>
-              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">Quick Links</h4>
+              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">
+                Quick Links
+              </h4>
               <ul className="space-y-4">
-                {['Home', 'Roadmap', 'FAQ'].map((item) => (
+                {["Home", "Roadmap", "FAQ"].map((item) => (
                   <li key={item}>
                     <Link
                       href={`#${item.toLowerCase()}`}
@@ -79,11 +82,13 @@ const Footer = () => {
 
             {/* Resources */}
             <div>
-              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">Resources</h4>
+              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">
+                Resources
+              </h4>
               <ul className="space-y-4">
                 <li>
                   <a
-                    href="https://drive.google.com/file/d/1LN2k1Nhu2DrA1r8FlyaWRImNESoeQabd/view?usp=sharing"
+                    href="/whitepaper"
                     target="_blank"
                     className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit"
                   >
@@ -92,12 +97,18 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <Link href="#" className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit">
+                  <Link
+                    href="#"
+                    className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit"
+                  >
                     Docs
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit">
+                  <Link
+                    href="#"
+                    className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit"
+                  >
                     Audits
                   </Link>
                 </li>
@@ -106,21 +117,28 @@ const Footer = () => {
 
             {/* Support/Other */}
             <div>
-              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">Legal</h4>
+              <h4 className="text-[#CEA065] font-serif font-bold mb-6 tracking-wide">
+                Legal
+              </h4>
               <ul className="space-y-4">
                 <li>
-                  <Link href="#" className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit">
+                  <Link
+                    href="#"
+                    className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit">
+                  <Link
+                    href="#"
+                    className="text-[#F8EBDD]/50 hover:text-[#F8EBDD] transition-colors duration-200 text-sm font-medium flex items-center gap-1 group w-fit"
+                  >
                     Terms of Service
                   </Link>
                 </li>
               </ul>
             </div>
-
           </div>
         </div>
 
@@ -135,7 +153,9 @@ const Footer = () => {
 
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm">
             <div className="w-1.5 h-1.5 rounded-full bg-[#14F195] animate-pulse" />
-            <span className="text-[#F8EBDD]/50 text-xs font-medium tracking-wide">Built on Solana</span>
+            <span className="text-[#F8EBDD]/50 text-xs font-medium tracking-wide">
+              Built on Solana
+            </span>
           </div>
         </div>
       </div>

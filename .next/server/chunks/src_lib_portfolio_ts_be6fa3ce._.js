@@ -12,7 +12,7 @@ const TOKEN_PROGRAM_ID = new __TURBOPACK__imported__module__$5b$project$5d2f$nod
 const TOKEN_2022_PROGRAM_ID = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["PublicKey"]("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
 class PortfolioService {
     static async getPortfolio(address) {
-        const rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || "https://solana-rpc.publicnode.com";
+        const rpcUrl = ("TURBOPACK compile-time value", "https://solana-rpc.publicnode.com") || "https://solana-rpc.publicnode.com";
         const connection = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Connection"](rpcUrl, "confirmed");
         const publicKey = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$solana$2f$web3$2e$js$2f$lib$2f$index$2e$esm$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["PublicKey"](address);
         let solBalanceLamports = 0;

@@ -5,7 +5,7 @@ const Roadmap = () => {
   const phases = [
     {
       icon: Rocket,
-      quarter: "Q4 2025",
+      quarter: "Q2 2026",
       title: "Launch Phase",
       color: "text-blue-500", // Change for text color
       bgColor: "bg-blue-100",
@@ -17,7 +17,7 @@ const Roadmap = () => {
     },
     {
       icon: Zap,
-      quarter: "Q1 2026",
+      quarter: "Q3 2026",
       title: "Growth Phase",
       color: "text-purple-500", // Change for text color
       bgColor: "bg-purple-100",
@@ -29,7 +29,7 @@ const Roadmap = () => {
     },
     {
       icon: Trophy,
-      quarter: "Q2 2026",
+      quarter: "Q4 2026",
       title: "Expansion Phase",
       color: "text-orange-500", // Change for text color
       bgColor: "bg-orange-100",
