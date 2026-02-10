@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import {
+  PublicKey,
+  Transaction,
+  TransactionMessage,
+  VersionedTransaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, TrendingUp, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
@@ -80,7 +87,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
       return;
     }
     if (val < (minDeposit || 100)) {
-      toast.error(`Minimum stake amount is ${minDeposit} SOL.`);
+      toast.error(`Minimum stake amount is ${minDeposit || 100} SOL.`);
       return;
     }
     if (val > maxSol) {
@@ -121,43 +128,53 @@ const StakeModal = ({ userId }: { userId?: string }) => {
         setStep("initial");
         return;
       }
+      if (parsedAmount < (minDeposit || 100)) {
+        toast.error(`Minimum stake amount is ${minDeposit || 100} SOL.`);
+        setStep("initial");
+        return;
+      }
+      if (parsedAmount > maxSol) {
+        toast.error("Insufficient balance.");
+        setStep("initial");
+        return;
+      }
 
       const lamports = Math.floor(parsedAmount * LAMPORTS_PER_SOL);
-      const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash();
+      const { blockhash } = await connection.getLatestBlockhash();
 
-      // Create simple transaction - let sendTransaction handle the rest
-      const transaction = new Transaction({
-        feePayer: publicKey,
-        recentBlockhash: blockhash,
-      }).add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(adminWallet),
-          lamports,
-        }),
-      );
+      const transferIx = SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: new PublicKey(adminWallet),
+        lamports,
+      });
 
-      console.log("[StakeModal] Requesting signature via sendTransaction...");
+      const supportsV0 = !!wallet?.adapter?.supportedTransactionVersions?.has?.(0);
+      const isPhantom = wallet?.adapter?.name === "Phantom";
 
-      // sendTransaction will automatically:
-      // 1. Get the latest blockhash
-      // 2. Set the fee payer
-      // 3. Serialize the transaction correctly
-      // 4. Send to the wallet for signing
-      const signature = await sendTransaction(transaction, connection);
+      let signature: string;
+      if (supportsV0 && !isPhantom) {
+        const messageV0 = new TransactionMessage({
+          payerKey: publicKey,
+          recentBlockhash: blockhash,
+          instructions: [transferIx],
+        }).compileToV0Message();
+        const v0Tx = new VersionedTransaction(messageV0);
+        console.log("[StakeModal] Sending v0 transaction via sendTransaction...");
+        signature = await sendTransaction(v0Tx, connection);
+      } else {
+        // Legacy fallback for wallets that don't support v0
+        const legacyTx = new Transaction({
+          feePayer: publicKey,
+          recentBlockhash: blockhash,
+        }).add(transferIx);
+        console.log("[StakeModal] Sending legacy transaction via sendTransaction...");
+        signature = await sendTransaction(legacyTx, connection);
+      }
 
       console.log("Transaction signature:", signature);
 
       // Wait for confirmation
-      await connection.confirmTransaction(
-        {
-          signature,
-          blockhash,
-          lastValidBlockHeight,
-        },
-        "confirmed",
-      );
+      await connection.confirmTransaction(signature, "confirmed");
 
       console.log("Transaction confirmed!");
 
