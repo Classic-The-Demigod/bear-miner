@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
 
     // Create session
     const session = await getIronSession<SessionData>(
-      cookies(),
+      await cookies(),
       sessionOptions
     );
 
