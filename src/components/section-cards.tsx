@@ -66,7 +66,7 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
       try {
         const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/So11111111111111111111111111111111111111112");
         const data = await res.json();
-        const pair = data.pairs?.[0];
+        const pair = data.pairs?.[1];
 
         if (pair) {
           setSolPrice(parseFloat(pair.priceUsd));

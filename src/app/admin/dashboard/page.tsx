@@ -149,7 +149,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/So11111111111111111111111111111111111111112");
       const data = await res.json();
-      const pair = data.pairs?.[0];
+      const pair = data.pairs?.[1];
       if (pair) setSolPrice(parseFloat(pair.priceUsd));
     } catch (e) { console.error("Failed to fetch SOL price", e); }
   };
@@ -271,6 +271,8 @@ export default function AdminDashboard() {
       toast.success("Wallet Added Successfully")
     } catch { toast.error("Failed to save wallet") }
   }
+
+
 
   const openEdit = async (user: any) => {
     setEditUser(user)
