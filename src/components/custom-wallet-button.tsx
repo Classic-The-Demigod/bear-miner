@@ -106,6 +106,29 @@ export function CustomWalletButton() {
         );
     }
 
+    if (connected && !isAuthenticated) {
+        return (
+            <Button
+                onClick={signIn}
+                disabled={isAuthenticating}
+                className="bg-[#7a4a33] hover:bg-[#633c2a] text-white font-serif font-bold text-base rounded-2xl h-12 px-6 shadow-lg shadow-[#7a4a33]/20 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 border-b-4 border-[#5a3626] active:border-b-0 min-w-[160px] relative overflow-hidden group"
+            >
+                {isAuthenticating ? (
+                    <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin text-[#d4c5bd]" />
+                        <span className="animate-pulse">Verifying...</span>
+                    </>
+                ) : (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                        <Check className="mr-2 h-5 w-5" />
+                        Verify Wallet
+                    </>
+                )}
+            </Button>
+        );
+    }
+
     return (
         <Button
             onClick={handleConnect}
