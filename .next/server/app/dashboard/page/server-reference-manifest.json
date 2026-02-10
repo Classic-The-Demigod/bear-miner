@@ -3,7 +3,7 @@
     "6026334fac1cb605d94d50297710de8465b0131819": {
       "workers": {
         "app/dashboard/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions/stake.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "moduleId": "1098",
           "async": false,
           "exportedName": "recordStake",
           "filename": "src/app/actions/stake.ts"

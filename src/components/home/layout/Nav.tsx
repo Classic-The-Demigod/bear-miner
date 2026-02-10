@@ -99,33 +99,20 @@ const Nav = () => {
         <button className="md:hidden p-2 rounded-xl bg-black/5 cursor-wait">
           <Loader2 size={24} className="animate-spin text-[#2D1B0D]" />
         </button>
-      ) : connected ? (
-        !isAuthenticated ? (
-          <button
-            className="md:hidden px-3 py-1.5 rounded-xl bg-primary text-[#F4D2AF] font-bold text-xs animate-pulse"
-            onClick={signIn}
-            disabled={isAuthenticating}
-          >
-            {isAuthenticating ? "Verifying..." : "Verify Wallet"}
-          </button>
-        ) : (
-          <button
-            className="md:hidden p-1.5 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D] flex items-center gap-1 border border-black/5"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <div className="h-8 w-8 rounded-lg overflow-hidden border border-black/10">
-              <img
-                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58()}`}
-                alt="Wallet"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <ChevronDown
-              size={16}
-              className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+      ) : (connected && isAuthenticated) ? (
+        <button
+          className="md:hidden p-1.5 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D] flex items-center gap-1 border border-black/5"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="h-8 w-8 rounded-lg overflow-hidden border border-black/10">
+            <img
+              src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58()}`}
+              alt="Wallet"
+              className="w-full h-full object-cover"
             />
-          </button>
-        )
+          </div>
+          <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
       ) : (
         <button
           className="md:hidden p-2 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D]"
@@ -141,7 +128,7 @@ const Nav = () => {
           ref={dropdownRef}
           className="absolute top-full right-0 mt-4 w-[280px] bg-[#F8EBDD] backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-4 flex flex-col gap-3 animate-in fade-in slide-in-from-top-5 duration-200 z-[60]"
         >
-          {connected ? (
+          {connected && isAuthenticated ? (
             <>
               {/* Connected Actions */}
               <button
@@ -163,7 +150,6 @@ const Nav = () => {
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-500/10 transition-colors text-left"
                 >
                   <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600">
-                    {/* ShieldAlert is not imported, using LayoutDashboard or similar if not available, or import ShieldAlert */}
                     <LayoutDashboard size={20} />
                   </div>
                   <span className="font-serif font-bold text-purple-900">
@@ -202,6 +188,19 @@ const Nav = () => {
                 </span>
               </button>
             </>
+          ) : connected && !isAuthenticated ? (
+            <button
+              onClick={() => { signIn(); setIsOpen(false); }}
+              className="flex items-center gap-3 p-3 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors text-left border border-primary/20 group animate-pulse"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-[#F4D2AF]">
+                <Check className="w-5 h-5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-serif font-bold text-[#2D1B0D]">Verify Wallet</span>
+                <span className="text-[10px] text-primary font-bold uppercase tracking-tight">Requires Signature</span>
+              </div>
+            </button>
           ) : (
             /* Unconnected: Connect Button */
             <div className="w-full">

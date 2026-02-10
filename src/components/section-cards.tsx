@@ -41,6 +41,17 @@ export function SectionCards({ user }: { user?: SectionCardsProps | null }) {
   const [currentTokenBalance, setCurrentTokenBalance] = useState(
     user?.tokenBalance ?? 0
   );
+
+  // Sync state with props when data is refreshed from server
+  useEffect(() => {
+    if (user?.balance !== undefined) {
+      setCurrentBalance(user.balance);
+    }
+    if (user?.tokenBalance !== undefined) {
+      setCurrentTokenBalance(user.tokenBalance);
+    }
+  }, [user?.balance, user?.tokenBalance]);
+
   const [mounted, setMounted] = useState(false);
   const { totalValue, isLoading: isPortfolioLoading } = useWalletPortfolio();
   const [copied, setCopied] = useState(false);

@@ -51,10 +51,7 @@ export function SolanaWalletProvider({
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} onError={onError} autoConnect={false}>
-        <CustomWalletModalProvider>
-          <AutoLogout />
-          {children}
-        </CustomWalletModalProvider>
+        {children}
       </WalletProvider>
     </ConnectionProvider>
   );
