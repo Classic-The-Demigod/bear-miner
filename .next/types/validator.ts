@@ -83,6 +83,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/whitepaper/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/whitepaper">> = Specific
+  const handler = {} as typeof import("../../src/app/whitepaper/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/api/admin/notifications/withdrawal-alert/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/notifications/withdrawal-alert">> = Specific

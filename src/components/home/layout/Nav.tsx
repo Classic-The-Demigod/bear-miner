@@ -63,7 +63,7 @@ const Nav = () => {
               width={45}
               height={45}
               className="relative transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-              style={{ width: 'auto', height: 'auto' }}
+              style={{ width: "auto", height: "auto" }}
             />
           </div>
           <h1 className="text-xl md:text-2xl font-serif font-black tracking-tight text-[#2D1B0D]">
@@ -75,7 +75,7 @@ const Nav = () => {
       {/* Desktop Menu */}
       <div className="md:flex items-center gap-4 hidden">
         <Link
-          href="https://t.me/bearminers"
+          href="https://t.me/bearminerwordwide"
           target="_blank"
           className="group flex items-center justify-center p-2 rounded-2xl bg-white/50 hover:bg-[#0088cc]/10 border border-transparent hover:border-[#0088cc]/20 transition-all duration-300 hover:scale-110"
         >
@@ -138,10 +138,12 @@ const Nav = () => {
                 <div className="w-10 h-10 rounded-full bg-[#7A4A33]/10 flex items-center justify-center text-[#7A4A33]">
                   <LayoutDashboard size={20} />
                 </div>
-                <span className="font-serif font-bold text-[#2D1B0D]">Dashboard</span>
+                <span className="font-serif font-bold text-[#2D1B0D]">
+                  Dashboard
+                </span>
               </button>
 
-              {role === 'ADMIN' && (
+              {role === "ADMIN" && (
                 <Link
                   href="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
@@ -150,7 +152,9 @@ const Nav = () => {
                   <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600">
                     <LayoutDashboard size={20} />
                   </div>
-                  <span className="font-serif font-bold text-purple-900">Admin Panel</span>
+                  <span className="font-serif font-bold text-purple-900">
+                    Admin Panel
+                  </span>
                 </Link>
               )}
 
@@ -162,9 +166,12 @@ const Nav = () => {
                   {copied ? <Check size={20} /> : <Copy size={20} />}
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-serif font-bold text-[#2D1B0D]">Copy Address</span>
+                  <span className="font-serif font-bold text-[#2D1B0D]">
+                    Copy Address
+                  </span>
                   <span className="text-xs text-[#2D1B0D]/50 font-mono truncate max-w-[120px]">
-                    {publicKey?.toBase58().slice(0, 4)}...{publicKey?.toBase58().slice(-4)}
+                    {publicKey?.toBase58().slice(0, 4)}...
+                    {publicKey?.toBase58().slice(-4)}
                   </span>
                 </div>
               </button>
@@ -176,7 +183,9 @@ const Nav = () => {
                 <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
                   <LogOut size={20} />
                 </div>
-                <span className="font-serif font-bold text-red-600/80 group-hover:text-red-600">Disconnect</span>
+                <span className="font-serif font-bold text-red-600/80 group-hover:text-red-600">
+                  Disconnect
+                </span>
               </button>
             </>
           ) : connected && !isAuthenticated ? (
@@ -203,7 +212,7 @@ const Nav = () => {
 
           {/* Telegram Button (Always Visible) */}
           <Link
-            href="https://t.me/bearminers"
+            href="https://t.me/bearminerwordwide"
             target="_blank"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#0088cc]/5 transition-colors text-left group"
@@ -216,9 +225,10 @@ const Nav = () => {
                 height={20}
               />
             </div>
-            <span className="font-serif font-bold text-[#2D1B0D] group-hover:text-[#0088cc] transition-colors">Join Telegram</span>
+            <span className="font-serif font-bold text-[#2D1B0D] group-hover:text-[#0088cc] transition-colors">
+              Join Telegram
+            </span>
           </Link>
-
         </div>
       )}
     </nav>

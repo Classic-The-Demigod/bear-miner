@@ -1,6 +1,6 @@
 var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/admin/wallets/route.js")
-R.c("server/chunks/[root-of-the-server]__7c05cd3f._.js")
-R.c("server/chunks/[root-of-the-server]__703022d1._.js")
-R.m(98978)
-R.m(56354)
-module.exports=R.m(56354).exports
+R.c("server/chunks/node_modules_next_a07335f1._.js")
+R.c("server/chunks/[root-of-the-server]__595c27f2._.js")
+R.m("[project]/.next-internal/server/app/api/admin/wallets/route/actions.js [app-rsc] (server actions loader, ecmascript)")
+R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/src/app/api/admin/wallets/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/src/app/api/admin/wallets/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

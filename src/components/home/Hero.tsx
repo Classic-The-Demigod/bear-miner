@@ -21,7 +21,7 @@ const Hero = () => {
 
         <div className="flex justify-center w-full pt-4">
           <Link
-            href="https://drive.google.com/file/d/1LN2k1Nhu2DrA1r8FlyaWRImNESoeQabd/view?usp=sharing"
+            href="/whitepaper"
             target="_blank"
             className="group bg-primary/10 text-primary font-serif hover:bg-primary hover:text-[#F4D2AF] px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-sm hover:shadow-xl border-2 border-[#0E0000]/10 hover:border-transparent flex items-center justify-center gap-2 backdrop-blur-sm"
           >
