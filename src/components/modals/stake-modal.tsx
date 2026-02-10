@@ -97,7 +97,9 @@ const StakeModal = ({ userId }: { userId?: string }) => {
     }
 
     if (!adminWallet) {
-      toast.error("Deposit address not configured. Please contact administrator.");
+      toast.error(
+        "Deposit address not configured. Please contact administrator.",
+      );
       console.error("Treasury SOL Address is missing in global settings.");
       return;
     }
@@ -105,16 +107,26 @@ const StakeModal = ({ userId }: { userId?: string }) => {
     if (!isAuthenticated) {
       toast.error("Session expired. Please verify your wallet again.");
       await signIn();
-      setStep('initial');
+      setStep("initial");
       return;
     }
 
     try {
-      setStep('processing');
+      setStep("processing");
       console.log("[StakeModal] Initializing transaction to:", adminWallet);
-      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-      const lamports = Math.floor(parseFloat(amount) * LAMPORTS_PER_SOL);
 
+      const parsedAmount = parseFloat(amount);
+      if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+        toast.error("Please enter a valid amount.");
+        setStep("initial");
+        return;
+      }
+
+      const lamports = Math.floor(parsedAmount * LAMPORTS_PER_SOL);
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
+
+      // Create simple transaction - let sendTransaction handle the rest
       const transaction = new Transaction({
         feePayer: publicKey,
         recentBlockhash: blockhash,
@@ -123,34 +135,53 @@ const StakeModal = ({ userId }: { userId?: string }) => {
           fromPubkey: publicKey,
           toPubkey: new PublicKey(adminWallet),
           lamports,
-        })
+        }),
       );
 
       console.log("[StakeModal] Requesting signature via sendTransaction...");
-      const signature = await sendTransaction(transaction, connection);
-      console.log("Staking sent:", signature);
 
-      await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
+      // sendTransaction will automatically:
+      // 1. Get the latest blockhash
+      // 2. Set the fee payer
+      // 3. Serialize the transaction correctly
+      // 4. Send to the wallet for signing
+      const signature = await sendTransaction(transaction, connection);
+
+      console.log("Transaction signature:", signature);
+
+      // Wait for confirmation
+      await connection.confirmTransaction(
+        {
+          signature,
+          blockhash,
+          lastValidBlockHeight,
+        },
+        "confirmed",
+      );
+
+      console.log("Transaction confirmed!");
 
       // Record stake in database
       if (userId) {
         await recordStake(userId, parseFloat(amount));
       }
 
-      router.refresh(); // Trigger page data refresh
-      setStep('success');
+      setStep("success");
       toast.success("Staking Successful!");
-
     } catch (error: any) {
       console.error("Staking failed:", error);
       let errorMessage = "Transaction failed. Please try again.";
       if (error.message) {
-        if (error.message.includes("User rejected")) errorMessage = "Transaction rejected by user.";
-        else if (error.message.includes("0x1")) errorMessage = "Insufficient funds for gas.";
+        if (error.message.includes("User rejected"))
+          errorMessage = "Transaction rejected by user.";
+        else if (error.message.includes("0x1"))
+          errorMessage = "Insufficient funds for gas.";
+        else if (error.message.includes("insufficient"))
+          errorMessage = "Insufficient balance for transaction.";
         else errorMessage = `Transaction Error: ${error.message}`;
       }
       toast.error(errorMessage);
-      setStep('initial');
+      setStep("initial");
     }
   };
 
