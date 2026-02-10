@@ -977,7 +977,7 @@ export default function WhitePaperPage() {
           </Paragraph>
         </Section>
 
-        <Section title="Contacts">
+        {/* <Section title="Contacts">
           <ul className="list-disc pl-6 space-y-1">
             <li>
               Website:{" "}
@@ -992,7 +992,7 @@ export default function WhitePaperPage() {
               </Link>
             </li>
           </ul>
-        </Section>
+        </Section> */}
       </div>
     </main>
   );
