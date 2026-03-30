@@ -16,7 +16,7 @@ interface Crypto {
   market_cap: number;
   market_cap_rank: number;
   total_volume: number;
-  price_change_percentage_24h: number;
+  price_change_percentage_24h: number | null;
 }
 
 export default function CryptoPriceTracker() {
@@ -103,14 +103,13 @@ export default function CryptoPriceTracker() {
             disabled={loading}
             className="h-10 w-10 shrink-0 bg-white/50 border-black/10 text-[#2D1B0D] hover:bg-[#2D1B0D] hover:text-white transition-all duration-300 rounded-lg"
           >
-            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
       </CardHeader>
 
       <CardContent className="p-0">
         <div className="h-[500px] overflow-y-auto custom-scrollbar">
-
           {/* Desktop Table Header */}
           <div className="hidden md:grid grid-cols-12 px-6 py-4 text-xs font-bold text-[#2D1B0D]/70 uppercase tracking-widest bg-black/5 sticky top-0 backdrop-blur-md z-10 border-b border-black/5">
             <div className="col-span-1">#</div>
@@ -125,7 +124,9 @@ export default function CryptoPriceTracker() {
             {loading && cryptos.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-60 space-y-4">
                 <RefreshCw className="h-10 w-10 text-black/20 animate-spin" />
-                <p className="text-sm font-serif text-black/40 tracking-wider">Loading premium markets...</p>
+                <p className="text-sm font-serif text-black/40 tracking-wider">
+                  Loading premium markets...
+                </p>
               </div>
             ) : filteredCryptos.length > 0 ? (
               filteredCryptos.map((crypto) => (
@@ -135,11 +136,12 @@ export default function CryptoPriceTracker() {
                 >
                   {/* Mobile Row: Rank + Name + 24h Badges */}
                   <div className="flex items-center justify-between w-full md:contents">
-
                     {/* Left: Rank & Info */}
                     <div className="flex items-center gap-3 col-span-4">
                       {/* Rank - Mobile */}
-                      <span className="md:hidden text-xs font-mono text-black/40">#{crypto.market_cap_rank}</span>
+                      <span className="md:hidden text-xs font-mono text-black/40">
+                        #{crypto.market_cap_rank}
+                      </span>
                       {/* Rank - Desktop */}
                       <div className="hidden md:block col-span-1 text-xs font-mono text-black/40 group-hover:text-black/70 transition-colors">
                         {crypto.market_cap_rank}
@@ -159,7 +161,9 @@ export default function CryptoPriceTracker() {
                         )}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-serif font-bold text-[#2D1B0D] text-sm">{crypto.name}</span>
+                        <span className="font-serif font-bold text-[#2D1B0D] text-sm">
+                          {crypto.name}
+                        </span>
                         <span className="text-[10px] text-black/50 font-mono uppercase">
                           {crypto.symbol}
                         </span>
@@ -173,16 +177,21 @@ export default function CryptoPriceTracker() {
                       </span>
                       <Badge
                         variant="secondary"
-                        className={`font-mono text-[10px] px-1.5 py-0 border backdrop-blur-md h-5 ${crypto.price_change_percentage_24h >= 0
-                          ? 'bg-green-100 text-green-700 border-green-200'
-                          : 'bg-red-100 text-red-700 border-red-200'
-                          }`}
+                        className={`font-mono text-[10px] px-1.5 py-0 border backdrop-blur-md h-5 ${
+                          (crypto.price_change_percentage_24h ?? 0) >= 0
+                            ? "bg-green-100 text-green-700 border-green-200"
+                            : "bg-red-100 text-red-700 border-red-200"
+                        }`}
                       >
-                        {crypto.price_change_percentage_24h >= 0 ? '+' : ''}
-                        {crypto.price_change_percentage_24h.toFixed(1)}%
+                        {(crypto.price_change_percentage_24h ?? 0) >= 0
+                          ? "+"
+                          : ""}
+                        {Math.abs(
+                          crypto.price_change_percentage_24h ?? 0,
+                        ).toFixed(1)}
+                        %
                       </Badge>
                     </div>
-
                   </div>
 
                   {/* Desktop Only Columns */}
@@ -193,17 +202,18 @@ export default function CryptoPriceTracker() {
                   <div className="hidden md:flex col-span-2 justify-end">
                     <Badge
                       variant="secondary"
-                      className={`font-mono text-xs px-2.5 py-0.5 border backdrop-blur-md ${crypto.price_change_percentage_24h >= 0
-                        ? 'bg-green-100 text-green-700 border-green-200'
-                        : 'bg-red-100 text-red-700 border-red-200'
-                        }`}
+                      className={`font-mono text-xs px-2.5 py-0.5 border backdrop-blur-md ${
+                        (crypto.price_change_percentage_24h ?? 0) >= 0
+                          ? "bg-green-100 text-green-700 border-green-200"
+                          : "bg-red-100 text-red-700 border-red-200"
+                      }`}
                     >
-                      {crypto.price_change_percentage_24h >= 0 ? (
+                      {(crypto.price_change_percentage_24h ?? 0) >= 0 ? (
                         <TrendingUp className="w-3 h-3 mr-1" />
                       ) : (
                         <TrendingDown className="w-3 h-3 mr-1" />
                       )}
-                      {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
+                      {Math.abs(crypto.price_change_percentage_24h ?? 0).toFixed(2)}%
                     </Badge>
                   </div>
 
@@ -216,7 +226,9 @@ export default function CryptoPriceTracker() {
               ))
             ) : (
               <div className="py-20 text-center">
-                <p className="text-black/40 font-serif italic">No assets found.</p>
+                <p className="text-black/40 font-serif italic">
+                  No assets found.
+                </p>
               </div>
             )}
           </div>
