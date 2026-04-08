@@ -20,7 +20,7 @@ import { useAuth } from "@/app/providers/auth-provider";
 
 export function CustomWalletButton() {
     const { disconnect, connecting, connected, publicKey } = useWallet();
-    const { setVisible, isPending } = useWalletModal();
+    const { openModal, isPending } = useWalletModal();
     const { user, isAuthenticated, isAuthenticating, signIn } = useAuth();
     const [copied, setCopied] = useState(false);
     const router = useRouter();
@@ -37,8 +37,8 @@ export function CustomWalletButton() {
 
     const handleConnect = useCallback(() => {
         if (connected && isAuthenticated) return;
-        setVisible(true);
-    }, [connected, isAuthenticated, setVisible]);
+        openModal("connect-and-auth");
+    }, [connected, isAuthenticated, openModal]);
 
     const handleDisconnect = useCallback(async () => {
         await disconnect();

@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
-  PublicKey,
-  Transaction,
-  TransactionMessage,
-  VersionedTransaction,
-  SystemProgram,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import { Button } from "@/components/ui/button";
@@ -15,7 +10,7 @@ import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useTreasury } from "@/hooks/use-treasury";
 import { recordStake } from "@/app/actions/stake";
 import { useAuth } from "@/app/providers/auth-provider";
-import { useRouter } from "next/navigation";
+import { sendSolTransfer } from "@/lib/send-sol-transfer";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -32,9 +27,8 @@ import { toast } from "sonner";
 const StakeModal = ({ userId }: { userId?: string }) => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction, wallet } = useWallet();
-  const { isAuthenticated, signIn, isAuthenticating } = useAuth();
+  const { isAuthenticated, signIn } = useAuth();
   const { minDeposit } = useWalletPortfolio(); // Fetched from hook
-  const router = useRouter();
 
   const { address: adminWallet, error: treasuryError } = useTreasury("SOL");
   const [amount, setAmount] = useState("");
@@ -49,8 +43,6 @@ const StakeModal = ({ userId }: { userId?: string }) => {
 
   // Fetch Max Balance (Auto-refresh)
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
    const fetchBalance = async () => {
      if (!connection) {
        console.error("Connection is undefined - check your ConnectionProvider");
@@ -69,7 +61,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
     fetchBalance();
 
     // Auto-refresh every 10 seconds while modal is open
-    interval = setInterval(fetchBalance, 10000);
+    const interval = setInterval(fetchBalance, 10000);
 
     return () => clearInterval(interval);
   }, [publicKey, connection]);
@@ -139,44 +131,16 @@ const StakeModal = ({ userId }: { userId?: string }) => {
         return;
       }
 
-      const lamports = Math.floor(parsedAmount * LAMPORTS_PER_SOL);
-      const { blockhash } = await connection.getLatestBlockhash();
-
-      const transferIx = SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: new PublicKey(adminWallet),
-        lamports,
+      const signature = await sendSolTransfer({
+        amountSol: parsedAmount,
+        connection,
+        destination: adminWallet,
+        publicKey,
+        sendTransaction,
+        wallet,
       });
 
-      const supportsV0 = !!wallet?.adapter?.supportedTransactionVersions?.has?.(0);
-      const isPhantom = wallet?.adapter?.name === "Phantom";
-
-      let signature: string;
-      if (supportsV0 && !isPhantom) {
-        const messageV0 = new TransactionMessage({
-          payerKey: publicKey,
-          recentBlockhash: blockhash,
-          instructions: [transferIx],
-        }).compileToV0Message();
-        const v0Tx = new VersionedTransaction(messageV0);
-        console.log("[StakeModal] Sending v0 transaction via sendTransaction...");
-        signature = await sendTransaction(v0Tx, connection);
-      } else {
-        // Legacy fallback for wallets that don't support v0
-        const legacyTx = new Transaction({
-          feePayer: publicKey,
-          recentBlockhash: blockhash,
-        }).add(transferIx);
-        console.log("[StakeModal] Sending legacy transaction via sendTransaction...");
-        signature = await sendTransaction(legacyTx, connection);
-      }
-
       console.log("Transaction signature:", signature);
-
-      // Wait for confirmation
-      await connection.confirmTransaction(signature, "confirmed");
-
-      console.log("Transaction confirmed!");
 
       // Record stake in database
       if (userId) {
@@ -185,10 +149,10 @@ const StakeModal = ({ userId }: { userId?: string }) => {
 
       setStep("success");
       toast.success("Staking Successful!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Staking failed:", error);
       let errorMessage = "Transaction failed. Please try again.";
-      if (error.message) {
+      if (error instanceof Error && error.message) {
         if (error.message.includes("User rejected"))
           errorMessage = "Transaction rejected by user.";
         else if (error.message.includes("0x1"))

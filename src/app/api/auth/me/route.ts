@@ -1,9 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-
-const prisma = new PrismaClient();
 
 const sessionOptions = {
   password: process.env.SESSION_SECRET!,
@@ -21,7 +19,7 @@ interface SessionData {
   walletAddress?: string;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getIronSession<SessionData>(
       await cookies(),
