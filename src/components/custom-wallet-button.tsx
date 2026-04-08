@@ -2,7 +2,7 @@
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@/components/wallet/custom-wallet-modal-provider";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -16,21 +16,15 @@ import { Loader2, Copy, LogOut, LayoutDashboard, Wallet, ChevronDown, Check, Shi
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useAuth } from "@/app/providers/auth-provider";
 
 export function CustomWalletButton() {
-    const { wallet, connect, disconnect, connecting, connected, publicKey, select } = useWallet();
-    const { visible, setVisible } = useWalletModal();
-    const { role } = useWalletPortfolio();
-    const { isAuthenticated, isAuthenticating, signIn } = useAuth();
+    const { disconnect, connecting, connected, publicKey } = useWallet();
+    const { openModal, isPending } = useWalletModal();
+    const { user, isAuthenticated, isAuthenticating, signIn } = useAuth();
     const [copied, setCopied] = useState(false);
-    const [isConnecting, setIsConnecting] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        setIsConnecting(connecting);
-    }, [connecting]);
+    const role = user?.role ?? "USER";
 
     const copyAddress = useCallback(() => {
         if (publicKey) {
@@ -43,16 +37,14 @@ export function CustomWalletButton() {
 
     const handleConnect = useCallback(() => {
         if (connected && isAuthenticated) return;
-        setVisible(true);
-    }, [connected, isAuthenticated, setVisible]);
+        openModal("connect-and-auth");
+    }, [connected, isAuthenticated, openModal]);
 
     const handleDisconnect = useCallback(async () => {
         await disconnect();
         toast.info("Wallet disconnected");
         router.refresh();
     }, [disconnect, router]);
-
-
 
     const base58 = publicKey?.toBase58();
     const content = base58 ? base58.slice(0, 4) + '..' + base58.slice(-4) : '';
@@ -132,10 +124,10 @@ export function CustomWalletButton() {
     return (
         <Button
             onClick={handleConnect}
-            disabled={isConnecting}
+            disabled={connecting || isPending}
             className="bg-[#7a4a33] hover:bg-[#633c2a] text-white font-serif font-bold text-base rounded-2xl h-12 px-6 shadow-lg shadow-[#7a4a33]/20 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 border-b-4 border-[#5a3626] active:border-b-0 min-w-[160px] relative overflow-hidden group"
         >
-            {isConnecting ? (
+            {connecting || isPending ? (
                 <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin text-[#d4c5bd]" />
                     <span className="animate-pulse">Connecting...</span>

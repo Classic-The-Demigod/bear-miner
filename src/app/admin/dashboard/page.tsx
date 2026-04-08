@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio"
+import { useAuth } from "@/app/providers/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -60,7 +60,8 @@ const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', 
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const { role, isLoading: isAuthLoading } = useWalletPortfolio()
+  const { user, isLoading: isAuthLoading } = useAuth()
+  const role = user?.role ?? "USER"
 
   // State
   const [users, setUsers] = useState<any[]>([])

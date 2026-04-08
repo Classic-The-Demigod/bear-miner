@@ -1,49 +1,23 @@
 "use client";
 
-import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletName } from "@solana/wallet-adapter-base";
 import { X, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/app/providers/auth-provider";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "./custom-wallet-modal-provider";
 
 export function WalletModal({ onClose }: { onClose: () => void }) {
-    const { wallets, select, connect, connecting, wallet } = useWallet();
-    const { signIn } = useAuth();
+    const { wallets } = useWallet();
+    const { connectWallet, isPending } = useWalletModal();
     const [expanded, setExpanded] = useState(false);
-    const [pendingWallet, setPendingWallet] = useState<WalletName | null>(null);
 
     const handleWalletClick = useCallback(
         (walletName: WalletName) => {
-            select(walletName);
-            setPendingWallet(walletName);
-            // Don't close immediately, wait for wallet to update and connect
+            connectWallet(walletName);
         },
-        [select]
+        [connectWallet]
     );
-
-    // Trigger connection when the selected wallet updates
-    useEffect(() => {
-        const connectWallet = async () => {
-            if (pendingWallet && wallet?.adapter.name === pendingWallet) {
-                try {
-                    // Check if already connected but not authenticated
-                    if (!wallet.adapter.connected) {
-                        await connect();
-                    }
-                    // Automatically trigger verification (signIn) after connection state is confirmed
-                    await signIn();
-                    setPendingWallet(null);
-                    onClose();
-                } catch (error) {
-                    console.error("Connection/Authentication failed:", error);
-                    setPendingWallet(null);
-                }
-            }
-        };
-        connectWallet();
-    }, [pendingWallet, wallet, connect, signIn, onClose]);
 
     // Filter wallets: show installed first, then others
     const { installed, others } = useMemo(() => {
@@ -88,6 +62,7 @@ export function WalletModal({ onClose }: { onClose: () => void }) {
                             <button
                                 key={wallet.adapter.name}
                                 onClick={() => handleWalletClick(wallet.adapter.name)}
+                                disabled={isPending}
                                 className="w-full flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-[#7A4A33]/20 hover:border-[#7A4A33]/50 transition-all duration-300 group"
                             >
                                 <div className="flex items-center gap-4">
