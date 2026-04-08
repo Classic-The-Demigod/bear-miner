@@ -29,9 +29,9 @@ export default function BMTPurchase() {
 
   const BMT_PER_SOL = 44217;
   const totalRaised = 60000000;
-  const percentRaised = 60.27;
+  const percentRaised = 65.73;
   // const softcapTarget = 60000000;
-  const participants = 301;
+  const participants = 323;
   const presalePrice = 0.0029;
   const launchPrice = 0.004;
 
