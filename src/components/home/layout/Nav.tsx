@@ -1,23 +1,22 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, LayoutDashboard, LogOut, Copy, Check, Send, Loader2, ChevronDown } from "lucide-react";
+import { Menu, X, LayoutDashboard, LogOut, Copy, Check, Loader2, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { CustomWalletButton } from "@/components/custom-wallet-button";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useAuth } from "@/app/providers/auth-provider";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { connected, disconnect, publicKey, connecting } = useWallet();
-  const { role } = useWalletPortfolio();
-  const { isAuthenticated, isAuthenticating, signIn } = useAuth();
+  const { user, isAuthenticated, signIn } = useAuth();
   const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const role = user?.role ?? "USER";
 
   // Close dropdown when clicking outside
   useEffect(() => {

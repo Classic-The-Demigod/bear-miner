@@ -100,7 +100,7 @@ export default function BMTPurchase() {
                   </div>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>35M BMT</span>
+                  <span>50M BMT</span>
                   <span>Target: 80M BMT</span>
                 </div>
               </div>
