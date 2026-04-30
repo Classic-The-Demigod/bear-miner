@@ -88,9 +88,11 @@ const Tokenomics = () => {
             return (
               <div
                 key={index}
-                className={`${item.bgColor
-                  } rounded-3xl p-6 border-4 border-black shadow-[0_6px_0_rgba(0,0,0,1)] hover:shadow-[0_10px_0_rgba(0,0,0,1)] hover:-translate-y-2 transition-all group ${index === 0 ? "md:col-span-2 lg:col-span-1" : ""
-                  }`}
+                className={`${
+                  item.bgColor
+                } rounded-3xl p-6 border-4 border-black shadow-[0_6px_0_rgba(0,0,0,1)] hover:shadow-[0_10px_0_rgba(0,0,0,1)] hover:-translate-y-2 transition-all group ${
+                  index === 0 ? "md:col-span-2 lg:col-span-1" : ""
+                }`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div
@@ -124,7 +126,7 @@ const Tokenomics = () => {
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white rounded-2xl p-6 border-2 border-black">
               <div className="text-4xl font-serif font-bold text-primary mb-2">
-                2%
+                1%
               </div>
               <div className="text-sm text-[#0E0000]/70">Daily Reward Rate</div>
               <p className="text-xs text-[#0E0000]/60 mt-2">

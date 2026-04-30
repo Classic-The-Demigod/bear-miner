@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import {
-  LAMPORTS_PER_SOL,
-} from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, TrendingUp, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
+import {
+  Loader2,
+  TrendingUp,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+} from "lucide-react";
 import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio";
 import { useTreasury } from "@/hooks/use-treasury";
 import { recordStake } from "@/app/actions/stake";
@@ -23,7 +27,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
-
 const StakeModal = ({ userId }: { userId?: string }) => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction, wallet } = useWallet();
@@ -32,7 +35,9 @@ const StakeModal = ({ userId }: { userId?: string }) => {
 
   const { address: adminWallet, error: treasuryError } = useTreasury("SOL");
   const [amount, setAmount] = useState("");
-  const [step, setStep] = useState<'initial' | 'confirming' | 'processing' | 'success'>('initial');
+  const [step, setStep] = useState<
+    "initial" | "confirming" | "processing" | "success"
+  >("initial");
   const [maxSol, setMaxSol] = useState(0);
 
   useEffect(() => {
@@ -43,20 +48,22 @@ const StakeModal = ({ userId }: { userId?: string }) => {
 
   // Fetch Max Balance (Auto-refresh)
   useEffect(() => {
-   const fetchBalance = async () => {
-     if (!connection) {
-       console.error("Connection is undefined - check your ConnectionProvider");
-       return;
-     }
-     if (publicKey && connection) {
-       try {
-         const bal = await connection.getBalance(publicKey);
-         setMaxSol(bal / LAMPORTS_PER_SOL);
-       } catch (e) {
-         console.error("Failed to fetch balance:", e);
-       }
-     }
-   };
+    const fetchBalance = async () => {
+      if (!connection) {
+        console.error(
+          "Connection is undefined - check your ConnectionProvider",
+        );
+        return;
+      }
+      if (publicKey && connection) {
+        try {
+          const bal = await connection.getBalance(publicKey);
+          setMaxSol(bal / LAMPORTS_PER_SOL);
+        } catch (e) {
+          console.error("Failed to fetch balance:", e);
+        }
+      }
+    };
 
     fetchBalance();
 
@@ -86,7 +93,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
       toast.error("Insufficient balance.");
       return;
     }
-    setStep('confirming');
+    setStep("confirming");
   };
 
   const handleStake = async () => {
@@ -167,7 +174,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
   };
 
   const reset = () => {
-    setStep('initial');
+    setStep("initial");
     setAmount("");
   };
 
@@ -190,7 +197,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                 Deposit SOL
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center">
-                Deposit SOL to start earning 2% daily rewards
+                Deposit SOL to start earning 1% daily rewards
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -245,7 +252,7 @@ const StakeModal = ({ userId }: { userId?: string }) => {
                   <span className="font-bold text-green-600">
                     +{((parseFloat(amount) || 0) * 0.02).toFixed(4)} SOL{" "}
                     <span className="text-xs text-muted-foreground font-normal">
-                      (2%)
+                      (1%)
                     </span>
                   </span>
                 </div>
