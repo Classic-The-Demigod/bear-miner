@@ -5,7 +5,6 @@ import { ArrowUpRight } from "lucide-react";
 const Hero = () => {
   return (
     <section className="w-full relative flex flex-col items-center">
-
       {/* Text Content - Centered in 100dvh Viewport */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center gap-8 w-full px-4 md:px-12 lg:px-28 h-[100dvh]">
         <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif text-primary leading-[1.1] tracking-tight max-w-5xl drop-shadow-sm flex flex-col items-center">
@@ -15,7 +14,7 @@ const Hero = () => {
 
         <p className="text-[14px] md:text-lg text-black/70 font-normal leading-relaxed max-w-2xl mx-auto px-[30px] md:px-0">
           Bear Miner is a decentralized staking platform built on the Solana
-          blockchain, offering a sustainable 2% daily return on your staked SOL.
+          blockchain, offering a sustainable 1% daily return on your staked SOL.
           Transparent. Secure. Rewarding.
         </p>
 

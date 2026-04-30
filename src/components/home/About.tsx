@@ -1,13 +1,12 @@
-
 import { TrendingUp, Shield, Lock, Users } from "lucide-react";
 
 const About = () => {
   const features = [
     {
       icon: TrendingUp,
-      title: "Daily 2% Return",
+      title: "Daily 1% Return",
       description:
-        "Earn a consistent 2% daily return on your staked SOL. Rewards are automatically distributed by smart contracts — compound or withdraw anytime.",
+        "Earn a consistent 1% daily return on your staked SOL. Rewards are automatically distributed by smart contracts — compound or withdraw anytime.",
       color: "bg-green-100",
     },
     {

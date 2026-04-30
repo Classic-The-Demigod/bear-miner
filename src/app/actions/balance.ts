@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const DAILY_RATE = 0.02; // 2% daily
+const DAILY_RATE = 0.01; // 1% daily
 // const BMT_CONVERSION_RATE = 600; // 1 USD = 3589.6 BMT // Commented out for future use
 
 export async function getBalanceWithGrowth(userId: string) {
