@@ -38,9 +38,9 @@ export default function BMTPurchase() {
   const [availableSol, setAvailableSol] = useState(0);
   const { address: presaleAddress, error: treasuryError } = useTreasury("SOL");
 
-  const percentRaised = 65.73;
+  const percentRaised = 70.1;
   // const softcapTarget = 60000000;
-  const participants = 323;
+  const participants = 330;
   const presalePrice = 0.0029;
   const launchPrice = 0.004;
 
@@ -228,7 +228,7 @@ export default function BMTPurchase() {
                   </div>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>50M BMT</span>
+                  <span>55M BMT</span>
                   <span>Target: 80M BMT</span>
                 </div>
               </div>
