@@ -894,23 +894,23 @@ export default function AdminDashboard() {
                       <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Rewards Balance Status</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
+                    <div className="flex flex-col gap-6">
+                      <div className="space-y-1 min-w-0">
                         <div className="flex items-baseline gap-2">
-                          <span className="text-4xl font-black tracking-tight">{parseFloat(editForm.balance || "0").toFixed(4)}</span>
-                          <span className="text-xl font-bold text-primary">SOL</span>
+                          <span className="text-3xl sm:text-4xl font-black tracking-tight truncate" title={parseFloat(editForm.balance || "0").toFixed(4)}>{parseFloat(editForm.balance || "0").toFixed(4)}</span>
+                          <span className="text-xl font-bold text-primary shrink-0">SOL</span>
                         </div>
-                        <div className="text-sm font-bold text-muted-foreground/80">
+                        <div className="text-sm font-bold text-muted-foreground/80 truncate">
                           ≈ {solPrice > 0 ? formatCurrency(parseFloat(editForm.balance || "0") * solPrice) : "$0.00"} USD
                         </div>
                       </div>
 
-                      <div className="space-y-1 border-l border-primary/10 pl-4">
+                      <div className="space-y-1 border-t border-primary/10 pt-6 min-w-0">
                         <div className="flex items-baseline gap-2">
-                          <span className="text-4xl font-black tracking-tight">{new Intl.NumberFormat().format(parseFloat(editForm.tokenBalance || "0"))}</span>
-                          <span className="text-xl font-bold text-yellow-600">BMT</span>
+                          <span className="text-3xl sm:text-4xl font-black tracking-tight truncate" title={new Intl.NumberFormat().format(parseFloat(editForm.tokenBalance || "0"))}>{new Intl.NumberFormat().format(parseFloat(editForm.tokenBalance || "0"))}</span>
+                          <span className="text-xl font-bold text-yellow-600 shrink-0">BMT</span>
                         </div>
-                        <div className="text-sm font-bold text-muted-foreground/80">
+                        <div className="text-sm font-bold text-muted-foreground/80 truncate">
                           ≈ {formatCurrency(parseFloat(editForm.tokenBalance || "0") * parseFloat(settings.bearTokenPrice || "0"))} USD
                         </div>
                       </div>
@@ -1092,8 +1092,13 @@ export default function AdminDashboard() {
                   Discard Changes
                 </AlertDialogCancel>
                 <Button onClick={handleUpdateUser} className="h-14 flex-1 text-lg font-black shadow-xl shadow-primary/20" size="lg">
+                
                   <Check className="mr-2 h-5 w-5" /> Save Profile
                 </Button>
+                {/* <Button onClick={handleUpdateUser} className="h-14 bg-red-600 flex-1 text-lg font-black shadow-xl shadow-primary/20" size="lg">
+                <IconFidgetSpinner className={`mr-2 h-5 w-5`} />
+                   Pending Withdrawal
+                </Button> */}
               </div>
             </div>
           )}
