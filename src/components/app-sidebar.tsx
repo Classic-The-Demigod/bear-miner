@@ -15,6 +15,7 @@ import {
   IconSettings,
   IconHome,
   IconShieldLock,
+  IconArrowsExchange,
 } from "@tabler/icons-react";
 
 import { useAuth } from "@/app/providers/auth-provider";
@@ -159,6 +160,11 @@ export function AppSidebar({ user: propUser, ...props }: AppSidebarCombinedProps
       title: "Admin Panel",
       url: "/admin/dashboard",
       icon: IconShieldLock,
+    });
+    navMain.push({
+      title: "Solana Activity",
+      url: "/admin/transactions",
+      icon: IconArrowsExchange,
     });
   }
 
