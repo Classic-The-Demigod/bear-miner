@@ -45,8 +45,8 @@ export default function WhitePaperPage() {
             <li>Bear Miner Architecture and System Design</li>
             <li>Daily 1% Yield Mechanics</li>
             <li>How Bear Miner Works</li>
-            <li>Tokenomics</li>
-            <li>Token Flow Diagram</li>
+            {/* <li>Tokenomics</li>
+            <li>Token Flow Diagram</li> */}
             <li>Anti-Whale Architecture & Penalty Systems</li>
             <li>Risk Framework & Investor Protection</li>
             <li>Governance, Roadmap & Long-Term Vision</li>
@@ -466,7 +466,7 @@ export default function WhitePaperPage() {
             Some users join mining pools that focus on SOL. In these pools,
             participants combine their resources to increase the chances of
             earning rewards, which are then distributed among pool members based
-            on their contribution.
+            on the Bear Miner automated Trading Bot. This allows users to earn SOL without having to manage the mining process themselves. Bear Miner has put in place a structured ai trading bot that is built on taking decisions based on real market data feed and short term price direction. It is programmed against portfolio drawdown and guarantees a sustainable return. Our trading bot is modelled to reinforce learning that causes it to trade as a problem solver rather than making predictions.
           </Paragraph>
           <Subheading>Withdrawal</Subheading>
           <Paragraph>
@@ -485,7 +485,7 @@ export default function WhitePaperPage() {
           </Paragraph>
         </Section>
 
-        <Section title="Tokenomics">
+        {/* <Section title="Tokenomics">
           <Subheading>Token Overview</Subheading>
           <div className="grid gap-2 text-sm text-gray-800">
             <KeyValue label="Token Name" value="Bear Miner" />
@@ -779,7 +779,7 @@ export default function WhitePaperPage() {
             should conduct independent due diligence and comply with all
             applicable laws and regulations in their jurisdiction.
           </Paragraph>
-        </Section>
+        </Section> */}
         <Section title="Anti-Whale Architecture & Penalty Systems">
           <Paragraph>
             Unchecked whale dominance is one of the most destructive forces in

@@ -13,6 +13,7 @@ import Tokenomics from "../components/home/Tokenomics";
 import FaqAccordion from "../components/home/Accordion";
 import Footer from "../components/home/Footer";
 import BMTPurchase from "../components/home/BMTPurchase";
+import AIMining from "../components/home/AIMining";
 import TokenDetails from "../components/home/TokenDetails";
 
 export default function Home() {
@@ -49,10 +50,13 @@ export default function Home() {
 
       <About />
 
-      <div className="md:px-28 py-8 px-4">
+      {/* AI Automated Mining Section */}
+      <AIMining />
+
+      {/* <div className="md:px-28 py-8 px-4">
         <BMTPurchase />
       </div>
-      <HowToPurchase />
+      <HowToPurchase /> */}
       <Roadmap />
       <Tokenomics />
       <TokenDetails />

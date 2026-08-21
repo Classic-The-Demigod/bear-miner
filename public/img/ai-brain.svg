@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" fill="none">
+  <defs>
+    <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7A4A33;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CEA065;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14F195;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:0.4" />
+    </linearGradient>
+    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#CEA065;stop-opacity:0.3" />
+      <stop offset="50%" style="stop-color:#14F195;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#CEA065;stop-opacity:0.3" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background ambient glow -->
+  <ellipse cx="300" cy="250" rx="220" ry="200" fill="#14F195" opacity="0.06" filter="url(#softGlow)"/>
+  <ellipse cx="300" cy="250" rx="150" ry="140" fill="#CEA065" opacity="0.08" filter="url(#softGlow)"/>
+
+  <!-- Outer orbital rings -->
+  <ellipse cx="300" cy="250" rx="230" ry="210" stroke="#CEA065" stroke-width="1" stroke-dasharray="8 6" opacity="0.25" fill="none"/>
+  <ellipse cx="300" cy="250" rx="260" ry="240" stroke="#7A4A33" stroke-width="0.8" stroke-dasharray="4 8" opacity="0.15" fill="none"/>
+
+  <!-- Neural connection lines (background network) -->
+  <g opacity="0.2" stroke="#CEA065" stroke-width="1">
+    <line x1="140" y1="140" x2="220" y2="200"/>
+    <line x1="460" y1="140" x2="380" y2="200"/>
+    <line x1="140" y1="360" x2="220" y2="300"/>
+    <line x1="460" y1="360" x2="380" y2="300"/>
+    <line x1="300" y1="80" x2="300" y2="150"/>
+    <line x1="300" y1="350" x2="300" y2="420"/>
+    <line x1="160" y1="250" x2="220" y2="250"/>
+    <line x1="380" y1="250" x2="440" y2="250"/>
+  </g>
+
+  <!-- Circuit board traces -->
+  <g stroke="url(#circuitGrad)" stroke-width="1.5" fill="none" opacity="0.4">
+    <!-- Left side traces -->
+    <path d="M80,200 L140,200 L160,180 L190,180"/>
+    <path d="M80,300 L140,300 L160,320 L190,320"/>
+    <path d="M100,250 L170,250"/>
+    <!-- Right side traces -->
+    <path d="M520,200 L460,200 L440,180 L410,180"/>
+    <path d="M520,300 L460,300 L440,320 L410,320"/>
+    <path d="M500,250 L430,250"/>
+    <!-- Top traces -->
+    <path d="M250,60 L250,100 L270,120"/>
+    <path d="M350,60 L350,100 L330,120"/>
+    <!-- Bottom traces -->
+    <path d="M250,440 L250,400 L270,380"/>
+    <path d="M350,440 L350,400 L330,380"/>
+  </g>
+
+  <!-- Circuit board dots -->
+  <g fill="#14F195" opacity="0.5">
+    <circle cx="80" cy="200" r="3"/>
+    <circle cx="80" cy="300" r="3"/>
+    <circle cx="100" cy="250" r="3"/>
+    <circle cx="520" cy="200" r="3"/>
+    <circle cx="520" cy="300" r="3"/>
+    <circle cx="500" cy="250" r="3"/>
+    <circle cx="250" cy="60" r="3"/>
+    <circle cx="350" cy="60" r="3"/>
+    <circle cx="250" cy="440" r="3"/>
+    <circle cx="350" cy="440" r="3"/>
+  </g>
+
+  <!-- Main brain shape - Left hemisphere -->
+  <path d="M300,130 C250,130 210,150 195,185 C180,220 185,255 195,280 C200,295 195,310 200,330 C205,350 220,365 245,375 C270,385 290,380 300,370" 
+        fill="url(#brainGrad)" opacity="0.85" stroke="#5C4033" stroke-width="2"/>
+  
+  <!-- Main brain shape - Right hemisphere -->
+  <path d="M300,130 C350,130 390,150 405,185 C420,220 415,255 405,280 C400,295 405,310 400,330 C395,350 380,365 355,375 C330,385 310,380 300,370" 
+        fill="url(#brainGrad)" opacity="0.85" stroke="#5C4033" stroke-width="2"/>
+
+  <!-- Brain folds/sulci -->
+  <g stroke="#F8EBDD" stroke-width="1.5" fill="none" opacity="0.4">
+    <path d="M245,160 C260,175 270,195 265,220"/>
+    <path d="M355,160 C340,175 330,195 335,220"/>
+    <path d="M230,230 C250,245 260,265 255,290"/>
+    <path d="M370,230 C350,245 340,265 345,290"/>
+    <path d="M250,300 C265,315 275,340 270,360"/>
+    <path d="M350,300 C335,315 325,340 330,360"/>
+  </g>
+
+  <!-- Central brain divide -->
+  <line x1="300" y1="135" x2="300" y2="368" stroke="#F4D2AF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Neural network nodes inside brain -->
+  <g filter="url(#glow)">
+    <!-- Layer 1 - Top nodes -->
+    <circle cx="260" cy="170" r="6" fill="#14F195" opacity="0.9"/>
+    <circle cx="300" cy="155" r="5" fill="#14F195" opacity="0.7"/>
+    <circle cx="340" cy="170" r="6" fill="#14F195" opacity="0.9"/>
+    
+    <!-- Layer 2 - Middle nodes -->
+    <circle cx="235" cy="220" r="7" fill="#14F195" opacity="0.8"/>
+    <circle cx="275" cy="235" r="5" fill="#10B981" opacity="0.9"/>
+    <circle cx="325" cy="235" r="5" fill="#10B981" opacity="0.9"/>
+    <circle cx="365" cy="220" r="7" fill="#14F195" opacity="0.8"/>
+    
+    <!-- Layer 3 - Core processing nodes -->
+    <circle cx="250" cy="280" r="8" fill="#14F195" opacity="1"/>
+    <circle cx="300" cy="270" r="10" fill="#14F195" opacity="1"/>
+    <circle cx="350" cy="280" r="8" fill="#14F195" opacity="1"/>
+    
+    <!-- Layer 4 - Lower nodes -->
+    <circle cx="265" cy="330" r="6" fill="#14F195" opacity="0.8"/>
+    <circle cx="300" cy="340" r="5" fill="#10B981" opacity="0.7"/>
+    <circle cx="335" cy="330" r="6" fill="#14F195" opacity="0.8"/>
+  </g>
+
+  <!-- Neural connections inside brain -->
+  <g stroke="#14F195" stroke-width="1" opacity="0.5">
+    <!-- Top to middle connections -->
+    <line x1="260" y1="170" x2="235" y2="220"/>
+    <line x1="260" y1="170" x2="275" y2="235"/>
+    <line x1="300" y1="155" x2="275" y2="235"/>
+    <line x1="300" y1="155" x2="325" y2="235"/>
+    <line x1="340" y1="170" x2="365" y2="220"/>
+    <line x1="340" y1="170" x2="325" y2="235"/>
+    
+    <!-- Middle to core connections -->
+    <line x1="235" y1="220" x2="250" y2="280"/>
+    <line x1="275" y1="235" x2="300" y2="270"/>
+    <line x1="275" y1="235" x2="250" y2="280"/>
+    <line x1="325" y1="235" x2="300" y2="270"/>
+    <line x1="325" y1="235" x2="350" y2="280"/>
+    <line x1="365" y1="220" x2="350" y2="280"/>
+    
+    <!-- Core to lower connections -->
+    <line x1="250" y1="280" x2="265" y2="330"/>
+    <line x1="300" y1="270" x2="265" y2="330"/>
+    <line x1="300" y1="270" x2="335" y2="330"/>
+    <line x1="350" y1="280" x2="335" y2="330"/>
+    <line x1="300" y1="270" x2="300" y2="340"/>
+  </g>
+
+  <!-- Central processing pulse ring -->
+  <circle cx="300" cy="270" r="18" stroke="#14F195" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <circle cx="300" cy="270" r="25" stroke="#14F195" stroke-width="1" fill="none" opacity="0.2" stroke-dasharray="4 4"/>
+
+  <!-- Outer data nodes (orbiting) -->
+  <g filter="url(#glow)">
+    <!-- Top data nodes -->
+    <circle cx="300" cy="80" r="8" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="300" y="84" text-anchor="middle" fill="#0E0000" font-size="8" font-weight="bold">AI</text>
+    
+    <!-- Left data nodes -->
+    <circle cx="140" cy="140" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="140" y="144" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">ML</text>
+    
+    <circle cx="100" cy="250" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="100" y="254" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">RL</text>
+    
+    <circle cx="140" cy="360" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="140" y="364" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">📊</text>
+    
+    <!-- Right data nodes -->
+    <circle cx="460" cy="140" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="460" y="144" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">⚡</text>
+    
+    <circle cx="500" cy="250" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="500" y="254" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">🛡</text>
+    
+    <circle cx="460" cy="360" r="7" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="460" y="364" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">SOL</text>
+    
+    <!-- Bottom data node -->
+    <circle cx="300" cy="420" r="8" fill="#CEA065" stroke="#5C4033" stroke-width="1.5"/>
+    <text x="300" y="424" text-anchor="middle" fill="#0E0000" font-size="6" font-weight="bold">BMT</text>
+  </g>
+
+  <!-- Animated pulse rings (CSS animations applied externally) -->
+  <circle cx="300" cy="270" r="35" stroke="#14F195" stroke-width="0.8" fill="none" opacity="0.15">
+    <animate attributeName="r" from="35" to="80" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.15" to="0" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="300" cy="270" r="35" stroke="#14F195" stroke-width="0.8" fill="none" opacity="0.15">
+    <animate attributeName="r" from="35" to="80" dur="3s" begin="1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.15" to="0" dur="3s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Data flow particles -->
+  <g fill="#14F195" opacity="0.6">
+    <circle r="2">
+      <animateMotion dur="4s" repeatCount="indefinite" path="M140,140 Q220,200 260,170"/>
+    </circle>
+    <circle r="2">
+      <animateMotion dur="4.5s" repeatCount="indefinite" path="M460,140 Q380,200 340,170"/>
+    </circle>
+    <circle r="2">
+      <animateMotion dur="5s" repeatCount="indefinite" path="M300,80 Q300,120 300,155"/>
+    </circle>
+    <circle r="2">
+      <animateMotion dur="3.5s" repeatCount="indefinite" path="M300,340 Q300,380 300,420"/>
+    </circle>
+  </g>
+</svg>

