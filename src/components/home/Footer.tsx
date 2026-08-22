@@ -39,7 +39,7 @@ const Footer = () => {
 
             <div className="flex items-center gap-4 pt-2">
               <Link
-                href="https://t.me/bearminerwordwide"
+                href="https://t.me/bearminerchat"
                 target="_blank"
                 className="group flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 hover:bg-[#0088cc]/20 hover:border-[#0088cc]/30 transition-all duration-300"
               >

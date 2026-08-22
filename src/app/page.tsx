@@ -58,8 +58,29 @@ export default function Home() {
       </div>
       <HowToPurchase /> */}
       <Roadmap />
-      <Tokenomics />
-      <TokenDetails />
+      {/* Tokenomics Coming Soon */}
+      <section className="py-20 px-4 bg-gradient-to-b from-[#F8EBDD] to-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-primary/10 border-2 border-primary/20 rounded-full px-5 py-2 mb-6">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+              Coming Soon
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+            Tokenomics
+          </h2>
+          <p className="text-base md:text-lg text-black/60 max-w-xl mx-auto leading-relaxed mb-10">
+            Full $BMT token distribution, supply details, and allocation
+            breakdown will be revealed soon. Stay tuned.
+          </p>
+          <div className="bg-[#F8EBDD] rounded-3xl p-10 border-4 border-black shadow-[0_6px_0_rgba(0,0,0,1)] inline-block">
+            <span className="text-6xl">🐻</span>
+            <p className="text-sm font-bold text-black/50 mt-4 uppercase tracking-wider">
+              Under Construction
+            </p>
+          </div>
+        </div>
+      </section>
       <FaqAccordion />
       <Footer />
     </main>

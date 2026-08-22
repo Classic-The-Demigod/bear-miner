@@ -466,7 +466,14 @@ export default function WhitePaperPage() {
             Some users join mining pools that focus on SOL. In these pools,
             participants combine their resources to increase the chances of
             earning rewards, which are then distributed among pool members based
-            on the Bear Miner automated Trading Bot. This allows users to earn SOL without having to manage the mining process themselves. Bear Miner has put in place a structured ai trading bot that is built on taking decisions based on real market data feed and short term price direction. It is programmed against portfolio drawdown and guarantees a sustainable return. Our trading bot is modelled to reinforce learning that causes it to trade as a problem solver rather than making predictions.
+            on the Bear Miner automated Trading Bot. This allows users to earn
+            SOL without having to manage the mining process themselves. Bear
+            Miner has put in place a structured ai trading bot that is built on
+            taking decisions based on real market data feed and short term price
+            direction. It is programmed against portfolio drawdown and
+            guarantees a sustainable return. Our trading bot is modelled to
+            reinforce learning that causes it to trade as a problem solver
+            rather than making predictions.
           </Paragraph>
           <Subheading>Withdrawal</Subheading>
           <Paragraph>
@@ -987,7 +994,7 @@ export default function WhitePaperPage() {
             </li>
             <li>
               Telegram:{" "}
-              <Link href={"https://t.me/bearminerwordwide"} target="_blank">
+              <Link href={"https://t.me/bearminerchat"} target="_blank">
                 Bear Miner
               </Link>
             </li>
