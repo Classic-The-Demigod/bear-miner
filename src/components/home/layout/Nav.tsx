@@ -74,7 +74,7 @@ const Nav = () => {
       {/* Desktop Menu */}
       <div className="md:flex items-center gap-4 hidden">
         <Link
-          href="https://t.me/bearminerwordwide"
+          href="https://t.me/bearminerchat"
           target="_blank"
           className="group flex items-center justify-center p-2 rounded-2xl bg-white/50 hover:bg-[#0088cc]/10 border border-transparent hover:border-[#0088cc]/20 transition-all duration-300 hover:scale-110"
         >
@@ -98,7 +98,7 @@ const Nav = () => {
         <button className="md:hidden p-2 rounded-xl bg-black/5 cursor-wait">
           <Loader2 size={24} className="animate-spin text-[#2D1B0D]" />
         </button>
-      ) : (connected && isAuthenticated) ? (
+      ) : connected && isAuthenticated ? (
         <button
           className="md:hidden p-1.5 rounded-xl hover:bg-black/5 active:scale-95 transition-all text-[#2D1B0D] flex items-center gap-1 border border-black/5"
           onClick={() => setIsOpen(!isOpen)}
@@ -110,7 +110,10 @@ const Nav = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <ChevronDown size={16} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            size={16}
+            className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
         </button>
       ) : (
         <button
@@ -189,15 +192,22 @@ const Nav = () => {
             </>
           ) : connected && !isAuthenticated ? (
             <button
-              onClick={() => { signIn(); setIsOpen(false); }}
+              onClick={() => {
+                signIn();
+                setIsOpen(false);
+              }}
               className="flex items-center gap-3 p-3 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors text-left border border-primary/20 group animate-pulse"
             >
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-[#F4D2AF]">
                 <Check className="w-5 h-5" />
               </div>
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-[#2D1B0D]">Verify Wallet</span>
-                <span className="text-[10px] text-primary font-bold uppercase tracking-tight">Requires Signature</span>
+                <span className="font-serif font-bold text-[#2D1B0D]">
+                  Verify Wallet
+                </span>
+                <span className="text-[10px] text-primary font-bold uppercase tracking-tight">
+                  Requires Signature
+                </span>
               </div>
             </button>
           ) : (
@@ -211,7 +221,7 @@ const Nav = () => {
 
           {/* Telegram Button (Always Visible) */}
           <Link
-            href="https://t.me/bearminerwordwide"
+            href="https://t.me/bearminerchat"
             target="_blank"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#0088cc]/5 transition-colors text-left group"

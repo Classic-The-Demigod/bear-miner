@@ -1,0 +1,456 @@
+<svg width="800" height="1100" viewBox="0 0 800 1100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="400" y1="0" x2="400" y2="1100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15616D"/>
+      <stop offset="35%" stop-color="#1B7887"/>
+      <stop offset="70%" stop-color="#228999"/>
+      <stop offset="100%" stop-color="#1A6F7C"/>
+    </linearGradient>
+
+    <!-- Card Background -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="100%" stop-color="#FBF4EA"/>
+    </linearGradient>
+
+    <!-- Chalkboard Gradient -->
+    <linearGradient id="chalkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2D3B36"/>
+      <stop offset="100%" stop-color="#1F2825"/>
+    </linearGradient>
+
+    <!-- Wood Border Gradient -->
+    <linearGradient id="woodGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C28B53"/>
+      <stop offset="50%" stop-color="#9B6835"/>
+      <stop offset="100%" stop-color="#6F4620"/>
+    </linearGradient>
+
+    <!-- Solana Gradient -->
+    <linearGradient id="solGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00FFA3"/>
+      <stop offset="100%" stop-color="#DC1FFF"/>
+    </linearGradient>
+
+    <!-- Gold Coin Gradient -->
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+
+    <!-- Shadow Filter -->
+    <filter id="cardShadow" x="-10%" y="-5%" width="120%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    <filter id="popShadow" x="-10%" y="-10%" width="125%" height="125%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="4" dy="5" stdDeviation="0" flood-color="#1A1A1A" flood-opacity="1"/>
+    </filter>
+
+    <!-- Checkmark Icon Symbol -->
+    <g id="iconCheck">
+      <circle cx="20" cy="20" r="18" fill="#22C55E" stroke="#15803D" stroke-width="2"/>
+      <path d="M12 20.5L17.5 26L28 14.5" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Cross Icon Symbol -->
+    <g id="iconCross">
+      <circle cx="20" cy="20" r="18" fill="#EF4444" stroke="#B91C1C" stroke-width="2"/>
+      <path d="M13 13L27 27M27 13L13 27" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Penalty Skull/Alert Icon Symbol -->
+    <g id="iconAlert">
+      <circle cx="20" cy="20" r="18" fill="#7C3AED" stroke="#5B21B6" stroke-width="2"/>
+      <!-- Skull shape -->
+      <path d="M14 19C14 14.5 16.5 12 20 12C23.5 12 26 14.5 26 19C26 21 24.5 22.5 24 23.5V25H16V23.5C15.5 22.5 14 21 14 19Z" fill="#FFFFFF"/>
+      <circle cx="17.5" cy="18" r="1.5" fill="#7C3AED"/>
+      <circle cx="22.5" cy="18" r="1.5" fill="#7C3AED"/>
+      <path d="M18 25V27M22 25V27" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <style>
+    .font-heavy { font-family: 'Arial Black', Impact, system-ui, sans-serif; font-weight: 900; }
+    .font-sans { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    .title-stroke { stroke: #123C42; stroke-width: 6px; paint-order: stroke fill; }
+  </style>
+
+  <!-- BACKGROUND -->
+  <rect width="800" height="1100" fill="url(#bgGrad)"/>
+
+  <!-- Decorative Clouds & Environment -->
+  <g opacity="0.25">
+    <circle cx="120" cy="90" r="60" fill="#FFFFFF"/>
+    <circle cx="170" cy="80" r="45" fill="#FFFFFF"/>
+    <circle cx="220" cy="95" r="50" fill="#FFFFFF"/>
+    
+    <circle cx="680" cy="110" r="55" fill="#FFFFFF"/>
+    <circle cx="730" cy="100" r="45" fill="#FFFFFF"/>
+
+    <!-- Distant Mountain Silhouettes -->
+    <path d="M-50 780 L180 560 L390 780 Z" fill="#0D464F" opacity="0.4"/>
+    <path d="M220 780 L480 500 L720 780 Z" fill="#0E4B55" opacity="0.4"/>
+    <path d="M540 780 L720 590 L900 780 Z" fill="#0A3C44" opacity="0.4"/>
+    <!-- Ground Hill -->
+    <path d="M-50 830 Q 380 720 850 810 L850 1150 L-50 1150 Z" fill="#145A64"/>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- HEADER SECTION                                       -->
+  <!-- ==================================================== -->
+  <g transform="translate(40, 28)">
+    <!-- Bear Logo Badge -->
+    <rect x="0" y="0" width="70" height="64" rx="20" fill="#E29014" stroke="#123C42" stroke-width="3" filter="url(#popShadow)"/>
+    <!-- Scaled Bear Icon from logo.svg -->
+    <g transform="translate(8, 4) scale(1.3)">
+      <path d="M31.7 27.7C30.6 28 30.1 26.2 30.1 26.2L30.4 32.6L28.8 31.1L28.9 34.1L25.6 31.4L25.3 33.3L21.5 29.4C22 31 21.5 32 21.5 32C15.9 28.6 15.7 25.7 15.7 25.7L15.5 28.1L15.2 31L12.1 25.2L10.3 27.8C9.9 27.3 9.9 26.2 9.9 26.2L9.2 27.6C9.2 27.6 8.5 26.2 9.5 24.9C10.4 23.6 9.9 21.6 9.9 21.6C8.5 18.9 9.5 15.3 9.5 15.3C7.5 14.2 6.1 10.4 8.5 8.7C10.9 6.9 13.5 8.9 13.5 8.9C15.2 6.8 17.6 6 19.9 5.9C21.3 5.8 22.7 5.9 23.8 6.1C24.2 6.2 24.5 6.3 24.8 6.3C26.2 6.7 27.2 7.1 27.2 7.1C27.6 7.3 27.9 7.5 28.2 7.7C28.6 7.9 28.9 8.1 29.2 8.3C38.1 14.6 31.3 23.6 31.3 23.6C30.4 25.8 31.7 27.7 31.7 27.7Z" fill="#82543D" stroke="#21130A" stroke-width="0.7"/>
+      <!-- Snout & Details -->
+      <path d="M32.8 15.2C32.6 15.9 32.3 16.6 31.9 17.1C29.6 20.4 24 20.7 23.2 16.9C22.8 15 23.3 13.7 24 12.8C25 11.5 26.4 11.1 26.4 11.1C33.3 9.6 32.8 15.2 32.8 15.2Z" fill="#F1D3AF" stroke="#21130A" stroke-width="0.6"/>
+      <circle cx="23.8" cy="9.9" r="0.9" fill="#FFFFFF"/>
+      <circle cx="28.8" cy="9.2" r="0.9" fill="#FFFFFF"/>
+      <ellipse cx="29" cy="13" rx="1.8" ry="1.2" fill="#2B1311"/>
+    </g>
+
+    <!-- Main Title -->
+    <text x="88" y="38" class="font-heavy title-stroke" font-size="44" fill="#FFFFFF" letter-spacing="1">BEAR MINER</text>
+    <text x="90" y="62" class="font-heavy" font-size="20" fill="#00FFA3" letter-spacing="4">PENALTY SYSTEM</text>
+
+    <!-- Solana Tag (Top Right) -->
+    <g transform="translate(560, 10)">
+      <rect x="0" y="0" width="160" height="40" rx="20" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+      <!-- Solana Mini Logo -->
+      <g transform="translate(14, 11) scale(0.06)">
+        <path fill="url(#solGrad)" d="M64.6,237.9c2.4-2.4,5.7-3.8,9.2-3.8h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,237.9z"/>
+        <path fill="url(#solGrad)" d="M64.6,3.8C67.1,1.4,70.4,0,73.8,0h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,3.8z"/>
+        <path fill="url(#solGrad)" d="M333.1,120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8,0-8.7,7-4.6,11.1l62.7,62.7c2.4,2.4,5.7,3.8,9.2,3.8h317.4c5.8,0,8.7-7,4.6-11.1L333.1,120.1z"/>
+      </g>
+      <text x="46" y="25" class="font-sans" font-weight="700" font-size="12" fill="#E2E8F0">SOLANA DAPP</text>
+    </g>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- TOP RIGHT: RECOMMENDED 6:1 CHALKBOARD               -->
+  <!-- ==================================================== -->
+  <g transform="translate(425, 115)">
+    <!-- Wooden Frame -->
+    <rect x="-8" y="-8" width="346" height="196" rx="16" fill="url(#woodGrad)" stroke="#3E2713" stroke-width="3" filter="url(#cardShadow)"/>
+    <!-- Slate Board -->
+    <rect x="0" y="0" width="330" height="180" rx="10" fill="url(#chalkGrad)"/>
+    <!-- Board Border Inset -->
+    <rect x="5" y="5" width="320" height="170" rx="7" fill="none" stroke="#3A4D45" stroke-width="1.5" stroke-dasharray="8 4"/>
+
+    <!-- Recommended Ribbon -->
+    <g transform="translate(65, -18)">
+      <rect x="0" y="0" width="200" height="30" rx="15" fill="#16A34A" stroke="#14532D" stroke-width="2" filter="url(#popShadow)"/>
+      <text x="100" y="20" class="font-sans" font-weight="800" font-size="12" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">★ RECOMMENDED ★</text>
+    </g>
+
+    <!-- Chalkboard Text Lines -->
+    <g transform="translate(25, 45)">
+      <!-- Step 1 -->
+      <circle cx="14" cy="18" r="14" fill="#3B82F6"/>
+      <text x="14" y="23" class="font-sans" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle">1</text>
+      <text x="38" y="16" class="font-heavy" font-size="17" fill="#F8FAFC">COMPOUND 6 DAYS</text>
+      <text x="38" y="32" class="font-sans" font-weight="600" font-size="12" fill="#94A3B8">Re-invest daily for exponential yield</text>
+
+      <!-- Step 2 -->
+      <g transform="translate(0, 52)">
+        <circle cx="14" cy="18" r="14" fill="#E29014"/>
+        <text x="14" y="23" class="font-sans" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle">2</text>
+        <text x="38" y="16" class="font-heavy" font-size="17" fill="#FCD34D">WITHDRAW 7TH DAY</text>
+        <text x="38" y="32" class="font-sans" font-weight="600" font-size="12" fill="#94A3B8">Harvest your 100% full profits safely</text>
+      </g>
+
+      <!-- Golden Ratio Pill -->
+      <g transform="translate(10, 102)">
+        <rect x="0" y="0" width="260" height="24" rx="12" fill="#0F172A" stroke="#00FFA3" stroke-width="1"/>
+        <text x="130" y="16" class="font-sans" font-weight="700" font-size="11" fill="#00FFA3" text-anchor="middle">
+          The 6:1 Rule Guarantees 0% Penalties
+        </text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CARD 1: ACCUMULATION PENALTY                         -->
+  <!-- ==================================================== -->
+  <g transform="translate(45, 125)">
+    <!-- Card Frame -->
+    <rect width="355" height="275" rx="20" fill="url(#cardGrad)" stroke="#1A1A1A" stroke-width="3.5" filter="url(#popShadow)"/>
+
+    <!-- Header Badge -->
+    <path d="M 0 20 Q 0 0 20 0 L 335 0 Q 355 0 355 20 L 355 52 L 0 52 Z" fill="#7A4A33"/>
+    <text x="177" y="34" class="font-heavy" font-size="17" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">ACCUMULATION PENALTY</text>
+
+    <!-- Content Rows -->
+    <g transform="translate(20, 68)">
+      <!-- Row 1: Positive Rule -->
+      <use href="#iconCheck" x="0" y="0"/>
+      <g transform="translate(50, 8)">
+        <text class="font-heavy" font-size="13" fill="#15803D">INTERACT WITHIN 28 HOURS</text>
+        <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">Compound rewards or claim once every 24h</text>
+      </g>
+
+      <!-- Row 2: Negative Trigger -->
+      <g transform="translate(0, 60)">
+        <use href="#iconCross" x="0" y="0"/>
+        <g transform="translate(50, 8)">
+          <text class="font-heavy" font-size="13" fill="#B91C1C">DON'T ACCUMULATE &gt; 28 HOURS!</text>
+          <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">Idle rewards damage protocol reward velocity</text>
+        </g>
+      </g>
+
+      <!-- Row 3: Penalty Consequences Box -->
+      <g transform="translate(0, 120)">
+        <rect width="315" height="74" rx="12" fill="#FEE2E2" stroke="#EF4444" stroke-width="1.5"/>
+        <use href="#iconAlert" x="10" y="17"/>
+        <g transform="translate(56, 8)">
+          <text y="15" class="font-heavy" font-size="13" fill="#991B1B">20% INITIAL PENALTY</text>
+          <text y="32" class="font-sans" font-weight="700" font-size="11" fill="#B91C1C">Increases by ~0.7% per hour over time</text>
+          <text y="48" class="font-sans" font-weight="600" font-size="10" fill="#6B7280">Lifts instantly upon: Compound or Withdrawal</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CARD 2: WITHDRAWAL / CLAIM CYCLE (28 DAYS)          -->
+  <!-- ==================================================== -->
+  <g transform="translate(425, 335)">
+    <!-- Card Frame -->
+    <rect width="330" height="280" rx="20" fill="url(#cardGrad)" stroke="#1A1A1A" stroke-width="3.5" filter="url(#popShadow)"/>
+
+    <!-- Header Badge -->
+    <path d="M 0 20 Q 0 0 20 0 L 310 0 Q 330 0 330 20 L 330 52 L 0 52 Z" fill="#2563EB"/>
+    <text x="165" y="34" class="font-heavy" font-size="17" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">WITHDRAWAL CYCLE (28D)</text>
+
+    <!-- Content Rows -->
+    <g transform="translate(18, 68)">
+      <!-- Row 1: Good rule -->
+      <use href="#iconCheck" x="0" y="0"/>
+      <g transform="translate(50, 8)">
+        <text class="font-heavy" font-size="13" fill="#15803D">MAX 4 WITHDRAWALS / CYCLE</text>
+        <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">1st to 4th withdrawal = 0% Penalty</text>
+      </g>
+
+      <!-- Row 2: Bad rule -->
+      <g transform="translate(0, 58)">
+        <use href="#iconCross" x="0" y="0"/>
+        <g transform="translate(50, 8)">
+          <text class="font-heavy" font-size="13" fill="#B91C1C">DON'T EXCEED 4 CLAIMS / CYCLE!</text>
+          <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">Over-extracting depletes shared pool</text>
+        </g>
+      </g>
+
+      <!-- Row 3: Penalty Consequences Box -->
+      <g transform="translate(0, 118)">
+        <rect width="294" height="84" rx="12" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+        <use href="#iconAlert" x="10" y="22"/>
+        <g transform="translate(56, 6)">
+          <text y="15" class="font-heavy" font-size="13" fill="#1E40AF">+20% PENALTY PER EXTRA CLAIM</text>
+          <text y="32" class="font-sans" font-weight="700" font-size="10.5" fill="#2563EB">5th: 20% • 6th: 40% • 7th: 60%</text>
+          <text y="48" class="font-sans" font-weight="700" font-size="10.5" fill="#DC2626">8th: 80% • 9th+: 100% (No Reward)</text>
+          <text y="64" class="font-sans" font-weight="600" font-size="9.5" fill="#6B7280">Penalty resets automatically after 28 days</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CARD 3: GREEDY WITHDRAWER                            -->
+  <!-- ==================================================== -->
+  <g transform="translate(45, 425)">
+    <!-- Card Frame -->
+    <rect width="355" height="280" rx="20" fill="url(#cardGrad)" stroke="#1A1A1A" stroke-width="3.5" filter="url(#popShadow)"/>
+
+    <!-- Header Badge -->
+    <path d="M 0 20 Q 0 0 20 0 L 335 0 Q 355 0 355 20 L 355 52 L 0 52 Z" fill="#DC2626"/>
+    <text x="177" y="34" class="font-heavy" font-size="17" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">GREEDY WITHDRAWER</text>
+
+    <!-- Content Rows -->
+    <g transform="translate(20, 68)">
+      <!-- Row 1: Good rule -->
+      <use href="#iconCheck" x="0" y="0"/>
+      <g transform="translate(50, 8)">
+        <text class="font-heavy" font-size="13" fill="#15803D">KEEP MINIMUM 2 DAYS GAP</text>
+        <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">Allow at least 48 hours between withdrawals</text>
+      </g>
+
+      <!-- Row 2: Bad rule -->
+      <g transform="translate(0, 58)">
+        <use href="#iconCross" x="0" y="0"/>
+        <g transform="translate(50, 8)">
+          <text class="font-heavy" font-size="13" fill="#B91C1C">AVOID WITHDRAWING IN A ROW!</text>
+          <text y="18" class="font-sans" font-weight="600" font-size="11" fill="#4B5563">Rapid consecutive claims trigger Whale Defense</text>
+        </g>
+      </g>
+
+      <!-- Row 3: Penalty Consequences Box -->
+      <g transform="translate(0, 118)">
+        <rect width="315" height="84" rx="12" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5"/>
+        <use href="#iconAlert" x="10" y="22"/>
+        <g transform="translate(56, 6)">
+          <text y="15" class="font-heavy" font-size="13" fill="#991B1B">MULTI-LEVEL CLAIM PENALTIES</text>
+          <text y="32" class="font-sans" font-weight="700" font-size="10.5" fill="#B91C1C">Level 1: 0% → Level 2: 20% → Level 3: 40%</text>
+          <text y="48" class="font-sans" font-weight="700" font-size="10.5" fill="#991B1B">Level 4: 60% → Level 5: 80% (Escalating)</text>
+          <text y="64" class="font-sans" font-weight="600" font-size="9.5" fill="#6B7280">Cooldown lifts penalty after healthy compounding</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- BOTTOM SECTION: BEAR MINING ASSETS & ILLUSTRATION    -->
+  <!-- ==================================================== -->
+  <g transform="translate(0, 720)">
+    <!-- Grass Horizon -->
+    <path d="M0 90 Q 200 65 400 85 T 800 75 L 800 380 L 0 380 Z" fill="#0D464F"/>
+
+    <!-- Left Side: Table of Penalties at a glance -->
+    <g transform="translate(45, 10)">
+      <!-- Neo-brutalist Summary Box -->
+      <rect width="355" height="225" rx="16" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="3" filter="url(#popShadow)"/>
+      <rect width="355" height="38" rx="14" fill="#0F172A"/>
+      <text x="177" y="25" class="font-heavy" font-size="14" fill="#FCD34D" text-anchor="middle" letter-spacing="1">PENALTY QUICK REFERENCE</text>
+
+      <!-- Mini Table -->
+      <g transform="translate(16, 50)" class="font-sans" font-size="11">
+        <!-- Row 1 -->
+        <rect x="0" y="0" width="323" height="26" fill="#F8FAFC" rx="6"/>
+        <text x="10" y="17" font-weight="700" fill="#334155">28+ Hours Idle:</text>
+        <text x="313" y="17" font-weight="800" fill="#DC2626" text-anchor="end">20% (+0.7%/hr)</text>
+
+        <!-- Row 2 -->
+        <rect x="0" y="30" width="323" height="26" fill="#FFFFFF" rx="6"/>
+        <text x="10" y="47" font-weight="700" fill="#334155">Back-to-Back Claims:</text>
+        <text x="313" y="47" font-weight="800" fill="#EA580C" text-anchor="end">20% to 80% Tiered</text>
+
+        <!-- Row 3 -->
+        <rect x="0" y="60" width="323" height="26" fill="#F8FAFC" rx="6"/>
+        <text x="10" y="77" font-weight="700" fill="#334155">5th+ Withdrawal in Month:</text>
+        <text x="313" y="77" font-weight="800" fill="#E11D48" text-anchor="end">+20% per Extra</text>
+
+        <!-- Row 4 -->
+        <rect x="0" y="90" width="323" height="26" fill="#FFFFFF" rx="6"/>
+        <text x="10" y="107" font-weight="700" fill="#334155">6:1 Rule Adherence:</text>
+        <text x="313" y="107" font-weight="800" fill="#16A34A" text-anchor="end">0% (100% Rewards)</text>
+
+        <!-- Row 5: Vacation Mode -->
+        <rect x="0" y="120" width="323" height="36" fill="#ECFDF5" stroke="#10B981" stroke-width="1" rx="8"/>
+        <text x="10" y="136" font-weight="800" fill="#047857">🌴 Vacation Mode Active:</text>
+        <text x="313" y="136" font-weight="800" fill="#047857" text-anchor="end">TIMERS FROZEN</text>
+        <text x="10" y="150" font-weight="600" font-size="9.5" fill="#065F46">Pause tracking while traveling with 0 penalties</text>
+      </g>
+    </g>
+
+    <!-- Right Side: Illustrated Mining Scene & Bear Mascot -->
+    <g transform="translate(430, -10)">
+      <!-- Mining Cart Shadow -->
+      <ellipse cx="170" cy="225" rx="140" ry="20" fill="#07282D" opacity="0.6"/>
+
+      <!-- Mining Cart Body -->
+      <g transform="translate(30, 80)">
+        <!-- Wheels -->
+        <circle cx="50" cy="130" r="28" fill="#1E293B" stroke="#0F172A" stroke-width="5"/>
+        <circle cx="50" cy="130" r="14" fill="#64748B" stroke="#0F172A" stroke-width="3"/>
+        <line x1="50" y1="106" x2="50" y2="154" stroke="#0F172A" stroke-width="3"/>
+        <line x1="26" y1="130" x2="74" y2="130" stroke="#0F172A" stroke-width="3"/>
+
+        <circle cx="210" cy="130" r="28" fill="#1E293B" stroke="#0F172A" stroke-width="5"/>
+        <circle cx="210" cy="130" r="14" fill="#64748B" stroke="#0F172A" stroke-width="3"/>
+        <line x1="210" y1="106" x2="210" y2="154" stroke="#0F172A" stroke-width="3"/>
+        <line x1="186" y1="130" x2="234" y2="130" stroke="#0F172A" stroke-width="3"/>
+
+        <!-- Chassis connection -->
+        <rect x="35" y="125" width="190" height="10" fill="#334155" stroke="#0F172A" stroke-width="2"/>
+
+        <!-- Cart Tub -->
+        <path d="M20 30 L240 30 L215 115 L45 115 Z" fill="#78350F" stroke="#1A1A1A" stroke-width="4"/>
+        <path d="M45 40 L215 40 L195 105 L65 105 Z" fill="#92400E"/>
+        <rect x="18" y="26" width="224" height="12" rx="4" fill="#B45309" stroke="#1A1A1A" stroke-width="3"/>
+
+        <!-- Solana Gold Coins & Gems in Cart -->
+        <g transform="translate(45, -15)">
+          <!-- Gold Coins -->
+          <circle cx="35" cy="35" r="18" fill="url(#goldGrad)" stroke="#78350F" stroke-width="2"/>
+          <text x="35" y="41" class="font-heavy" font-size="12" fill="#78350F" text-anchor="middle">$</text>
+
+          <circle cx="75" cy="20" r="22" fill="url(#goldGrad)" stroke="#78350F" stroke-width="2"/>
+          <text x="75" y="27" class="font-heavy" font-size="15" fill="#78350F" text-anchor="middle">SOL</text>
+
+          <circle cx="120" cy="25" r="20" fill="url(#goldGrad)" stroke="#78350F" stroke-width="2"/>
+          <text x="120" y="32" class="font-heavy" font-size="13" fill="#78350F" text-anchor="middle">BMT</text>
+
+          <circle cx="155" cy="35" r="16" fill="url(#goldGrad)" stroke="#78350F" stroke-width="2"/>
+
+          <!-- Sparkling Jewels -->
+          <polygon points="95,0 105,15 95,30 85,15" fill="#00FFA3" stroke="#065F46" stroke-width="1.5"/>
+          <polygon points="135,-5 145,10 135,25 125,10" fill="#DC1FFF" stroke="#701A75" stroke-width="1.5"/>
+        </g>
+      </g>
+
+      <!-- Bear Mascot Behind the Cart (Miner Bear) -->
+      <g transform="translate(100, -35)">
+        <!-- Bear Body -->
+        <path d="M50 100 C20 70 30 20 60 20 C75 20 85 28 95 28 C105 28 115 20 130 20 C160 20 170 70 140 100 Z" fill="#82543D" stroke="#21130A" stroke-width="3"/>
+        
+        <!-- Ears -->
+        <circle cx="55" cy="25" r="16" fill="#82543D" stroke="#21130A" stroke-width="2.5"/>
+        <circle cx="55" cy="25" r="8" fill="#F1D3AF"/>
+
+        <circle cx="135" cy="25" r="16" fill="#82543D" stroke="#21130A" stroke-width="2.5"/>
+        <circle cx="135" cy="25" r="8" fill="#F1D3AF"/>
+
+        <!-- Miner Helmet -->
+        <path d="M48 28 Q 95 -8 142 28 L146 36 L44 36 Z" fill="#F59E0B" stroke="#21130A" stroke-width="3"/>
+        <ellipse cx="95" cy="34" rx="55" ry="8" fill="#D97706" stroke="#21130A" stroke-width="2"/>
+        <!-- Headlamp -->
+        <circle cx="95" cy="20" r="12" fill="#E2E8F0" stroke="#1E293B" stroke-width="2"/>
+        <circle cx="95" cy="20" r="8" fill="#FEF08A"/>
+        <!-- Lamp Light Beam -->
+        <polygon points="95,20 20,120 170,120" fill="#FEF08A" opacity="0.25"/>
+
+        <!-- Bear Face -->
+        <!-- Eyes -->
+        <ellipse cx="78" cy="46" rx="4.5" ry="6" fill="#21130A"/>
+        <circle cx="76.5" cy="44" r="2" fill="#FFFFFF"/>
+        
+        <ellipse cx="112" cy="46" rx="4.5" ry="6" fill="#21130A"/>
+        <circle cx="110.5" cy="44" r="2" fill="#FFFFFF"/>
+
+        <!-- Snout Muzzle -->
+        <ellipse cx="95" cy="62" rx="20" ry="14" fill="#F1D3AF" stroke="#21130A" stroke-width="2"/>
+        <ellipse cx="95" cy="55" rx="7" ry="4.5" fill="#21130A"/>
+        <!-- Smile -->
+        <path d="M88 62 Q 95 69 102 62" stroke="#21130A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Miner Pickaxe in Paw -->
+        <g transform="translate(140, 25) rotate(25)">
+          <!-- Handle -->
+          <rect x="0" y="0" width="8" height="90" rx="4" fill="#C28B53" stroke="#21130A" stroke-width="2"/>
+          <!-- Pick Head -->
+          <path d="M-25 10 Q 4 -5 33 10 Q 4 5 -25 10 Z" fill="#94A3B8" stroke="#1E293B" stroke-width="2.5"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- Bottom Notification Strip -->
+    <g transform="translate(45, 255)">
+      <rect width="710" height="75" rx="18" fill="#FFFDF9" stroke="#1A1A1A" stroke-width="3" filter="url(#popShadow)"/>
+      <g transform="translate(25, 22)">
+        <!-- Green Shield / Lock Icon -->
+        <circle cx="18" cy="16" r="18" fill="#10B981"/>
+        <path d="M18 7 L26 11 V17 C26 22 22 25 18 27 C14 25 10 22 10 17 V11 Z" fill="#FFFFFF"/>
+        
+        <g transform="translate(48, 8)">
+          <text class="font-heavy" font-size="14" fill="#0F172A">BEAR MINER SUSTAINABILITY PROTOCOL</text>
+          <text y="20" class="font-sans" font-weight="600" font-size="12" fill="#475569">
+            Individualized anti-whale controls protect your principal and ensure permanent 1% daily yield longevity.
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

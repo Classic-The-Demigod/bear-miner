@@ -466,7 +466,14 @@ export default function WhitePaperPage() {
             Some users join mining pools that focus on SOL. In these pools,
             participants combine their resources to increase the chances of
             earning rewards, which are then distributed among pool members based
-            on the Bear Miner automated Trading Bot. This allows users to earn SOL without having to manage the mining process themselves. Bear Miner has put in place a structured ai trading bot that is built on taking decisions based on real market data feed and short term price direction. It is programmed against portfolio drawdown and guarantees a sustainable return. Our trading bot is modelled to reinforce learning that causes it to trade as a problem solver rather than making predictions.
+            on the Bear Miner automated Trading Bot. This allows users to earn
+            SOL without having to manage the mining process themselves. Bear
+            Miner has put in place a structured ai trading bot that is built on
+            taking decisions based on real market data feed and short term price
+            direction. It is programmed against portfolio drawdown and
+            guarantees a sustainable return. Our trading bot is modelled to
+            reinforce learning that causes it to trade as a problem solver
+            rather than making predictions.
           </Paragraph>
           <Subheading>Withdrawal</Subheading>
           <Paragraph>
@@ -789,6 +796,199 @@ export default function WhitePaperPage() {
             designed to neutralize this risk through individualized anti-whale
             controls.
           </Paragraph>
+
+          <Subheading>Penalty Transparency & Dashboard Metrics</Subheading>
+          <Paragraph>
+            The Bear Miner DApp surfaces comprehensive, real-time penalty metrics
+            directly on the user interface. Participants have complete visibility
+            into their current penalty status, the exact percentage deducted from
+            pending yields, and countdown timers indicating precisely when each
+            penalty will be lifted.
+          </Paragraph>
+          <div className="bg-[#F8EBDD] border-2 border-[#82543D]/30 rounded-xl p-4 my-3 text-sm text-[#4A2D1B]">
+            <p className="font-semibold text-[#82543D] mb-1">
+              🌟 The 6:1 Sustainable Strategy:
+            </p>
+            <p>
+              Users can easily avoid all penalties by following the <strong>6:1 Rule</strong>—compounding
+              rewards for 6 consecutive days and taking profits on the 7th day.
+              Additionally, <strong>Vacation Mode</strong> is available to freeze all timers
+              without penalty during periods of planned inactivity.
+            </p>
+          </div>
+
+          <Subheading>1. Accumulation Penalty</Subheading>
+          <Paragraph>
+            The protocol actively encourages miners to compound their rewards daily to
+            sustain liquidity velocity and maximize compounding yield. When a user
+            allows rewards to accumulate unharvested for prolonged periods before
+            withdrawing, it places an asymmetric extraction burden on the liquidity
+            pool that negatively impacts other ecosystem participants.
+          </Paragraph>
+          <Paragraph>
+            To protect protocol solvency, an <strong>Accumulation Penalty</strong> is
+            enforced on stagnant balances:
+          </Paragraph>
+          <ul className="list-disc pl-6 space-y-1 text-sm text-gray-800">
+            <li>
+              <strong>Trigger Condition:</strong> 28 consecutive hours without
+              compounding or withdrawing rewards.
+            </li>
+            <li>
+              <strong>Penalty Rate:</strong> Begins at <strong>20%</strong> immediately upon
+              reaching the 28-hour threshold, escalating continuously by approximately
+              <strong> 0.7% per hour</strong> until an interaction is recorded.
+            </li>
+            <li>
+              <strong>Lifting Mechanism:</strong> Instantly lifted upon executing an
+              interaction (Stake, Compound, or Withdrawal). Note that withdrawing may be
+              subject to cycle and frequency limits.
+            </li>
+          </ul>
+
+          <Subheading>2. Greedy Withdrawer Penalty (Anti-Draining Defense)</Subheading>
+          <Paragraph>
+            To prevent rapid, back-to-back liquidity drain by high-stake participants, Bear
+            Miner enforces a progressive multi-tier penalty for overly frequent
+            withdrawals. Users must maintain an interaction cooldown of at least 48
+            hours between profit claims.
+          </Paragraph>
+          <div className="overflow-x-auto my-3">
+            <table className="w-full border border-gray-200 text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="border px-4 py-2 text-left">Level</th>
+                  <th className="border px-4 py-2 text-left">Penalty Application</th>
+                  <th className="border px-4 py-2 text-center">Current Deduction</th>
+                  <th className="border px-4 py-2 text-center">Next Withdrawal Penalty</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">Level 1</td>
+                  <td className="border px-4 py-2">1st Withdrawal (Normal)</td>
+                  <td className="border px-4 py-2 text-center text-green-600 font-semibold">No Penalty (0%)</td>
+                  <td className="border px-4 py-2 text-center">20%</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">Level 2</td>
+                  <td className="border px-4 py-2">2nd Withdrawal (Consecutive)</td>
+                  <td className="border px-4 py-2 text-center text-amber-600 font-semibold">20% Penalty</td>
+                  <td className="border px-4 py-2 text-center">40%</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">Level 3</td>
+                  <td className="border px-4 py-2">3rd Withdrawal (Consecutive)</td>
+                  <td className="border px-4 py-2 text-center text-orange-600 font-semibold">40% Penalty</td>
+                  <td className="border px-4 py-2 text-center">60%</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">Level 4</td>
+                  <td className="border px-4 py-2">4th Withdrawal (Consecutive)</td>
+                  <td className="border px-4 py-2 text-center text-red-600 font-semibold">60% Penalty</td>
+                  <td className="border px-4 py-2 text-center">80%</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">Level 5</td>
+                  <td className="border px-4 py-2">5th Withdrawal (Consecutive)</td>
+                  <td className="border px-4 py-2 text-center text-red-700 font-bold">80% Penalty</td>
+                  <td className="border px-4 py-2 text-center font-bold text-red-700">100%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-500 italic">
+            * Note: If an account surpasses 28 hours without interaction while in any tier, the Accumulation Penalty will also activate concurrently.
+          </p>
+
+          <Subheading>3. Cycle Penalty (28-Day Capped Extractions)</Subheading>
+          <Paragraph>
+            While the recommended optimal trajectory is the 6:1 cycle (compound 6 days,
+            withdraw on day 7), Bear Miner understands participants may require
+            occasional liquidity flexibility to cover unanticipated expenses. Rather than
+            inflexibly locking funds, the protocol establishes a 28-day cycle with a
+            generous ceiling:
+          </Paragraph>
+          <Paragraph>
+            Participants may execute up to <strong>4 standard withdrawals per 28-day cycle with zero penalty</strong>.
+            Any withdrawals initiated beyond the 4th during the same 28-day window incur an
+            incremental 20% penalty per extra event. This penalty applies exclusively to
+            surplus withdrawals and completely resets at the conclusion of each 28-day
+            cycle.
+          </Paragraph>
+          <div className="overflow-x-auto my-3">
+            <table className="w-full border border-gray-200 text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="border px-4 py-2 text-left">Withdrawals Per 28-Day Cycle</th>
+                  <th className="border px-4 py-2 text-center">Penalty Deduction</th>
+                  <th className="border px-4 py-2 text-left">Protocol Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">1st – 4th Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-green-600 font-semibold">NO PENALTY (0%)</td>
+                  <td className="border px-4 py-2 text-green-700">Standard Allowable Extraction</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">5th Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-amber-600 font-semibold">20% PENALTY</td>
+                  <td className="border px-4 py-2">Cycle Over-Extraction Tier 1</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">6th Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-orange-600 font-semibold">40% PENALTY</td>
+                  <td className="border px-4 py-2">Cycle Over-Extraction Tier 2</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">7th Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-red-600 font-semibold">60% PENALTY</td>
+                  <td className="border px-4 py-2">Cycle Over-Extraction Tier 3</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">8th Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-red-700 font-bold">80% PENALTY</td>
+                  <td className="border px-4 py-2">Cycle Over-Extraction Tier 4</td>
+                </tr>
+                <tr>
+                  <td className="border px-4 py-2 font-medium">9th+ Withdrawal</td>
+                  <td className="border px-4 py-2 text-center text-red-800 font-black">100% PENALTY</td>
+                  <td className="border px-4 py-2 text-red-700 font-semibold">Zero Yield Released (Locked until reset)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <Subheading>How to Avoid All Penalties (Summary Rules)</Subheading>
+          <Paragraph>
+            Penalties in Bear Miner are fully transparent and 100% avoidable. Users can
+            safeguard their maximum yield by observing four simple guidelines:
+          </Paragraph>
+          <ul className="list-disc pl-6 space-y-1.5 text-sm text-gray-800">
+            <li>
+              <strong>Never accumulate idle rewards past 28 hours:</strong> Perform at
+              least one Compound or interaction within every 24-hour window.
+            </li>
+            <li>
+              <strong>Maintain withdrawal intervals:</strong> Compound at least once
+              between profit extractions and observe a minimum 48-hour gap between
+              withdrawals.
+            </li>
+            <li>
+              <strong>Adhere to the 4-withdrawal monthly threshold:</strong> Do not
+              withdraw more than 4 times within any single 28-day cycle.
+            </li>
+            <li>
+              <strong>Follow the 6:1 Compound-to-Withdraw Strategy:</strong> Compound 6 days
+              in sequence, harvest on day 7 for optimal returns with zero penalty exposure.
+            </li>
+            <li>
+              <strong>Activate Vacation Mode:</strong> When unable to access the protocol,
+              enable Vacation Mode in the DApp to pause countdown timers safely.
+            </li>
+          </ul>
+
           <Subheading>
             Individualized Penalties, Not Global Punishment
           </Subheading>
@@ -987,7 +1187,7 @@ export default function WhitePaperPage() {
             </li>
             <li>
               Telegram:{" "}
-              <Link href={"https://t.me/bearminerwordwide"} target="_blank">
+              <Link href={"https://t.me/bearminerchat"} target="_blank">
                 Bear Miner
               </Link>
             </li>
